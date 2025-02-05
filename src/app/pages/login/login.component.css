@@ -1,0 +1,164 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+
+}
+
+.background {
+  background-image: url('/assets/images/image3.png');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 97.5vh;
+  position: relative;
+}
+
+.background::before {
+  content: "";
+  background-image: url('/assets/images/endless.png');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.9;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+.container {
+  background-color: white;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  display: flex;
+  overflow: hidden;
+  width: 50%;
+  max-width: 768px;
+  position: relative;
+  min-height: 70vh;
+  z-index: 2;
+}
+
+.decorative-box {
+  position: absolute;
+  top: -16px;
+  left: 32px;
+}
+
+.blue-box {
+  background-color: #2563eb;
+  width: 32px;
+  height: 32px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.small-blue-box {
+  background-color: #2563eb;
+  width: 16px;
+  height: 16px;
+  transform: rotate(45deg);
+  margin-top: -8px;
+  margin-left: 8px;
+}
+
+.form-container {
+  width: 60%;
+  padding: 32px;
+}
+
+.form-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo {
+  width: 96px;
+  height: 96px;
+  margin-bottom: 16px;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1e3a8a;
+  margin-bottom: 24px;
+}
+
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.input-group {
+  margin-bottom: 16px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.input {
+  flex: 1;
+  max-width: 400px;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s;
+  box-shadow: 5px 5px #cccc;
+}
+
+.input:focus {
+  border-color: #2563eb;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.checkbox {
+  margin-right: 8px;
+}
+
+.checkbox-label {
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.submit-button {
+  width: 25%;
+  background-color: #1e3a8a;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: none;
+}
+
+.submit-button:hover {
+  background-color: #1e40af;
+}
+
+.side-panel {
+  width: 70%;
+  background-color: #1e3a8a;
+  position: relative;
+}
+
+.side-panel-gif {
+  position: absolute;
+  top: 25px;
+  left: 60px;
+  width: 60%;
+  height: auto;
+  z-index: 3;
+}

@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SupabaseAuthService } from '../../services/supabase-auth.service';
-
 import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
-  imports: [FormsModule],
+  imports: [CommonModule, FormsModule],
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
@@ -24,7 +24,7 @@ export class LoginComponent {
         alert(`Login failed: ${error.message}`);
       } else {
         alert('Login successful!');
-        this.router.navigate(['/dashboard']);  // Example route for successful login
+        this.router.navigate(['/dashboard']);
       }
     } catch (error) {
       console.error('Error:', error);

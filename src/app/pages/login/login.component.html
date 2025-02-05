@@ -1,10 +1,43 @@
-<form (ngSubmit)="login()">
-    <label for="email">Email:</label>
-    <input type="email" [(ngModel)]="email" name="email" required />
-  
-    <label for="password">Password:</label>
-    <input type="password" [(ngModel)]="password" name="password" required />
-  
-    <button type="submit">Login</button>
-  </form>
-  
+
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Quanby Inventory System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+</head>
+<body>
+    <div class="background">
+        <div class="container">
+            <div class="decorative-box">
+                <div class="blue-box"></div>
+                <div class="small-blue-box"></div>
+            </div>
+            <div class="form-container">
+                <div class="form-content">
+                    <img alt="Company Logo" class="logo" src="https://storage.googleapis.com/a1aa/image/y614iJ88HT6zJejoEdzFGbVDKZKUZwpCsm7XhWuDdos.jpg"/>
+                    <h1 class="title">Quanby Inventory System</h1>
+                    <form class="form" (ngSubmit)="login()">
+                        <div class="input-group">
+                          <label for="email">Email:</label>
+                            <input class="input" name="email" [(ngModel)]="email" placeholder="Email" type="email"/>
+                        </div>
+                        <div class="input-group">
+                          <label for="email">Password:</label>
+                            <input class="input" name="password" [(ngModel)]="password" placeholder="Password" type="password"/>
+                        </div>
+                        <div class="checkbox-group">
+                            <input class="checkbox" id="remember" type="checkbox"/>
+                            <label class="checkbox-label" for="remember">Remember me</label>
+                        </div>
+                        <button class="submit-button" type="submit">Submit</button>
+                    </form>
+                </div>
+            </div>
+            <div class="side-panel">
+                <img class="side-panel-gif" src="/assets/images/file.gif" alt="Animation"/>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
