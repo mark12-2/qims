@@ -1,0 +1,51 @@
+<div class="p-grid p-justify-center">
+    <div class="p-col-12 p-md-8">
+      <h2>Supplier Profile</h2>
+      <form [formGroup]="supplierForm" (ngSubmit)="onSubmit()" class="p-fluid">
+        <!-- Supplier Name -->
+        <div class="p-field">
+          <label for="supplierName">Supplier Name</label>
+          <input id="supplierName" type="text" pInputText formControlName="supplierName" />
+        </div>
+  
+        <!-- Contact Person -->
+        <div class="p-field">
+          <label for="contactPerson">Contact Person</label>
+          <input id="contactPerson" type="text" pInputText formControlName="contactPerson" />
+        </div>
+  
+        <!-- Phone/Landline Number -->
+        <div class="p-field">
+          <label for="phone">Phone/Landline Number</label>
+          <input id="phone" type="text" pInputText formControlName="phone" />
+        </div>
+  
+        <!-- Brands Offered -->
+        <div class="p-field">
+          <label for="brandsOffered">Brands Offered</label>
+          <input id="brandsOffered" type="text" pInputText formControlName="brandsOffered" />
+        </div>
+  
+        <!-- Items/Models Offered -->
+        <div class="p-field">
+          <label for="itemsOffered">Items/Models Offered</label>
+          <input id="itemsOffered" type="text" pInputText formControlName="itemsOffered" />
+        </div>
+  
+        <!-- Item Costs -->
+        <div class="p-field">
+          <label for="itemCosts">Item Costs</label>
+          <input id="itemCosts" type="text" pInputText formControlName="itemCosts" />
+        </div>
+  
+        <!-- Supplier Group Chats -->
+        <div class="p-field">
+          <label for="groupChats">Supplier Group Chats</label>
+          <input id="groupChats" type="text" pInputText formControlName="groupChats" />
+        </div>
+  
+        <!-- Submit Button -->
+        <button pButton type="submit" label="Save Profile" class="p-mt-3"></button>
+      </form>
+    </div>
+  </div>
