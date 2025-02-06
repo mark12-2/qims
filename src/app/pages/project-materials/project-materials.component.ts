@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 const SUPABASE_URL = 'https://yvvuuiflqwppvezjmdsr.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2dnV1aWZscXdwcHZlemptZHNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg2MzQ4MTksImV4cCI6MjA1NDIxMDgxOX0.9OZp412dfD1fdCqXTM8egs-M_iA9OVfwae_LrmB4rvo'
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2dnV1aWZscXdwcHZlemptZHNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg2MzQ4MTksImV4cCI6MjA1NDIxMDgxOX0.9OZp412dfD1fdCqXTM8egs-M_iA9OVfwae_LrmB4rvo';
 
 @Component({
   selector: 'app-project-materials',
@@ -45,10 +45,13 @@ export class ProjectMaterialsComponent {
   }
 
   openModal() {
+    console.log('Opening modal');
     this.showModal = true;
+    this.resetForm();
   }
 
   closeModal() {
+    console.log('Closing modal');
     this.showModal = false;
   }
 
