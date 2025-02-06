@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SupabaseAuthService } from '../services/supabase-auth.service';
+import { SupabaseAuthService } from '../../services/supabase-auth.service';
 
 @Component({
   selector: 'app-dashboard',
