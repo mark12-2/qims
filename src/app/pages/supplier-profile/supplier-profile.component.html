@@ -1,46 +1,140 @@
-<div class="sidebar-container">
-    <nav class="sidebar-nav">
-      <div class="admin-info">
-        <img src="/assets/images/Avatar.png" alt="Admin Avatar" class="admin-avatar">
-        <span class="admin-name">John Doe</span>
-      </div>
-      <ul>
-        <li><a href="#"><i class="icon-home"></i>Home</a></li>
-        <li><a href="#"><i class="icon-project"></i>Project Material</a></li>
-        <li><a href="#"><i class="icon-cart"></i>Cart</a></li>
-        <li><a href="#"><i class="icon-borrow"></i>Borrow Item</a></li>
-      </ul>
+<div class="sidebar">
+    <div class="profile">
+        <img class="profile-pic" src="/images/Avatar.png">
+        <h1 class="profile-name">userEmail</h1>
+    </div>
+    <nav class="nav">
+        <a class="nav-item" routerLink="/home" routerLinkActive="active">
+            <i class="fas fa-home"></i> Home
+        </a>
+        <a class="nav-item" routerLink="/project-materials" routerLinkActive="active">
+            <i class="fas fa-folder"></i> Project Materials
+        </a>
+        <a class="nav-item" routerLink="/cart" routerLinkActive="active">
+            <i class="fas fa-shopping-cart"></i> Cart
+        </a>
+        <a class="nav-item" routerLink="/borrowed-items" routerLinkActive="active">
+            <i class="fas fa-clipboard-list"></i> Borrowed Items
+        </a>
+        <a class="nav-item" href="/suppliers/" routerLinkActive="active">
+            <i class="fas fa-user-tie"></i> Suppliers <!-- Added routerLink -->
+        </a>
     </nav>
-  </div>
+    <div class="footer-nav">
+        <a class="footer-item" href="/supplier-form/" routerLinkActive="active">
+            <i class="fas fa-plus-circle"></i> Add Supplier
+        </a>
+        <a class="footer-item" routerLink="/settings" routerLinkActive="active">
+            <i class="fas fa-cog"></i> Settings
+        </a>
+    </div>
+</div>
+
+
+
+<div class="sidebar">
+    <div class="profile">
+        <img class="profile-pic" src="/images/Avatar.png">
+        <h1 class="profile-name">userEmail</h1>
+    </div>
+    <nav class="nav">
+        <a class="nav-item" routerLink="/home" routerLinkActive="active">
+            <i class="fas fa-home"></i> Home
+        </a>
+        <a class="nav-item" routerLink="/project-materials" routerLinkActive="active">
+            <i class="fas fa-folder"></i> Project Materials
+        </a>
+        <a class="nav-item" routerLink="/cart" routerLinkActive="active">
+            <i class="fas fa-shopping-cart"></i> Cart
+        </a>
+        <a class="nav-item" routerLink="/borrowed-items" routerLinkActive="active">
+            <i class="fas fa-clipboard-list"></i> Borrowed Items
+        </a>
+        <a class="nav-item" href="/suppliers/" routerLinkActive="active">
+            <i class="fas fa-user-tie"></i> Suppliers <!-- Added routerLink -->
+        </a>
+    </nav>
+    <div class="footer-nav">
+        <a class="footer-item" routerLink="/add-supplier" routerLinkActive="active">
+            <i class="fas fa-plus-circle"></i> Add Supplier
+        </a>
+        <a class="footer-item" routerLink="/settings" routerLinkActive="active">
+            <i class="fas fa-cog"></i> Settings
+        </a>
+    </div>
+</div>
+
+
+    <div class="prop">
+        <div class="pap">
+            <p>Profile</p>
+        </div>
+    </div>
+
 
 <div class="bobo">
+    <div class="over">
+        <p>Overview</p>
+    </div>
     <div class="supplier-profile-container">
-    <h2>Supplier Profile</h2>
-    
-    <div class="supplier-info">
-      <div class="info-item">
-        <h3>Supplier Name</h3>
-        <p>TechPro Solutions Inc.</p>
-      </div>
-      <div class="info-item">
-        <h3>Contact Person/s</h3>
-        <p>Michael Chen & Sarah Lee</p>
-      </div>
-      <div class="info-item">
-        <h3>Phone/Landline Number</h3>
-        <p>+1 (555) 123-4567</p>
-      </div>
+        <h2>quanby images</h2>
+        <div class="supplier-info">
+            <div class="info-item">
+                <h3>About</h3>
+                <ul class="contact-details">
+                    <li class="contact-detail">
+                        <strong>Phone:</strong> +1 (555) 123-4567
+                    </li>
+                    <li class="contact-detail">
+                        <strong>Email:</strong> john.doe.com
+                    </li>
+                    <li class="contact-detail">
+                        <strong>Address:</strong> 123 Tech Street, City, State ZIP
+                    </li>
+                </ul>
+            </div>
+            <hr class="bottom-line">
+            <!-- New Brand Offered Section -->
+            <div class="brand-offered">
+                <h3>Brands Offered</h3>
+                <div class="brand-grid">
+                    <div class="brand-item">Brand 1</div>
+                    <div class="brand-item">Brand 2</div>
+                    <div class="brand-item">Brand 3</div>
+                    <div class="brand-item">Brand 4</div>
+                    <div class="brand-item">Brand 5</div>
+                    <div class="brand-item">Brand 6</div>
+                    <div class="brand-item">Brand 7</div>
+                    <div class="brand-item">Brand 8</div>
+                </div>
+            </div>
+        </div>
     </div>
-    
-    <div class="supplier-info">
-      <div class="info-item">
-        <h3>Brands Offered</h3>
-        <p>Smartphones, Laptops, Tablets, Smartwatches, Gaming Consoles</p>
-      </div>
-    
-    <div class="chat-link">
-      <i class="slack-icon"></i>
-      Supplier Group Chat/s: Available on Slack channel #techpro-solutions-suppliers
-    </div>
-  </div>
+</div>
+
+
+<div class="table">
+    <table class="supplier-table">
+        <caption>Items</caption>
+        <tr>
+            <th>Brand</th>
+            <th>Models Offered</th>
+            <th>Item Costs</th>
+        </tr>
+        <tr>
+            <td>Item 1</td>
+            <td>vbyv</td>
+            <td>2,000</td>
+        </tr>
+        <tr>
+            <td>Item 1</td>
+            <td>vbyv</td>
+            <td>2,000</td>
+        </tr>
+        <tr>
+            <td>Item 1</td>
+            <td>vbyv</td>
+            <td>2,000</td>
+        </tr>
+    </table>
 </div>
