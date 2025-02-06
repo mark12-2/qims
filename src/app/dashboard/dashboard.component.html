@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Quanby Inventory Analytics</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="profile">
+                <img alt="Profile picture of Jay-Ar" class="profile-pic" src="https://placehold.co/100x100"/>
+                <h1 class="profile-name">{{ userEmail }}</h1>
+            </div>
+            <nav class="nav">
+                <a class="nav-item active" href="#">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a class="nav-item" href="#">
+                    <i class="fas fa-folder"></i> Project Materials
+                </a>
+                <a class="nav-item" href="#">
+                    <i class="fas fa-shopping-cart"></i> Cart
+                </a>
+                <a class="nav-item" href="#">
+                    <i class="fas fa-clipboard-list"></i> Borrowed Items
+                </a>
+            </nav>
+            <div class="footer-nav">
+                <a class="footer-item" href="#">
+                    <i class="fas fa-plus-circle"></i> Add Supplier
+                </a>
+                <a class="footer-item" href="#">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <div class="main-content">
+          <header class="header">
+            <div class="welcome-message">
+              <h1>Welcome, {{ userEmail }}🌟</h1>
+            </div>
+            <h2>Quanby Inventory Analytics</h2>
+          </header>
+            <div class="content">
+                <div class="cards">
+                    <div class="card">
+                        <h2 class="card-title">350</h2>
+                        <p class="card-subtitle">Total Requests</p>
+                        <p class="card-description">Total number of equipment requests that come in.</p>
+                        <div class="card-stats">
+                            <div class="stat">
+                                <p class="stat-value">10</p>
+                                <p class="stat-label">Unanswered</p>
+                            </div>
+                            <div class="stat">
+                                <p class="stat-value">5</p>
+                                <p class="stat-label">Returned</p>
+                            </div>
+                            <div class="stat">
+                                <p class="stat-value">3</p>
+                                <p class="stat-label">Solved</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card card-green">
+                        <h2 class="card-title">350</h2>
+                        <p class="card-subtitle">Support Requests</p>
+                        <p class="card-description">Total number of support requests that come in.</p>
+                        <div class="middle">
+                        <button class="view-button">View equipment list</button>
+                    </div>
+                    </div>
+                </div>
+                <div class="activity-section">
+                    <div class="cost-history">
+                        <h2 class="section-title">Cost History</h2>
+                        <div class="select-container">
+                          <label for="equipmentSelect">Equipment</label>
+                          <select id="equipmentSelect" class="select">
+                            <option value="">Select Equipment</option>
+                          </select>
+                        </div>
+                        <img alt="Graph showing cost history" class="cost-image" src="https://placehold.co/600x300"/>
+                    </div>
+                    <div class="recent-activities">
+                        <h2 class="section-title">Recent Activities</h2>
+                        <div class="activity-list">
+                            <div class="activity">
+                                <i class="fas fa-box"></i>
+                                <div>
+                                    <p class="activity-description">Added 50 units of "Widget A" to inventory.</p>
+                                    <p class="activity-time">2 hours ago</p>
+                                </div>
+                            </div>
+                            <div class="activity">
+                                <i class="fas fa-box"></i>
+                                <div>
+                                    <p class="activity-description">Added 50 units of "Widget A" to inventory.</p>
+                                    <p class="activity-time">2 hours ago</p>
+                                </div>
+                            </div>
+                            <div class="activity">
+                                <i class="fas fa-box"></i>
+                                <div>
+                                    <p class="activity-description">Added 50 units of "Widget A" to inventory.</p>
+                                    <p class="activity-time">2 hours ago</p>
+                                </div>
+                            </div>
+                            <div class="activity">
+                                <i class="fas fa-box"></i>
+                                <div>
+                                    <p class="activity-description">Added 50 units of "Widget A" to inventory.</p>
+                                    <p class="activity-time">2 hours ago</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
