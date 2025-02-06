@@ -18,6 +18,9 @@ body {
     display: flex;
     flex-direction: column;
     padding: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
 }
 
 .profile {
@@ -34,10 +37,6 @@ body {
 .profile-name {
     font-size: 1.25rem;
     font-weight: 600;
-}
-
-.profile-role {
-    color: #93c5fd;
 }
 
 .nav {
@@ -89,6 +88,7 @@ body {
 
 .main-content {
     flex: 1;
+    margin-left: 230px;
 }
 
 .header {
@@ -96,6 +96,7 @@ body {
     color: white;
     padding: 20px;
     height: 100px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .header h1{
