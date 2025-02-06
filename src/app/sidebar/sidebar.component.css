@@ -1,0 +1,278 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    font-size: 12px;
+
+}
+
+.container {
+    display: flex;
+}
+
+.sidebar {
+    background-color: #000154;
+    color: white;
+    width: 220px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    box-shadow: 4px 0px 12px rgba(0, 0, 0, 0.1); /* Add shadow for elevation */
+    transition: all 0.3s ease; /* Smooth transition */
+}
+
+.profile {
+    text-align: center;
+    margin-top: 0px;
+    margin-bottom: 20px; /* Added margin bottom for better spacing*/
+    background-color: #010246;
+    border-radius: 10%;
+}
+
+.profile-pic {
+    margin-top: 20px;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    object-fit: cover; /* Makes the image responsive */
+    border: 0.5px solid white
+}
+
+.profile-name {
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 10px; /* Added spacing between name and picture */
+}
+
+.nav {
+    margin-top: 5px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    margin: 0px 8px;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease; /* Smooth transition */
+    border-radius: 10px; /* Rounded corners for items */
+}
+
+.nav-item i,
+.nav-item span {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.nav-item:hover, .nav-item.active {
+    background-color: #1e40af;
+    transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+.footer-nav {
+    margin-top: auto;
+    margin-bottom: 20px;
+}
+
+.footer-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    color: white;
+    text-decoration: none;
+    background-color: #010246;
+    margin-bottom: 10px;
+    border-radius: 5px; /* Rounded corners for footer items */
+    transition: all 0.3s ease; /* Smooth transition */
+}
+
+.footer-item i,
+.footer-item span {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.footer-item:hover {
+    background-color: #1e40af;
+    transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+.main-content {
+    flex: 1;
+    margin-left: 230px;
+    padding: 24px; /* Tailwind's p-6 */
+}
+
+/* Dropdown Button */
+.dropdown-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    margin: 0px 8px;
+    color: white;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    transition: all 0.3s ease; /* Smooth transition */
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.dropdown-btn:hover,
+.dropdown-btn.active {
+    background-color: #000154;
+    transform: scale(1.00); /* Slight zoom effect on hover */
+}
+
+.dropdown-btn i.fa-caret-down {
+    margin-left: auto; /* Push caret to the right */
+}
+
+/* Scrollbar Styling */
+.dropdown-container::-webkit-scrollbar {
+    width: 8px;
+    background-color: #1e3a8a; /* Match sidebar background */
+    border-radius: 10px;
+}
+
+.dropdown-container::-webkit-scrollbar-thumb {
+    background-color: #3b82f6; /* Light blue theme color */
+    border-radius: 10px;
+}
+
+.dropdown-container::-webkit-scrollbar-thumb:hover {
+    background-color: #60a5fa; /* Lighter blue on hover */
+}
+
+/* Remove horizontal scrollbar */
+.dropdown-container {
+    display: none;
+    background-color: #000145;
+    max-height: 150px;
+    overflow-y: auto; /* Vertical scrollbar stays */
+    overflow-x: hidden; /* Disable horizontal scrollbar */
+    padding: 0;
+    scrollbar-color: #3b82f6 #1e3a8a; /* Thumb and track colors for Firefox */
+    scrollbar-width: thin; /* Slim scrollbar for Firefox */
+}
+
+.dropdown-container.active {
+    display: block;
+    opacity: 1; /* Fade in when active */
+}
+
+.dropdown-container .dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: white;
+    text-decoration: none;
+    transition: background 0.3s ease;
+    border-radius: 5px; /* Rounded corners for dropdown items */
+}
+
+.dropdown-container .dropdown-item img {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.dropdown-container .dropdown-item:hover {
+    background-color: #1e40af;
+    transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+  
+
+/* Floating Button Styles */
+.floating-buttons {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    z-index: 1000;
+}
+
+.floating-btn {
+
+    padding: 12px;
+    margin: 8px 0px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    height: 50px;
+    width: 50px;
+    border: none;
+    background: transparent;
+
+}
+
+.floating-btn:hover {
+    transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
+}
+
+#notification-btn .icon {
+    width: 30px;
+    height: 30px;
+}
+input[type=checkbox]{
+    height: 0;
+    width: 0;
+    visibility: hidden;
+  }
+  
+  label {
+    top: -10px;
+    cursor: pointer;
+    text-indent: -9999px;
+    width: 35px;
+    height: 20px;
+    background: rgb(50, 54, 126);
+    display: block;
+    border-radius: 100px;
+    position: relative;                                               
+  }
+  
+  label:after {
+    top: -10px;
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border-radius: 90px;
+    transition: 0.3s;
+  }
+  
+  input:checked + label {
+    background: #8d8e88;
+  }
+  
+  input:checked + label:after {
+    left: calc(100% - 5px);
+    transform: translateX(-100%);
+  }
+  
+  label:active:after {
+    width: 30px;
+  }
+  
