@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Materials Management</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="profile">
+                <img alt="Profile picture" class="profile-pic" src="https://placehold.co/100x100"/>
+                <h1 class="profile-name">{{ userEmail }}</h1>
+            </div>
+            <nav class="nav">
+                <a class="nav-item active" href="#"><i class="fas fa-home"></i> Home</a>
+                <a class="nav-item" href="#"><i class="fas fa-folder"></i> Project Materials</a>
+                <a class="nav-item" href="#"><i class="fas fa-shopping-cart"></i> Cart</a>
+                <a class="nav-item" href="#"><i class="fas fa-clipboard-list"></i> Borrowed Items</a>
+            </nav>
+            <div class="footer-nav">
+                <a class="footer-item" href="#"><i class="fas fa-plus-circle"></i> Add Supplier</a>
+                <a class="footer-item" href="#"><i class="fas fa-cog"></i> Settings</a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1>Project Materials Management</h1>
+                <img alt="Company logo" class="company-logo" src="https://storage.googleapis.com/a1aa/image/el_TnoG-amx0la5sqV5eOP2qSqIe34vsPpuqf2ilYJM.jpg" />
+            </div>
+
+            <button class="btn-add-materials" (click)="openModal()">
+                <i class="fas fa-plus-circle"></i> Add Project
+            </button>
+
+            <!-- Modal for Adding Projects -->
+            <div class="modal" *ngIf="showModal">
+                <div class="modal-content">
+                    <span class="close" (click)="closeModal()">&times;</span>
+                    <h2>Create New Project</h2>
+
+                    <label>Project Name:</label>
+                    <input type="text" [(ngModel)]="project.name" placeholder="Enter project name">
+
+                    <label>Project Description:</label>
+                    <textarea [(ngModel)]="project.description" placeholder="Enter project description"></textarea>
+
+                    <h3>Materials</h3>
+                    <div *ngFor="let material of project.materials; let i = index" class="material-item">
+                        <input type="text" [(ngModel)]="material.name" placeholder="Material name">
+                        <input type="number" [(ngModel)]="material.units" min="1" placeholder="Units">
+                        <button (click)="removeMaterial(i)" *ngIf="project.materials.length > 1">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+
+                    <button (click)="addMaterial()">
+                        <i class="fas fa-plus"></i> Add Material
+                    </button>
+
+                    <button (click)="submitProject()">
+                        <i class="fas fa-save"></i> Save Project
+                    </button>
+                </div>
+            </div>
+
+            <!-- Project List -->
+            <div class="card-container">
+                <div *ngFor="let proj of projects" class="card">
+                    <h2>{{ proj.name }}</h2>
+                    <p>{{ proj.description }}</p>
+                    <p><strong>Materials:</strong></p>
+                    <ul>
+                        <li *ngFor="let mat of proj.materials">{{ mat.name }} - {{ mat.units }} units</li>
+                    </ul>
+                    <div class="card-buttons">
+                        <button class="btn edit"><i class="fas fa-edit"></i></button>
+                        <button class="btn delete"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
