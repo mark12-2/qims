@@ -5,11 +5,10 @@ import { Router } from '@angular/router';
 import { AuthError } from '@supabase/supabase-js'; // Import AuthError
 
 @Component({
-  standalone: true,
-  imports: [FormsModule],
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+    imports: [FormsModule],
+    selector: 'app-register',
+    templateUrl: './register.component.html',
+    styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
   email: string = '';

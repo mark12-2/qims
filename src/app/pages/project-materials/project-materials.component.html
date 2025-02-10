@@ -38,7 +38,7 @@
             </button>
 
             <!-- Modal for Adding Projects -->
-            <div class="modal" *ngIf="showModal">
+            <div class="modal" [hidden]="!showModal">
                 <div class="modal-content">
                     <span class="close" (click)="closeModal()">&times;</span>
                     <h2>Create New Project</h2>
@@ -85,5 +85,8 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" (click)="closeModal()" *ngIf="showModal"></div>
 </body>
 </html>

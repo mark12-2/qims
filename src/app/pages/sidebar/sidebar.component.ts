@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { SupabaseAuthService } from '../../services/supabase-auth.service';
 
 @Component({
-    selector: 'app-dashboard',
-    imports: [],
-    templateUrl: './dashboard.component.html',
-    styleUrls: ['./dashboard.component.css']
+  selector: 'app-sidebar',
+  imports: [],
+  templateUrl: './sidebar.component.html',
+  styleUrl: './sidebar.component.css'
 })
-export class DashboardComponent {
+export class SidebarComponent {
   userEmail: string | null = null;
 
   constructor(private authService: SupabaseAuthService) {}

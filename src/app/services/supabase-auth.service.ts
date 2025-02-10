@@ -102,5 +102,6 @@ async uploadImage(file: File): Promise<string | null> {
     console.error('Error during image upload:', error);
     return null;
   }
-}
+
+
 }

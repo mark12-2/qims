@@ -1,0 +1,82 @@
+<div class="equipment-list-container">
+  <h2>Equipment List</h2>
+  <table class="equipment-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Serial No</th>
+        <th>Name</th>
+        <th>Model</th>
+        <th>Brand</th>
+        <th>Supplier</th>
+        <th>Supplier Cost</th>
+        <th>SRP</th>
+        <th>Quantity</th>
+        <th>Location</th>
+        <th>Description</th>
+        <th>Variety</th>
+        <th>QR Code</th>
+        <th>Product Images</th>
+        <th>Return Slip</th>
+        <th>Damaged</th>
+        <th>Condition</th>
+        <th>Repair Logs</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let equipment of equipmentList">
+        <td>{{ equipment.id }}</td>
+        <td>{{ equipment.serial_no }}</td>
+        <td>{{ equipment.name }}</td>
+        <td>{{ equipment.model }}</td>
+        <td>{{ equipment.brand }}</td>
+        <td>{{ equipment.supplier }}</td>
+        <td>{{ equipment.supplier_cost }}</td>
+        <td>{{ equipment.srp }}</td>
+        <td>{{ equipment.quantity }}</td>
+        <td>{{ equipment.location }}</td>
+        <td>{{ equipment.description }}</td>
+        <td>{{ equipment.variety }}</td>
+        <td>
+          <img [src]="equipment.qr_code" alt="QR Code" style="width: 100px;">
+        </td>
+
+        <!-- ✅ Product Images -->
+        <td>
+          <div *ngIf="equipment.product_images?.length > 0; else noImages">
+            <div *ngFor="let image of equipment.product_images">
+              <img [src]="image" alt="Product Image" style="width: 100px;">
+            </div>
+          </div>
+          <ng-template #noImages>
+            <span>No images available</span>
+          </ng-template>
+        </td>
+
+        <td>{{ equipment.return_slip }}</td>
+        <td>{{ equipment.damaged ? 'Yes' : 'No' }}</td>
+        <td>{{ equipment.condition }}</td>
+
+        <!-- ✅ Repair Logs -->
+        <td>
+          <div *ngIf="equipment.repair_logs?.length > 0; else noLogs">
+            <ul>
+              <li *ngFor="let log of equipment.repair_logs">
+                <strong>{{ log.repair_details }}</strong> ({{ log.repair_status }}, {{ log.repair_date | date:'short' }})
+              </li>
+            </ul>
+          </div>
+          <ng-template #noLogs>
+            <span>No repair logs</span>
+          </ng-template>
+        </td>
+
+        <td>
+          <button (click)="editEquipment(equipment.id)">Edit</button>
+          <button (click)="deleteEquipment(equipment.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
