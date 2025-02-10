@@ -29,10 +29,10 @@ interface PageEvent {
     SidebarComponent,
     DynamicDialogModule, ToastModule, PaginatorModule, ButtonModule, DividerModule, MatTabsModule, SliderModule
   ],
-  templateUrl: './parts-picker.component.html',
-  styleUrls: ['./parts-picker.component.css']
+  templateUrl: './user-list.component.html',
+  styleUrls: ['./user-list.component.css']
 })
-export class PartsPickerComponent implements OnInit {
+export class UserListComponent implements OnInit {
   first1: number = 0;
   rows1: number = 10;
   first2: number = 0;
@@ -52,7 +52,7 @@ export class PartsPickerComponent implements OnInit {
   searchQuery: string = ''; 
   selectedProducts: any[] = [];
   showDropdown: boolean = false; 
-  categories: string[] = ['Computer', 'Laptop', 'Jay-ar', 'Piso-wifi', 'Television'];
+
 
   constructor() {}
 
@@ -86,16 +86,5 @@ export class PartsPickerComponent implements OnInit {
     return this.selectedProducts.some(p => p.id === product.id);
   }
 
-  getTotalPrice() {
-    return this.selectedProducts.reduce((sum, product) => sum + product.price * product.quantity, 0);
-  }
 
-  toggleDropdown() {
-    this.showDropdown = !this.showDropdown;
-  }
-
-  onPageChange3(event: PageEvent) {
-    this.first3 = event.first;
-    this.rows3 = event.rows;
-  }
 }

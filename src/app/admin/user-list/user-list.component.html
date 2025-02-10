@@ -10,9 +10,8 @@
   </div>
 
   <mat-tab-group>
-    <mat-tab *ngFor="let category of categories" [label]="category">
       <p-table 
-        [value]="filteredProducts(category)" 
+
         [tableStyle]="{'min-width': '50rem'}"
         styleClass="small-table">
         <ng-template pTemplate="header">
@@ -54,30 +53,7 @@
           </tr>
         </ng-template>
       </p-table>
-    </mat-tab>
-    <div class="flex items-center justify-start">
-        <div class="flex justify-center items-center gap-4">
-            <span>Items per page: </span>
-            <p-slider [(ngModel)]="rows3" (ngModelChange)="first3 = 0" [style]="{ width: '10rem' }" [min]="10" [max]="120" [step]="30" />
-        </div>
-        <p-paginator (onPageChange)="onPageChange3($event)" [first]="first3" [rows]="rows3" [totalRecords]="totalRecords"
-            [showFirstLastIcon]="false" [showCurrentPageReport]="true" currentPageReportTemplate="{first} - {last} of {totalRecords}"></p-paginator>
-    </div>
+
   </mat-tab-group>
 
-  <!-- Total Price Footer with Dropdown -->
-  <div class="total-bar">
-    <span (click)="toggleDropdown()" class="total-label">
-      Total Price: {{ getTotalPrice() | currency: 'PHP' }}
-    </span>
-
-    <!-- Dropdown List -->
-    <div class="dropdown" *ngIf="showDropdown">
-      <div *ngFor="let product of selectedProducts" class="dropdown-item">
-        {{ product.name }} (Quantity: {{ product.quantity }})
-      </div>
-    </div>
-
-    <button class="checkout-button">Checkout</button>
-  </div>
 </body>

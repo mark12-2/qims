@@ -64,6 +64,8 @@ body {
     text-decoration: none;
     transition: all 0.3s ease; /* Smooth transition */
     border-radius: 10px; /* Rounded corners for items */
+    font-weight: 300;
+    font-size: 12px;
 }
 
 .nav-item i,
@@ -93,6 +95,8 @@ body {
     margin-bottom: 10px;
     border-radius: 5px; /* Rounded corners for footer items */
     transition: all 0.3s ease; /* Smooth transition */
+    font-weight: 300;
+    font-size: 12px;
 }
 
 .footer-item i,
@@ -129,8 +133,8 @@ body {
     text-align: left;
     transition: all 0.3s ease; /* Smooth transition */
     border-radius: 5px;
-    font-size: 14px;
-    font-weight: 500;
+    font-size: 11px;
+    font-weight: 300;
 }
 
 .dropdown-btn:hover,
@@ -221,7 +225,8 @@ body {
     width: 50px;
     border: none;
     background: transparent;
-
+    font-weight: 300;
+    font-size: 12px;
 }
 
 .floating-btn:hover {
