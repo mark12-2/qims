@@ -3,13 +3,14 @@ import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common'; 
 import { FormsModule } from '@angular/forms'; 
 import { SidebarComponent } from "../../sidebar/sidebar.component";
-import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
+import { DialogService } from 'primeng/dynamicdialog';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { PaginatorModule } from 'primeng/paginator';
 import { SliderModule } from 'primeng/slider';  // Use SliderModule instead
 import { DividerModule } from 'primeng/divider';
+
 
 
 interface PageEvent {
@@ -26,8 +27,7 @@ interface PageEvent {
     TableModule,
     CommonModule,
     FormsModule,
-    SidebarComponent,
-    DynamicDialogModule, ToastModule, PaginatorModule, ButtonModule, DividerModule, MatTabsModule, SliderModule
+    SidebarComponent, ToastModule, PaginatorModule, ButtonModule, DividerModule, MatTabsModule, SliderModule
   ],
   templateUrl: './parts-picker.component.html',
   styleUrls: ['./parts-picker.component.css']
