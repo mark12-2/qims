@@ -33,6 +33,20 @@
             <input type="number" id="supplierCost" [(ngModel)]="equipmentData.supplier_cost" name="supplier_cost" placeholder="Enter Supplier Cost" />
           </div>
 
+                        <!-- Lifespan Tracking -->
+              <h3>Lifespan Tracking</h3>
+
+              <div class="form-group">
+                <label for="dateAcquired">Date Acquired</label>
+                <input type="date" id="dateAcquired" [(ngModel)]="equipmentData.date_acquired" name="date_acquired" required />
+              </div>
+
+              <div class="form-group">
+                <label for="lifespan">Lifespan (in months)</label>
+                <input type="number" id="lifespan" [(ngModel)]="equipmentData.lifespan_months" name="lifespan_months" min="1" placeholder="Enter Lifespan in Months" required />
+              </div>
+
+
           <div class="form-group">
             <label for="srp">Suggested Retail Price (SRP)</label>
             <input type="number" id="srp" [(ngModel)]="equipmentData.srp" name="srp" placeholder="Enter SRP" />

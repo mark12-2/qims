@@ -7,6 +7,7 @@ import { ProjectMaterialsComponent } from './pages/project-materials/project-mat
 import { AddEquipmentComponent } from './pages/add-equipment/add-equipment.component';
 import { SidebarComponent } from './pages/sidebar/sidebar.component';
 import { EquipmentListComponent } from './pages/equipment-list/equipment-list.component';
+import { EquipmentDetailsComponent } from './pages/equipment-details/equipment-details.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -16,5 +17,6 @@ export const routes: Routes = [
   { path: 'add-equipment', component: AddEquipmentComponent },
   { path: 'sidebar', component: SidebarComponent },
   {  path: 'equipment-list', component: EquipmentListComponent },
+  { path: 'equipment-details/:id', component: EquipmentDetailsComponent },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 ];

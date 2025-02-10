@@ -36,6 +36,8 @@ export class AddEquipmentComponent implements OnInit {
     return_slip: '',
     damaged: false,
     condition: '',
+    date_acquired: '',  // 🔹 New field
+    lifespan_months: 12 // 🔹 Default lifespan of 12 months
   };
 
   constructor(private supabaseService: SupabaseService, private router: Router) {}
@@ -43,14 +45,16 @@ export class AddEquipmentComponent implements OnInit {
   async ngOnInit() {
     await this.loadSuppliers();
 
-    // Check if we're editing equipment
-    const state = history.state;
-    if (state.equipment) {
+    // ✅ Check if there's an equipment object in history.state
+    if (history.state.equipment) {
       this.isEditMode = true;
-      this.equipmentId = state.equipment.id;
-      this.equipmentData = { ...state.equipment };
+      this.equipmentId = history.state.equipment.id;
+      this.equipmentData = { ...history.state.equipment };
+
+      console.log('🔄 Editing Equipment:', this.equipmentData);
     }
   }
+
 
   async loadSuppliers() {
     const data = await this.supabaseService.getSuppliers();
@@ -63,6 +67,11 @@ export class AddEquipmentComponent implements OnInit {
 
   async onSubmit() {
     await this.generateQRCode();
+
+    // 🔹 Set today's date if no date is provided
+  if (!this.equipmentData.date_acquired) {
+    this.equipmentData.date_acquired = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
+  }
 
     // 🔹 Upload Images
     const imageFiles = (document.getElementById('productImage') as HTMLInputElement).files;
@@ -91,6 +100,7 @@ export class AddEquipmentComponent implements OnInit {
       }
     }
   }
+
 
   async generateQRCode() {
     const data = `${this.equipmentData.serial_no}-${this.equipmentData.name}`;

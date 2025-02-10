@@ -110,7 +110,9 @@ export class SupabaseService {
         damaged: equipmentData.damaged,
         return_slip: equipmentData.return_slip,
         product_images: [],  // Will be updated after images are inserted
-        repair_logs: []      // Will be updated after repair logs are inserted
+        repair_logs: [],
+        date_acquired: equipmentData.date_acquired, // 🔹 Store date acquired
+        lifespan_months: equipmentData.lifespan_months       // Will be updated after repair logs are inserted
       }])
       .select()
       .single();
@@ -197,19 +199,26 @@ export class SupabaseService {
       return null;
     }
 
-    // Format data so that images and logs are arrays instead of objects
-    const formattedData = data.map((equipment: any) => ({
-      ...equipment,
-      product_images: equipment.equipment_images.map((img: any) => img.image_url),
-      repair_logs: equipment.equipment_repair_logs.map((log: any) => ({
-        repair_details: log.repair_details,
-        repair_status: log.repair_status,
-        repair_date: log.repair_date
-      })),
-    }));
+    // 🔹 Calculate remaining lifespan for each item
+    const today = new Date();
+    const formattedData = data.map((equipment: any) => {
+      if (equipment.date_acquired && equipment.lifespan_months) {
+        const acquiredDate = new Date(equipment.date_acquired);
+        const expirationDate = new Date(acquiredDate);
+        expirationDate.setMonth(expirationDate.getMonth() + equipment.lifespan_months);
+
+        // 🔹 Determine if the item is near expiration (less than 2 months remaining)
+        const timeRemaining = Math.ceil((expirationDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+        const nearExpiration = timeRemaining <= 60; // Less than 2 months
+
+        return { ...equipment, timeRemaining, nearExpiration };
+      }
+      return { ...equipment, timeRemaining: null, nearExpiration: false };
+    });
 
     return formattedData;
   }
+
 
 
   // 🔹 Delete equipment by ID
@@ -256,7 +265,9 @@ export class SupabaseService {
         variety: equipmentData.variety,
         qr_code: equipmentData.qr_code,
         damaged: equipmentData.damaged,
-        return_slip: equipmentData.return_slip
+        return_slip: equipmentData.return_slip,
+        date_acquired: equipmentData.date_acquired, // 🔹 Store updated date acquired
+        lifespan_months: equipmentData.lifespan_months // 
       })
       .eq('id', equipmentId)
       .select()
@@ -268,8 +279,76 @@ export class SupabaseService {
     }
 
     console.log('✅ Equipment updated successfully:', data);
+
+    // ✅ Log the cost history change
+    await this.supabase
+      .from('equipment_cost_history')
+      .insert({
+        equipment_id: equipmentId,
+        supplier_cost: equipmentData.supplier_cost,
+        srp: equipmentData.srp,
+        date_updated: new Date().toISOString()
+      });
+
     return data;
   }
+
+
+
+  async getEquipmentById(equipmentId: string) {
+    const { data, error } = await this.supabase
+      .from('equipments')
+      .select(`
+        *,
+        equipment_images (image_url),
+        equipment_repair_logs (repair_details, repair_status, repair_date)
+      `)
+      .eq('id', equipmentId)
+      .single();
+
+    if (error) {
+      console.error('❌ Error fetching equipment details:', error);
+      return null;
+    }
+
+    return {
+      ...data,
+      product_images: data.equipment_images.map((img: any) => img.image_url),
+      repair_logs: data.equipment_repair_logs.map((log: any) => ({
+        repair_details: log.repair_details,
+        repair_status: log.repair_status,
+        repair_date: log.repair_date
+      }))
+    };
+  }
+
+  async getCostHistory(equipmentId: string) {
+    const { data, error } = await this.supabase
+      .from('equipment_cost_history')
+      .select('supplier_cost, srp, date_updated')
+      .eq('equipment_id', equipmentId)
+      .order('date_updated', { ascending: true });
+
+    if (error) {
+      console.error('❌ Error fetching cost history:', error);
+      return [];
+    }
+
+    return data;
+  }
+
+  async getUser() {
+    const { data, error } = await this.supabase.auth.getUser();
+
+    if (error) {
+      console.error('❌ Error fetching user:', error);
+      return null;
+    }
+
+    return data.user;
+  }
+
+
 
 
 }
