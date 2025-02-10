@@ -162,3 +162,35 @@ body {
   height: auto;
   z-index: 3;
 }
+
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.login-form {
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+.form-container {
+  animation: slideUp 0.5s ease-in-out forwards;
+}
+
+.input-group {
+  animation: slideUp 0.5s ease-in-out forwards;
+}
+
+.input {
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+.submit-button {
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
