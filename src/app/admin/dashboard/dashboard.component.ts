@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { SupabaseAuthService } from '../../services/supabase-auth.service';
+import { SidebarComponent } from '../../sidebar/sidebar.component';
+
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [],
+  imports: [SidebarComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })

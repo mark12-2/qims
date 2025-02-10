@@ -1,0 +1,59 @@
+<app-sidebar></app-sidebar>
+<body>
+  <div class="search-bar">
+    <input 
+      type="text" 
+      [(ngModel)]="searchQuery" 
+      placeholder="Search products by name or code..." 
+      class="search-input"
+    />
+  </div>
+
+  <mat-tab-group>
+      <p-table 
+
+        [tableStyle]="{'min-width': '50rem'}"
+        styleClass="small-table">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 4rem">
+              <input type="checkbox" disabled />
+            </th>
+            <th>Image</th>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Action</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+          <tr>
+            <td>
+              <input type="checkbox" [checked]="isSelected(product)" (change)="toggleProductSelection(product)" />
+            </td>
+            <td>
+              <img [src]="product.image" alt="{{ product.name }}" class="product-image" />
+            </td>
+            <td>{{ product.code }}</td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.price | currency: 'PHP' }}</td>
+            <td>
+              <input 
+                type="number" 
+                [(ngModel)]="product.quantity" 
+                min="0" 
+                max="99" 
+                class="quantity-input" 
+              />
+            </td>
+            <td>
+              <button class="view-button">View</button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+  </mat-tab-group>
+
+</body>
