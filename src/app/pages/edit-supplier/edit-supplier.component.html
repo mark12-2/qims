@@ -30,68 +30,70 @@
     </div>
 </div>
 
-
-
 <div class="bobo">
     <div class="supplier-profile-container">
-      <h2>Supplier Form</h2>
-      <form (ngSubmit)="onSubmit()" class="supplier-form">
+      <h2>Edit Supplier</h2>
+      <form (ngSubmit)="updateSupplier()" class="supplier-form">
         <!-- Supplier Name -->
         <div class="form-group">
-          <input type="text" [(ngModel)]="supplierName" placeholder="Enter supplier name" name="supplier-name" />
+          <input type="text" [(ngModel)]="supplierData.supplier_name" placeholder="Enter supplier name" name="supplier_name"/>
         </div>
-  
-        <!-- Contact Person/s -->
+      
+        <!-- Contact Person -->
         <div class="form-group">
-          <input type="text" [(ngModel)]="contactPerson" placeholder="Enter contact person(s)" name="contact-person" />
+          <input type="text" [(ngModel)]="supplierData.contact_person" placeholder="Enter contact person(s)" name="contact_person"/>
         </div>
-  
+      
         <!-- Phone/Landline Number -->
         <div class="form-group">
-          <input type="text" [(ngModel)]="phone" placeholder="Enter phone/landline no." name="phone" />
+          <input type="text" [(ngModel)]="supplierData.phone" placeholder="Enter phone/landline no." name="phone"/>
         </div>
-  
+      
         <!-- Dynamic Item Groups -->
         <div *ngFor="let group of itemGroups; let i = index" class="item-group">
+          <!-- Hidden Input for ID (Ensures Updates Work) -->
+          <input type="hidden" [(ngModel)]="group.id" name="item-id-{{i}}"/>
+      
           <div class="form-group">
-            <input type="text" [(ngModel)]="group.brandsOffered" placeholder="Enter brands offered" name="brands-offered-{{i}}" />
+            <input type="text" [(ngModel)]="group.brandsOffered" placeholder="Enter brands offered" name="brandsOffered-{{i}}"/>
           </div>
+      
           <div class="form-group">
-            <input type="text" [(ngModel)]="group.itemsOffered" placeholder="Enter items/models offered" name="items-offered-{{i}}" />
+            <input type="text" [(ngModel)]="group.itemsOffered" placeholder="Enter items/models offered" name="itemsOffered-{{i}}"/>
           </div>
+      
           <div class="form-group">
-            <input type="text" [(ngModel)]="group.itemCosts" placeholder="Enter item costs" name="item-costs-{{i}}" />
+            <input type="text" [(ngModel)]="group.itemCosts" placeholder="Enter item costs" name="itemCosts-{{i}}"/>
           </div>
+      
           <div class="form-group">
-            <input type="file" (change)="onFileChange($event, i)" name="item-image-{{i}}" />
+            <input type="file" (change)="onFileChange($event, i)" name="item-image-{{i}}"/>
+            <img *ngIf="group.item_image_url" [src]="group.item_image_url" alt="Item Image" width="50"/>
           </div>
+      
           <button type="button" class="remove-group-button" (click)="removeItemGroup(i)" *ngIf="i > 0">
-            <i class="fas fa-trash"></i> <!-- Trash icon -->
+            <i class="fas fa-trash"></i>
           </button>
         </div>
-  
+      
         <!-- Add New Group Button -->
         <button type="button" class="add-group-button" (click)="addItemGroup()">Add Another Group</button>
-  
+      
         <!-- Email -->
         <div class="form-group">
-          <input type="email" [(ngModel)]="email" placeholder="Enter email address" name="email" />
+          <input type="email" [(ngModel)]="supplierData.email" placeholder="Enter email address" name="email"/>
         </div>
-  
+      
         <!-- Address -->
         <div class="form-group">
-          <input type="text" [(ngModel)]="address" placeholder="Enter address" name="address" />
+          <input type="text" [(ngModel)]="supplierData.address" placeholder="Enter address" name="address"/>
         </div>
-  
-        <!-- Supplier Group Chat/s -->
-        <div class="form-group">
-          <input type="text" [(ngModel)]="groupChatLink" placeholder="Enter group chat links" name="group-chat-link" />
-        </div>
-  
+      
         <!-- Submit Button -->
         <div class="submit-group">
-          <button type="submit" class="submit-button">Submit</button>
+          <button type="submit" class="submit-button">Save Changes</button>
         </div>
       </form>
+      
     </div>
   </div>
