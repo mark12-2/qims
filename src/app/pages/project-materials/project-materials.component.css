@@ -1,0 +1,136 @@
+body {
+  background-color: #ffff; /* Tailwind's bg-gray-100 */
+  font-family: Arial, sans-serif;
+  margin: 0;
+}
+
+.container {
+  display: flex;
+}
+
+.sidebar {
+  background-color: #1e3a8a;
+  color: white;
+  width: 230;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.profile {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.profile-pic {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+}
+
+.profile-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.nav {
+  margin-top: 40px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  color: white;
+  text-decoration: none;
+  transition: background 0.3s;
+
+}
+
+.nav-item i,
+.nav-item span {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.nav-item:hover, .nav-item.active {
+  background-color: #1e40af;
+}
+
+.footer-nav {
+  margin-top: auto;
+  margin-bottom: 20px;
+}
+
+.footer-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  color: white;
+  text-decoration: none;
+  background-color: #1e3a8a;
+  margin-bottom: 10px;
+}
+
+.footer-item i,
+.footer-item span {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 230px;
+}
+
+.main-content {
+  flex: 1;
+  padding: 24px; /* Tailwind's p-6 */
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px; /* Tailwind's mb-6 */
+}
+
+.company-logo {
+  height: 48px; /* Tailwind's h-12 */
+}
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
+  gap: 24px; /* Tailwind's gap-6 */
+}
+
+.card {
+  background-color: white;
+  padding: 16px; /* Tailwind's p-4 */
+  border-radius: 8px; /* Tailwind's rounded */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Tailwind's shadow */
+}
+
+.card-buttons {
+  display: flex;
+  margin-top: 16px; /* Tailwind's mt-4 */
+}
+
+.btn.edit {
+  color: #3b82f6; /* Tailwind's text-blue-500 */
+}
+
+.btn.delete {
+  color: #ef4444; /* Tailwind's text-red-500 */
+}
+
+.quantity {
+  font-weight: bold;
+}

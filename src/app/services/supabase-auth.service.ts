@@ -1,3 +1,4 @@
+// supabase-auth.service.ts
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
@@ -11,30 +12,32 @@ export class SupabaseAuthService {
   private supabase: SupabaseClient;
 
   constructor() {
-    this.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      global: {
-        headers: { 'x-allowed-origin': 'http://localhost:4200' }
-      }
-    });
+    this.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   }
 
-  signUp(email: string, password: string) {
-    return this.supabase.auth.signUp({
-      email,
-      password,
-      options: { emailRedirectTo: `${window.location.origin}/login` }
-    });
-  }
-
-  signIn(email: string, password: string) {
+  async signIn(email: string, password: string) {
     return this.supabase.auth.signInWithPassword({ email, password });
   }
 
-  signOut() {
+  async signUp(email: string, password: string) {
+    return this.supabase.auth.signUp({
+      email,
+      password,
+      options: { emailRedirectTo: `${window.location.origin}/login` },
+    });
+  }
+
+  async signOut() {
     return this.supabase.auth.signOut();
   }
 
-  getUser() {
+  async getUser() {
     return this.supabase.auth.getUser();
   }
+
+  async isLoggedIn() {
+    const { data } = await this.supabase.auth.getUser();
+    return !!data.user;
+  }
+  
 }

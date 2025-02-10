@@ -1,0 +1,87 @@
+<div class="sidebar">
+    <div class="profile">
+        <img class="profile-pic" src="/images/Avatar.png">
+        <h1 class="profile-name">userEmail</h1>
+    </div>
+    <nav class="nav">
+        <a class="nav-item" routerLink="/home" routerLinkActive="active">
+            <i class="fas fa-home"></i> Home
+        </a>
+        <a class="nav-item" routerLink="/project-materials" routerLinkActive="active">
+            <i class="fas fa-folder"></i> Project Materials
+        </a>
+        <a class="nav-item" routerLink="/cart" routerLinkActive="active">
+            <i class="fas fa-shopping-cart"></i> Cart
+        </a>
+        <a class="nav-item" routerLink="/borrowed-items" routerLinkActive="active">
+            <i class="fas fa-clipboard-list"></i> Borrowed Items
+        </a>
+        <a class="nav-item" href="/suppliers/" routerLinkActive="active">
+            <i class="fas fa-user-tie"></i> Suppliers <!-- Added routerLink -->
+        </a>
+    </nav>
+    <div class="footer-nav">
+        <a class="footer-item" href="/supplier-form/" routerLinkActive="active">
+            <i class="fas fa-plus-circle"></i> Add Supplier
+        </a>
+        <a class="footer-item" routerLink="/settings" routerLinkActive="active">
+            <i class="fas fa-cog"></i> Settings
+        </a>
+    </div>
+</div>
+
+
+
+<div class="bobo">
+    <div class="supplier-profile-container">
+        <h2>Supplier Form</h2>
+        <form class="supplier-form">
+            <!-- Supplier Name -->
+            <div class="form-group">
+                <label for="supplier-name">Supplier Name</label>
+                <input type="text" id="supplier-name" placeholder="Enter supplier name" />
+            </div>
+
+            <!-- Contact Person/s -->
+            <div class="form-group">
+                <label for="contact-persons">Contact Person/s</label>
+                <input type="text" id="contact-persons" placeholder="Enter contact person(s)" />
+            </div>
+
+            <!-- Phone/Landline Number -->
+            <div class="form-group">
+                <label for="phone-number">Phone/Landline Number</label>
+                <input type="text" id="phone-number" placeholder="Enter phone/landline number" />
+            </div>
+
+            <!-- Brands Offered -->
+            <div class="form-group">
+                <label for="brands-offered">Brands Offered</label>
+                <input type="text" id="brands-offered" placeholder="Enter brands offered" />
+            </div>
+
+            <!-- Items/Models Offered -->
+            <div class="form-group">
+                <label for="items-offered">Items/Models Offered</label>
+                <input type="text" id="items-offered" placeholder="Enter items/models offered" />
+            </div>
+
+            <!-- Item Costs -->
+            <div class="form-group">
+                <label for="item-costs">Item Costs</label>
+                <input type="text" id="item-costs" placeholder="Enter item costs" />
+            </div>
+
+            <!-- Supplier Group Chat/s -->
+            <div class="form-group">
+                <label for="group-chats">Supplier Group Chat/s</label>
+                <input type="text" id="group-chats" placeholder="Enter group chat links" />
+            </div>
+
+            <!-- Submit Button -->
+            <div class="submit-group">
+                <button type="submit" class="submit-button">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
