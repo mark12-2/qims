@@ -4,11 +4,10 @@ import { SupabaseAuthService } from '../../services/supabase-auth.service';
 import { Router } from '@angular/router';
 
 @Component({
-  standalone: true,
-  imports: [FormsModule],
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+    imports: [FormsModule],
+    selector: 'app-register',
+    templateUrl: './register.component.html',
+    styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
   email: string = '';
