@@ -10,7 +10,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { PaginatorModule } from 'primeng/paginator';
 import { SliderModule } from 'primeng/slider';  // Use SliderModule instead
 import { DividerModule } from 'primeng/divider';
-import { NgModule } from '@angular/core';
+
 
 interface PageEvent {
     first: number;

@@ -88,7 +88,6 @@ td:nth-child(5) {
 }
 
 .small-table .p-datatable-thead > tr > th {
-    padding: 6px 10px; /* Reduce padding for table headers */
     font-size: 12px; /* Reduce font size for headers */
 }
 
@@ -149,88 +148,104 @@ td:nth-child(7) {
     border-radius: 4px;
     font-size: 14px;
 }
-.total-bar {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    background-color: #f8f9fa;
-    padding: 10px 20px;
-    border-top-left-radius: 10px;
-    box-shadow: -2px -2px 8px rgba(0, 0, 0, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: auto;
-  }
-  
-  .checkout-button {
-    background-color: #28a745;
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-  
-  .checkout-button:hover {
-    background-color: #218838;
-  }
-  
-  .total-bar {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    background-color: #f8f9fa;
-    padding: 10px 20px;
-    border-top-left-radius: 10px;
-    box-shadow: -2px -2px 8px rgba(0, 0, 0, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: auto;
-  }
-  
-  .total-label {
-    cursor: pointer;
-    font-weight: 400;
-    color: #000154;
-    padding-right: 10px;
-  }
-  
-  .dropdown {
-    position: absolute;
-    bottom: 40px;
-    right: 0;
-    background-color: white;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    width: 300px;
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 100;
-    padding: 10px;
-  }
-  
-  .dropdown-item {
-    padding: 8px;
-    border-bottom: 1px solid #ddd;
-    font-size: 14px;
-  }
-  
-  .dropdown-item:last-child {
-    border-bottom: none;
-  }
-  
-  .checkout-button {
-    background-color: #000154;
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-  
+
   .checkout-button:hover {
     background-color: #01024a;
+  }
+  
+  .full-width {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+  .dialog-form {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .name-row {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .half-width {
+    flex: 1;
+  }
+  
+  .full-width {
+    width: 100%;
+    margin-bottom: 12px;
+    border-radius: 0%;
+  }
+  
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+  
+  .mat-form-field {
+    font-size: 12px;
+  }
+  
+  .mat-dialog-title {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 12px;
+    color: #1e40af;
+  }
+  
+  .mat-dialog-content {
+    padding: 12px;
+    border-radius: 0%;
+  }
+
+  .add{
+    margin-left: 20px;
+    border-radius: 3px;
+    padding: 7px;
+    color: white;
+    background-color: #1e3a8a;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .add:hover{
+    background-color: #01024a;
+    transition: all 0.3s ease;
+  }
+  button.mat-button {
+    font-size: 12px;
+  }
+  
+  button.mat-raised-button {
+    background-color: #1e40af;
+    color: white;
+    font-size: 12px;
+  }
+  
+  button.mat-raised-button:hover {
+    background-color: #1e3a8a;
+  }
+  
+  .snackbar-success {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .snackbar-error {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  .snackbar-warning {
+    background-color: #ff9800;
+    color: white;
   }
   

@@ -1,90 +1,195 @@
-import { Component, OnInit } from '@angular/core';
-import { TableModule } from 'primeng/table'; 
-import { CommonModule } from '@angular/common'; 
-import { FormsModule } from '@angular/forms'; 
-import { SidebarComponent } from "../../sidebar/sidebar.component";
-import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
-import { ToastModule } from 'primeng/toast';
-import { ButtonModule } from 'primeng/button';
-import { MatTabsModule } from '@angular/material/tabs';
-import { PaginatorModule } from 'primeng/paginator';
-import { SliderModule } from 'primeng/slider';  // Use SliderModule instead
-import { DividerModule } from 'primeng/divider';
-import { NgModule } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { TableModule } from 'primeng/table';
+import { SidebarComponent } from '../../sidebar/sidebar.component';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { SupabaseClient, createClient } from '@supabase/supabase-js';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
-interface PageEvent {
-    first: number;
-    rows: number;
-    page: number;
-    pageCount: number;
+interface User {
+  uid: string;
+  name: string;
+  email: string;
 }
 
 @Component({
-  selector: 'app-parts-picker',
+  selector: 'user-list',
+  templateUrl: './user-list.component.html',
+  styleUrls: ['./user-list.component.css'],
   standalone: true,
   imports: [
     TableModule,
     CommonModule,
-    FormsModule,
     SidebarComponent,
-    DynamicDialogModule, ToastModule, PaginatorModule, ButtonModule, DividerModule, MatTabsModule, SliderModule
+    FormsModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSnackBarModule,
   ],
-  templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.css']
 })
 export class UserListComponent implements OnInit {
-  first1: number = 0;
-  rows1: number = 10;
-  first2: number = 0;
-  rows2: number = 10;
-  first3: number = 0;
-  rows3: number = 10;
-  totalRecords: number = 120;
+  private supabase: SupabaseClient;
+  products: User[] = [];
+  searchQuery: string = '';
+  userForm: FormGroup;
+  editMode = false;
+  editUserId: string | null = null;
 
-  options = [
-    { label: 5, value: 5 },
-    { label: 10, value: 10 },
-    { label: 20, value: 20 },
-    { label: 120, value: 120 }
-  ];
+  @ViewChild('addUserDialog') addUserDialog!: TemplateRef<any>;
 
-  products: any[] = [];
-  searchQuery: string = ''; 
-  selectedProducts: any[] = [];
-  showDropdown: boolean = false; 
+  constructor(
+    private fb: FormBuilder,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
+  ) {
+    this.supabase = createClient(
+      'https://uqeuskaicawwgyknrbfi.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxZXVza2FpY2F3d2d5a25yYmZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzgxOTk0NzksImV4cCI6MjA1Mzc3NTQ3OX0.ghXQrzjmj7cQZaeIijE5pfdIhVk88pj1fZPtz-CfMq0'
+    );
 
-
-  constructor() {}
+    this.userForm = this.fb.group({
+      firstName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
+      lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+    });
+  }
 
   ngOnInit() {
-    this.products = [
-      { id: '1', category: 'Computer', code: 'A001', name: 'Product A', price: 30000, quantity: 1, image: '/images/laptop.jpg' },
-      { id: '2', category: 'Laptop', code: 'B002', name: 'Product B', price: 4000, quantity: 1, image: '/images/jiar.png' },
-      { id: '3', category: 'Jay-ar', code: 'C003', name: 'Product C', price: 150.00, quantity: 1, image: '/images/tv.png' },
-      { id: '4', category: 'Piso-wifi', code: 'D004', name: 'Product D', price: 500.00, quantity: 1, image: '/images/wifi.png' },
-      { id: '5', category: 'Television', code: 'E005', name: 'Product E', price: 25000.00, quantity: 1, image: '/images/tv.png' }
-    ];
+    this.loadUsers();
   }
 
-  filteredProducts(category: string) {
-    return this.products.filter(product =>
-      product.category === category &&
-      (product.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        product.code.toLowerCase().includes(this.searchQuery.toLowerCase()))
-    );
+
+  openAddUserDialog() {
+    this.editMode = false;
+    this.userForm.reset();
+    this.dialog.open(this.addUserDialog);
   }
 
-  toggleProductSelection(product: any) {
-    if (this.isSelected(product)) {
-      this.selectedProducts = this.selectedProducts.filter(p => p.id !== product.id);
+  closeDialog() {
+    this.dialog.closeAll();
+  }
+  async onAddUser() {
+    if (this.userForm.valid) {
+      const { firstName, lastName, email, password } = this.userForm.value;
+  
+      if (this.editMode && this.editUserId) {
+        // Update existing user
+        const { error } = await this.supabase
+          .from('profiles')
+          .update({ first_name: firstName, last_name: lastName, email })
+          .eq('id', this.editUserId);
+  
+        if (error) {
+          this.snackBar.open(`Error updating user: ${error.message}`, 'Close', {
+            duration: 3000,
+            panelClass: ['snackbar-error'],
+          });
+        } else {
+          this.snackBar.open('User updated successfully!', 'Close', {
+            duration: 3000,
+            panelClass: ['snackbar-success'],
+          });
+          this.dialog.closeAll();
+          this.loadUsers();
+        }
+      } else {
+        // Create a new user in auth and profile tables
+        const { data, error } = await this.supabase.auth.signUp({
+          email,
+          password,
+        });
+  
+        if (error) {
+          this.snackBar.open(`Error: ${error.message}`, 'Close', {
+            duration: 3000,
+            panelClass: ['snackbar-error'],
+          });
+        } else if (data.user) {
+          const { error: profileError } = await this.supabase
+            .from('profiles')
+            .insert([
+              { id: data.user.id, first_name: firstName, last_name: lastName, email },
+            ]);
+  
+          if (profileError) {
+            this.snackBar.open(`Error saving profile: ${profileError.message}`, 'Close', {
+              duration: 3000,
+              panelClass: ['snackbar-error'],
+            });
+          } else {
+            this.snackBar.open('User added successfully!', 'Close', {
+              duration: 3000,
+              panelClass: ['snackbar-success'],
+            });
+            this.dialog.closeAll();
+            this.loadUsers();
+          }
+        }
+      }
     } else {
-      this.selectedProducts.push(product);
+      this.snackBar.open('Please correct form errors before submitting', 'Close', {
+        duration: 3000,
+        panelClass: ['snackbar-warning'],
+      });
     }
   }
+  
+  async loadUsers() {
+    const { data, error } = await this.supabase
+      .from('profiles')
+      .select('id, first_name, last_name, email');
+  
+    if (error) {
+      this.snackBar.open(`Error loading users: ${error.message}`, 'Close', {
+        duration: 3000,
+        panelClass: ['snackbar-error'],
+      });
+    } else {
+      this.products = data.map(user => ({
+        uid: user.id,
+        name: `${user.first_name} ${user.last_name}`,
+        email: user.email,
+      }));
+    }
+  }
+  
 
-  isSelected(product: any) {
-    return this.selectedProducts.some(p => p.id === product.id);
+  editUser(user: User) {
+    this.editMode = true;
+    this.editUserId = user.uid;
+    this.userForm.patchValue({
+      firstName: user.name.split(' ')[0],
+      lastName: user.name.split(' ')[1],
+      email: user.email,
+    });
+    this.dialog.open(this.addUserDialog);
   }
 
+  async deleteUser(user: User) {
+    const { error } = await this.supabase
+      .from('profiles')
+      .delete()
+      .eq('id', user.uid);
 
+    if (error) {
+      this.snackBar.open(`Error deleting user: ${error.message}`, 'Close', {
+        duration: 3000,
+        panelClass: ['snackbar-error'],
+      });
+    } else {
+      this.snackBar.open('User deleted successfully!', 'Close', {
+        duration: 3000,
+        panelClass: ['snackbar-success'],
+      });
+      this.loadUsers();
+    }
+  }
 }
