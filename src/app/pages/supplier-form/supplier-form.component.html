@@ -1,0 +1,97 @@
+<div class="sidebar">
+    <div class="profile">
+        <img class="profile-pic" src="/images/Avatar.png">
+        <h1 class="profile-name">userEmail</h1>
+    </div>
+    <nav class="nav">
+        <a class="nav-item" routerLink="/home" routerLinkActive="active">
+            <i class="fas fa-home"></i> Home
+        </a>
+        <a class="nav-item" routerLink="/project-materials" routerLinkActive="active">
+            <i class="fas fa-folder"></i> Project Materials
+        </a>
+        <a class="nav-item" routerLink="/cart" routerLinkActive="active">
+            <i class="fas fa-shopping-cart"></i> Cart
+        </a>
+        <a class="nav-item" routerLink="/borrowed-items" routerLinkActive="active">
+            <i class="fas fa-clipboard-list"></i> Borrowed Items
+        </a>
+        <a class="nav-item" href="/suppliers/" routerLinkActive="active">
+            <i class="fas fa-user-tie"></i> Suppliers <!-- Added routerLink -->
+        </a>
+    </nav>
+    <div class="footer-nav">
+        <a class="footer-item" href="/supplier-form/" routerLinkActive="active">
+            <i class="fas fa-plus-circle"></i> Add Supplier
+        </a>
+        <a class="footer-item" routerLink="/settings" routerLinkActive="active">
+            <i class="fas fa-cog"></i> Settings
+        </a>
+    </div>
+</div>
+
+
+
+<div class="bobo">
+    <div class="supplier-profile-container">
+      <h2>Supplier Form</h2>
+      <form (ngSubmit)="onSubmit()" class="supplier-form">
+        <!-- Supplier Name -->
+        <div class="form-group">
+          <input type="text" [(ngModel)]="supplierName" placeholder="Enter supplier name" name="supplier-name" />
+        </div>
+  
+        <!-- Contact Person/s -->
+        <div class="form-group">
+          <input type="text" [(ngModel)]="contactPerson" placeholder="Enter contact person(s)" name="contact-person" />
+        </div>
+  
+        <!-- Phone/Landline Number -->
+        <div class="form-group">
+          <input type="text" [(ngModel)]="phone" placeholder="Enter phone/landline no." name="phone" />
+        </div>
+  
+        <!-- Dynamic Item Groups -->
+        <div *ngFor="let group of itemGroups; let i = index" class="item-group">
+          <div class="form-group">
+            <input type="text" [(ngModel)]="group.brandsOffered" placeholder="Enter brands offered" name="brands-offered-{{i}}" />
+          </div>
+          <div class="form-group">
+            <input type="text" [(ngModel)]="group.itemsOffered" placeholder="Enter items/models offered" name="items-offered-{{i}}" />
+          </div>
+          <div class="form-group">
+            <input type="text" [(ngModel)]="group.itemCosts" placeholder="Enter item costs" name="item-costs-{{i}}" />
+          </div>
+          <div class="form-group">
+            <input type="file" (change)="onFileChange($event, i)" name="item-image-{{i}}" />
+          </div>
+          <button type="button" class="remove-group-button" (click)="removeItemGroup(i)" *ngIf="i > 0">
+            <i class="fas fa-trash"></i> <!-- Trash icon -->
+          </button>
+        </div>
+  
+        <!-- Add New Group Button -->
+        <button type="button" class="add-group-button" (click)="addItemGroup()">Add Another Group</button>
+  
+        <!-- Email -->
+        <div class="form-group">
+          <input type="email" [(ngModel)]="email" placeholder="Enter email address" name="email" />
+        </div>
+  
+        <!-- Address -->
+        <div class="form-group">
+          <input type="text" [(ngModel)]="address" placeholder="Enter address" name="address" />
+        </div>
+  
+        <!-- Supplier Group Chat/s -->
+        <div class="form-group">
+          <input type="text" [(ngModel)]="groupChatLink" placeholder="Enter group chat links" name="group-chat-link" />
+        </div>
+  
+        <!-- Submit Button -->
+        <div class="submit-group">
+          <button type="submit" class="submit-button">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>

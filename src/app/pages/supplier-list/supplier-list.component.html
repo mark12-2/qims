@@ -1,0 +1,73 @@
+<div class="sidebar">
+    <div class="profile">
+        <img class="profile-pic" src="/images/Avatar.png">
+        <h1 class="profile-name">userEmail</h1>
+    </div>
+    <nav class="nav">
+        <a class="nav-item" routerLink="/home" routerLinkActive="active">
+            <i class="fas fa-home"></i> Home
+        </a>
+        <a class="nav-item" routerLink="/project-materials" routerLinkActive="active">
+            <i class="fas fa-folder"></i> Project Materials
+        </a>
+        <a class="nav-item" routerLink="/cart" routerLinkActive="active">
+            <i class="fas fa-shopping-cart"></i> Cart
+        </a>
+        <a class="nav-item" routerLink="/borrowed-items" routerLinkActive="active">
+            <i class="fas fa-clipboard-list"></i> Borrowed Items
+        </a>
+        <a class="nav-item" href="/suppliers/" routerLinkActive="active">
+            <i class="fas fa-user-tie"></i> Suppliers<!-- Added routerLink -->
+        </a>
+    </nav>
+    <div class="footer-nav">
+        <a class="footer-item" href="/supplier-form/" routerLinkActive="active">
+            <i class="fas fa-plus-circle"></i> Add Supplier
+        </a>
+        <a class="footer-item" routerLink="/settings" routerLinkActive="active">
+            <i class="fas fa-cog"></i> Settings
+        </a>
+    </div>
+</div>
+
+
+<div class="bobo">
+    <div class="supplier-profile-container">
+      <h2>Supplier List</h2>
+      <table class="supplier-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Supplier Name</th>
+            <th>Contact Person</th>
+            <th>Contact</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Dynamic Supplier Data -->
+          <tr *ngFor="let supplier of suppliers; let i = index">
+            <td>{{ i + 1 }}</td> <!-- Row number -->
+            <td>{{ supplier.supplier_name }}</td>
+            <td>{{ supplier.contact_person }}</td>
+            <td>{{ supplier.phone }}</td>
+            <td>{{ supplier.email }}</td>
+            <td>{{ supplier.address }}</td>
+            <td>
+              <a [routerLink]="['/profile', supplier.id]" class="view-profile">
+                <i class="fas fa-eye"></i>
+              </a>
+              <a [routerLink]="['/edit', supplier.id]" class="edit-profile">
+                <i class="fas fa-edit"></i>
+              </a>
+              <a href="#" class="delete-profile" (click)="deleteSupplier(supplier.id, $event)">
+                <i class="fas fa-trash"></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
