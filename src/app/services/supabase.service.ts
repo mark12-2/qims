@@ -28,6 +28,7 @@ export class SupabaseService {
     return 'An unexpected error occurred. Please try again later.';
   }
 
+
   async uploadFile(file: File): Promise<string | null> {
     if (file.size > 50 * 1024 * 1024) { // 50MB limit
       console.error(`❌ File too large (${file.size} bytes). Max allowed: 50MB.`);
@@ -267,7 +268,7 @@ export class SupabaseService {
         damaged: equipmentData.damaged,
         return_slip: equipmentData.return_slip,
         date_acquired: equipmentData.date_acquired, // 🔹 Store updated date acquired
-        lifespan_months: equipmentData.lifespan_months // 
+        lifespan_months: equipmentData.lifespan_months //
       })
       .eq('id', equipmentId)
       .select()
@@ -348,6 +349,17 @@ export class SupabaseService {
     return data.user;
   }
 
+  async getCurrentUser(): Promise<any | null> {
+    // Removed restoreSession call as it does not exist
+
+    const { data, error } = await this.supabase.auth.getUser();
+    if (error) {
+      console.error('❌ Error fetching user:', error);
+      return null;
+    }
+
+    return data?.user || null;
+  }
 
 
 

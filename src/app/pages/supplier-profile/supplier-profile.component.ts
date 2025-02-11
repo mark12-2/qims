@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router'; // To get route parameters
 import { SupabaseService } from '../../supabase.service';
 import { NgFor, NgIf } from '@angular/common'; // Import NgFor and NgIf
 import { CommonModule } from '@angular/common';
+import { SupabaseAuthService } from '../../services/supabase-auth.service';
 
 @Component({
   standalone: true,
@@ -20,12 +21,24 @@ export class SupplierProfileComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute, // To access route parameters
-    private supabaseService: SupabaseService
+    private supabaseService: SupabaseService,
+    private  authService: SupabaseAuthService
   ) {}
 
-  ngOnInit(): void {
-    this.fetchSupplierData();
+  async ngOnInit(): Promise<void> {
+    // await this.supabaseService.restoreSession(); // 🔹 Restore session first
+
+    const user = await this.authService.getUser();
+    if (!user) {
+      console.error('❌ User session is missing after navigation.');
+      alert('Session expired. Please log in again.');
+      return;
+    }
+
+    console.log('✅ User session exists:', user);
+    await this.fetchSupplierData(); // Fetch suppliers or profile after session is restored
   }
+
 
   async fetchSupplierData(): Promise<void> {
     try {
