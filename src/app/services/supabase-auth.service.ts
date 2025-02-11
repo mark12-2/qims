@@ -1,6 +1,6 @@
-// supabase-auth.service.ts
 import { Injectable } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient, AuthError } from '@supabase/supabase-js';
+
 
 const SUPABASE_URL = 'https://uqeuskaicawwgyknrbfi.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxZXVza2FpY2F3d2d5a25yYmZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzgxOTk0NzksImV4cCI6MjA1Mzc3NTQ3OX0.ghXQrzjmj7cQZaeIijE5pfdIhVk88pj1fZPtz-CfMq0';
@@ -15,29 +15,93 @@ export class SupabaseAuthService {
     this.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   }
 
-  async signIn(email: string, password: string) {
-    return this.supabase.auth.signInWithPassword({ email, password });
+  // Sign in with email and password
+  async signIn(email: string, password: string): Promise<{ data: any; error: AuthError | null }> {
+    try {
+      const { data, error } = await this.supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        throw error;
+      }
+      return { data, error };
+    } catch (error) {
+      console.error('Authentication error:', error);
+      throw error;
+    }
   }
 
-  async signUp(email: string, password: string) {
-    return this.supabase.auth.signUp({
-      email,
-      password,
-      options: { emailRedirectTo: `${window.location.origin}/login` },
-    });
+  // Sign up with email and password
+  async signUp(email: string, password: string): Promise<{ data: any; error: AuthError | null }> {
+    try {
+      const { data, error } = await this.supabase.auth.signUp({
+        email,
+        password,
+        options: { emailRedirectTo: `${window.location.origin}/login` },
+      });
+      if (error) {
+        throw error;
+      }
+      return { data, error };
+    } catch (error) {
+      console.error('Registration error:', error);
+      throw error;
+    }
   }
 
-  async signOut() {
-    return this.supabase.auth.signOut();
+  // Sign out the user
+  async signOut(): Promise<void> {
+    try {
+      const { error } = await this.supabase.auth.signOut();
+      if (error) {
+        throw error;
+      }
+    } catch (error) {
+      console.error('Sign-out error:', error);
+      throw error;
+    }
   }
 
-  async getUser() {
-    return this.supabase.auth.getUser();
+  // Get the current user
+  async getUser(): Promise<any | null> {
+    try {
+      const { data } = await this.supabase.auth.getUser();
+      return data?.user || null;
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      return null;
+    }
   }
 
-  async isLoggedIn() {
-    const { data } = await this.supabase.auth.getUser();
-    return !!data.user;
+  // Check if the user is logged in
+  async isLoggedIn(): Promise<boolean> {
+    const user = await this.getUser();
+    return !!user;
   }
-  
+
+  // Upload an image to Supabase Storage
+async uploadImage(file: File): Promise<string | null> {
+  const fileName = `${Date.now()}-${file.name}`;
+  try {
+    // Upload the file to the bucket
+    const { data: uploadData, error: uploadError } = await this.supabase.storage
+      .from('supplier-images') // Ensure this matches your bucket name
+      .upload(fileName, file);
+
+    if (uploadError) {
+      console.error('Error uploading image:', uploadError);
+      return null;
+    }
+
+    // Get the public URL of the uploaded image
+    const { data: urlData } = this.supabase.storage
+      .from('supplier-images')
+      .getPublicUrl(uploadData.path);
+
+    // Return the public URL of the image
+    return urlData.publicUrl;
+  } catch (error) {
+    console.error('Error during image upload:', error);
+    return null;
+  }
+
+
 }
