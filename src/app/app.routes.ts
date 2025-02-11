@@ -25,5 +25,11 @@ export const routes: Routes = [
   { path: 'supplier-form', component: SupplierFormComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'project-materials', component: ProjectMaterialsComponent },
+  { path: 'add-equipment', component: AddEquipmentComponent },
+  { path: 'sidebar', component: SidebarComponent },
+  {  path: 'equipment-list', component: EquipmentListComponent },
+  { path: 'equipment-details/:id', component: EquipmentDetailsComponent },
+  { path: 'parts-picker', component: PartsPickerComponent },
+  { path: 'user-list', component: UserListComponent },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 ];

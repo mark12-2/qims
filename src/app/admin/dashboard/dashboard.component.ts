@@ -7,7 +7,7 @@ import { CommonModule, NgIf, NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [SidebarComponent, CommonModule, NgFor],
+  imports: [SidebarComponent, CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
