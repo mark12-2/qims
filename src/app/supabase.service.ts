@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { SupabaseAuthService } from '../app/services/supabase-auth.service';
 
-const SUPABASE_URL = 'https://zphtwdpspvepjtlnwipw.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpwaHR3ZHBzcHZlcGp0bG53aXB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg5NDU0NzMsImV4cCI6MjA1NDUyMTQ3M30.C31yY0IKhy9ODf361QJnDgdNRc3OyU6YVHF9SPeIG-8';
+const SUPABASE_URL = 'https://xvcgubrtandfivlqcmww.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2Y2d1YnJ0YW5kZml2bHFjbXd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkxNDk4NjYsImV4cCI6MjA1NDcyNTg2Nn0.yjd-SXfzJe6XmuNpI2HsZcI9EsS9AxBXI-qukzgcZig';
 
 @Injectable({
   providedIn: 'root',
@@ -221,23 +221,23 @@ async uploadImage(file: File): Promise<string | null> {
 
     async updateSupplierItems(itemId: number | string, updatedItem: any): Promise<any> {
       console.log(`🔍 Checking if item exists before update: ID ${itemId}`);
-    
+
       const numericId = typeof itemId === 'string' ? itemId : String(itemId); // Ensure it's a string
-    
+
       // Fetch item before updating
       const { data: existingItem, error: fetchError } = await this.supabase
         .from('supplier_items')
         .select('id')
         .eq('id', numericId)
         .single();
-    
+
       if (fetchError || !existingItem) {
         console.warn(`⚠️ Item with ID ${numericId} not found in the database. Skipping update.`);
         return;
       }
-    
+
       console.log(`✅ Item ${numericId} exists, updating...`);
-    
+
       // Perform the update
       const { data, error } = await this.supabase
         .from('supplier_items')
@@ -249,16 +249,16 @@ async uploadImage(file: File): Promise<string | null> {
         })
         .eq('id', numericId)
         .select(); // Use .select() to return the updated data
-    
+
       if (error) {
         console.error('❌ Error updating supplier item:', error);
         throw error;
       }
-    
+
       console.log('✅ Updated item result:', data);
       return data; // Return the updated data for confirmation
     }
-    
+
 
 // Delete a single supplier item by ID
 async deleteSupplierItem(itemId: number): Promise<void> {

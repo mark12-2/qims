@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient, AuthError } from '@supabase/supabase-js';
 
 
-const SUPABASE_URL = 'https://zphtwdpspvepjtlnwipw.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpwaHR3ZHBzcHZlcGp0bG53aXB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg5NDU0NzMsImV4cCI6MjA1NDUyMTQ3M30.C31yY0IKhy9ODf361QJnDgdNRc3OyU6YVHF9SPeIG-8';
+const SUPABASE_URL = 'https://xvcgubrtandfivlqcmww.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2Y2d1YnJ0YW5kZml2bHFjbXd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkxNDk4NjYsImV4cCI6MjA1NDcyNTg2Nn0.yjd-SXfzJe6XmuNpI2HsZcI9EsS9AxBXI-qukzgcZig';
 
 @Injectable({
   providedIn: 'root',
@@ -12,8 +12,20 @@ export class SupabaseAuthService {
   private supabase: SupabaseClient;
 
   constructor() {
-    this.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    this.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+      },
+    });
+
+    // Automatically update session on changes
+    this.supabase.auth.onAuthStateChange((event, session) => {
+      console.log(`🔄 Auth state changed: ${event}`, session);
+    });
   }
+
 
   // Sign in with email and password
   async signIn(email: string, password: string): Promise<{ data: any; error: AuthError | null }> {
@@ -60,22 +72,35 @@ export class SupabaseAuthService {
     }
   }
 
-  // Get the current user
   async getUser(): Promise<any | null> {
-    try {
-      const { data } = await this.supabase.auth.getUser();
-      return data?.user || null;
-    } catch (error) {
-      console.error('Error fetching user:', error);
+    // Wait until the session is restored
+    await this.restoreSession();
+
+    const { data, error } = await this.supabase.auth.getUser();
+    if (error) {
+      console.error('❌ Error fetching user:', error);
       return null;
     }
+    return data?.user || null;
   }
+
 
   // Check if the user is logged in
   async isLoggedIn(): Promise<boolean> {
     const user = await this.getUser();
     return !!user;
   }
+
+  async restoreSession(): Promise<void> {
+    const { data, error } = await this.supabase.auth.getSession();
+
+    if (error || !data.session) {
+      console.warn('⚠️ No active session found, user may need to log in again.');
+    } else {
+      console.log('✅ Session restored successfully:', data.session);
+    }
+  }
+
 
   // Upload an image to Supabase Storage
 async uploadImage(file: File): Promise<string | null> {
@@ -102,6 +127,5 @@ async uploadImage(file: File): Promise<string | null> {
     console.error('Error during image upload:', error);
     return null;
   }
-
-
+}
 }

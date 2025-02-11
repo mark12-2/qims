@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SupabaseAuthService } from '../../services/supabase-auth.service';
 import { Router } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, ButtonModule],
     selector: 'app-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.css']

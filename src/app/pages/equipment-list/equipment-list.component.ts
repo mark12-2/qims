@@ -5,12 +5,14 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-equipment-list',
-  imports: [CommonModule,],
+  imports: [CommonModule],
   templateUrl: './equipment-list.component.html',
   styleUrls: ['./equipment-list.component.css'],
 })
 export class EquipmentListComponent implements OnInit {
-  equipmentList: any[] = []; // Store the fetched equipment data
+  equipmentList: any[] = [];
+  isQRCodeModalOpen = false;
+  selectedQRCode: string | null = null;
 
   constructor(
     private supabaseService: SupabaseService,
@@ -18,10 +20,9 @@ export class EquipmentListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.fetchEquipmentData(); // Fetch the equipment data when the component is initialized
+    this.fetchEquipmentData();
   }
 
-  // Fetch data from Supabase
   async fetchEquipmentData() {
     const result = await this.supabaseService.getEquipmentList();
     if (result) {
@@ -36,24 +37,31 @@ export class EquipmentListComponent implements OnInit {
   }
 
   async deleteEquipment(equipmentId: string) {
-  console.log(`🗑️ Deleting equipment with ID: ${equipmentId}`);
+    console.log(`🗑️ Deleting equipment with ID: ${equipmentId}`);
 
-  const result = await this.supabaseService.deleteEquipment(equipmentId);
+    const result = await this.supabaseService.deleteEquipment(equipmentId);
 
-  if (result.error) {
-    console.error('❌ Error deleting equipment:', result.error);
-  } else {
-    console.log('✅ Equipment deleted successfully:', result.data);
-
-    // ✅ Immediately update the UI by filtering out the deleted item
-    this.equipmentList = this.equipmentList.filter(e => e.id !== equipmentId);
+    if (result.error) {
+      console.error('❌ Error deleting equipment:', result.error);
+    } else {
+      console.log('✅ Equipment deleted successfully:', result.data);
+      this.equipmentList = this.equipmentList.filter(e => e.id !== equipmentId);
+    }
   }
-}
 
+  viewEquipmentDetails(equipmentId: string) {
+    this.router.navigate(['/equipment-details', equipmentId]);
+  }
 
+  // ✅ Open QR Code Modal
+  openQRCodeModal(qrCodeUrl: string) {
+    this.selectedQRCode = qrCodeUrl;
+    this.isQRCodeModalOpen = true;
+  }
 
-  // Method to delete equipment from Supabase
-  async deleteEquipmentFromDatabase(equipmentId: string): Promise<{ data: any, error: any }> {
-    return await this.supabaseService.deleteEquipment(equipmentId);
+  // ✅ Close QR Code Modal
+  closeQRCodeModal() {
+    this.isQRCodeModalOpen = false;
+    this.selectedQRCode = null;
   }
 }
