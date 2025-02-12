@@ -6,9 +6,10 @@
       <div class="equipment-box">
         <h2>{{ isEditMode ? 'Edit Equipment' : 'Add Equipment' }}</h2>
         <form (ngSubmit)="onSubmit()">
+
           <div class="form-group">
             <label for="serialNo">Serial No.</label>
-            <input type="number" id="serialNo" [(ngModel)]="equipmentData.serial_no" name="serial_no" placeholder="Enter Serial Number" maxlength="500" required />
+            <input type="number" id="serialNo" [(ngModel)]="equipmentData.serial_no" name="serial_no" placeholder="Enter Serial Number" required />
           </div>
 
           <div class="form-group">
@@ -33,19 +34,17 @@
             <input type="number" id="supplierCost" [(ngModel)]="equipmentData.supplier_cost" name="supplier_cost" placeholder="Enter Supplier Cost" />
           </div>
 
-                        <!-- Lifespan Tracking -->
-              <h3>Lifespan Tracking</h3>
+          <!-- Lifespan Tracking -->
+          <h3>Lifespan Tracking</h3>
+          <div class="form-group">
+            <label for="dateAcquired">Date Acquired</label>
+            <input type="date" id="dateAcquired" [(ngModel)]="equipmentData.date_acquired" name="date_acquired" required />
+          </div>
 
-              <div class="form-group">
-                <label for="dateAcquired">Date Acquired</label>
-                <input type="date" id="dateAcquired" [(ngModel)]="equipmentData.date_acquired" name="date_acquired" required />
-              </div>
-
-              <div class="form-group">
-                <label for="lifespan">Lifespan (in months)</label>
-                <input type="number" id="lifespan" [(ngModel)]="equipmentData.lifespan_months" name="lifespan_months" min="1" placeholder="Enter Lifespan in Months" required />
-              </div>
-
+          <div class="form-group">
+            <label for="lifespan">Lifespan (in months)</label>
+            <input type="number" id="lifespan" [(ngModel)]="equipmentData.lifespan_months" name="lifespan_months" min="1" placeholder="Enter Lifespan in Months" required />
+          </div>
 
           <div class="form-group">
             <label for="srp">Suggested Retail Price (SRP)</label>
@@ -62,7 +61,6 @@
             </select>
           </div>
 
-
           <!-- Stock & Location -->
           <h3>Stock & Location</h3>
           <div class="form-group">
@@ -76,6 +74,16 @@
           </div>
 
           <h3>Condition & Repairs</h3>
+
+          <div class="form-group">
+            <label for="condition">Condition</label>
+            <select id="condition" [(ngModel)]="equipmentData.condition" name="condition" required>
+              <option value="" disabled selected>Select Condition</option>
+              <option value="New">New</option>
+              <option value="Used">Used</option>
+            </select>
+          </div>
+
           <div class="form-group">
             <label>Is the Item Damaged?</label>
             <div class="radio-group">
@@ -86,11 +94,33 @@
             </div>
           </div>
 
-          <!-- ✅ Only Show Return Slip File Upload If "Yes" is Selected -->
-          <div class="form-group" *ngIf="equipmentData.damaged">
-            <label for="returnSlip">Return Slip</label>
-            <input type="file" id="returnSlip" (change)="handleReturnSlip($event)" />
+
+          <div *ngIf="equipmentData.damaged">
+            <h3>Repair Logs</h3>
+            <div class="form-group" *ngIf="equipmentData.damaged">
+              <label for="returnSlip">Return Slip</label>
+              <input type="file" id="returnSlip" (change)="handleReturnSlip($event)" />
+            </div>
+            <div *ngFor="let log of equipmentData.repair_logs; let i = index" class="form-group">
+              <label for="repairDetails{{i}}">Repair Details</label>
+              <input type="text" id="repairDetails{{i}}" [(ngModel)]="log.repair_details" name="repair_logs_{{i}}" placeholder="Enter repair details" />
+
+              <label for="repairStatus{{i}}">Repair Status</label>
+              <select id="repairStatus{{i}}" [(ngModel)]="log.repair_status" name="repair_status_{{i}}">
+                <option value="New">New</option>
+                <option value="Pending">Pending</option>
+                <option value="Completed">Completed</option>
+              </select>
+
+              <label for="repairDate{{i}}">Repair Date</label>
+              <input type="date" id="repairDate{{i}}" [(ngModel)]="log.repair_date" name="repair_date_{{i}}" />
+
+              <button type="button" (click)="removeRepairLog(i)">Remove</button>
+            </div>
+
+            <button type="button" (click)="addRepairLog()">➕ Add Repair Log</button>
           </div>
+
 
           <!-- Additional Information -->
           <h3>Additional Information</h3>
@@ -101,7 +131,7 @@
 
           <div class="form-group">
             <label for="description">Specifications/Description</label>
-            <textarea id="description" [(ngModel)]="equipmentData.description" name="description" rows="3" placeholder="Enter Description" maxlength="2000"></textarea>
+            <textarea id="description" [(ngModel)]="equipmentData.description" name="description" rows="3" placeholder="Enter Description"></textarea>
           </div>
 
           <div class="form-group">
@@ -112,7 +142,6 @@
           <div class="form-group">
             <label for="productImage">Product Images</label>
             <input type="file" id="productImage" name="product_images" multiple (change)="handleFileInput($event)" />
-
           </div>
 
           <!-- Submit Button -->

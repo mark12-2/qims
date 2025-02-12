@@ -110,10 +110,10 @@ export class SupabaseService {
         qr_code: equipmentData.qr_code,
         damaged: equipmentData.damaged,
         return_slip: equipmentData.return_slip,
-        product_images: [],  // Will be updated after images are inserted
-        repair_logs: [],
-        date_acquired: equipmentData.date_acquired, // 🔹 Store date acquired
-        lifespan_months: equipmentData.lifespan_months       // Will be updated after repair logs are inserted
+        product_images: [],
+        condition: equipmentData.condition,
+        date_acquired: equipmentData.date_acquired,
+        lifespan_months: equipmentData.lifespan_months
       }])
       .select()
       .single();
@@ -146,32 +146,51 @@ export class SupabaseService {
     console.log('✅ Image URLs inserted:', imageUrls);
 
     // 🔹 Step 3: Insert Repair Logs into `equipment_repair_logs`
-    for (const repair of equipmentData.repair_logs) {
-      const { data: repairData, error: repairError } = await this.supabase
-        .from('equipment_repair_logs')
-        .insert([{
-          equipment_id: equipmentId,
-          repair_details: repair.repair_description,
-          repair_status: repair.repair_status,
-          repair_date: repair.repair_date
-        }])
-        .select('repair_details, repair_status, repair_date');
+    console.log('🔍 Checking repair logs before insert:', equipmentData.repair_logs);
 
-      if (repairError) {
-        console.error('❌ Error inserting repair log:', repairError);
-      } else if (repairData && repairData.length > 0) {
-        repairLogs.push(repairData[0]);
+    if (!equipmentData.repair_logs || equipmentData.repair_logs.length === 0) {
+      console.warn('⚠ No repair logs provided. Skipping repair log insertion.');
+    } else {
+      for (const repair of equipmentData.repair_logs) {
+        console.log('📌 Inserting repair log:', repair);
+
+        const { data: repairData, error: repairError } = await this.supabase
+          .from('equipment_repair_logs')
+          .insert([{
+            equipment_id: equipmentId,
+            repair_details: repair.repair_details,
+            repair_status: repair.repair_status || 'New',
+            repair_date: repair.repair_date || new Date().toISOString(),
+          }])
+          .select();
+
+        if (repairError) {
+          console.error('❌ Error inserting repair log:', repairError);
+        } else {
+          console.log('✅ Repair log inserted successfully:', repairData);
+          repairLogs.push(repairData[0]);
+        }
+      }
+
+      // ✅ Fetch Repair Logs After Insert
+      const { data: insertedRepairLogs, error: fetchError } = await this.supabase
+        .from('equipment_repair_logs')
+        .select('*')
+        .eq('equipment_id', equipmentId);
+
+      if (fetchError) {
+        console.error('❌ Error fetching repair logs after insert:', fetchError);
+      } else {
+        console.log('✅ Confirmed repair logs in DB:', insertedRepairLogs);
       }
     }
-
-    console.log('✅ Repair logs inserted:', repairLogs);
 
     // 🔹 Step 4: Update `equipments` Table with `product_images` & `repair_logs`
     const { error: updateError } = await this.supabase
       .from('equipments')
       .update({
-        product_images: imageUrls.length > 0 ? imageUrls : null, // Store array of image URLs
-        repair_logs: repairLogs.length > 0 ? repairLogs : null // Store array of repair log objects
+        product_images: imageUrls.length > 0 ? imageUrls : null,
+        repair_logs: repairLogs.length > 0 ? repairLogs : null
       })
       .eq('id', equipmentId);
 
@@ -181,8 +200,10 @@ export class SupabaseService {
       console.log('✅ Equipment updated with product_images & repair_logs:', { imageUrls, repairLogs });
     }
 
+    await this.logActivity('add', equipmentId, `Equipment "${data.name}" was added to inventory.`);
     return data;
   }
+
 
 
 
@@ -192,49 +213,71 @@ export class SupabaseService {
       .select(`
         *,
         equipment_images (image_url),
-        equipment_repair_logs (repair_details, repair_status, repair_date)
-      `);
+        equipment_repair_logs (id, repair_details, repair_status, repair_date)
+      `)
+      .order('date_acquired', { ascending: false }) // ✅ Ensures latest added first
 
     if (error) {
       console.error('❌ Error fetching equipment data:', error);
       return null;
     }
 
-    // 🔹 Calculate remaining lifespan for each item
     const today = new Date();
-    const formattedData = data.map((equipment: any) => {
-      if (equipment.date_acquired && equipment.lifespan_months) {
-        const acquiredDate = new Date(equipment.date_acquired);
-        const expirationDate = new Date(acquiredDate);
-        expirationDate.setMonth(expirationDate.getMonth() + equipment.lifespan_months);
+    return data.map((equipment: any) => {
+      const acquiredDate = equipment.date_acquired ? new Date(equipment.date_acquired) : null;
+      const expirationDate = acquiredDate ? new Date(acquiredDate) : null;
 
-        // 🔹 Determine if the item is near expiration (less than 2 months remaining)
-        const timeRemaining = Math.ceil((expirationDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-        const nearExpiration = timeRemaining <= 60; // Less than 2 months
-
-        return { ...equipment, timeRemaining, nearExpiration };
+      if (expirationDate) {
+        expirationDate.setMonth(expirationDate.getMonth() + (equipment.lifespan_months || 0));
       }
-      return { ...equipment, timeRemaining: null, nearExpiration: false };
+
+      const timeRemaining = acquiredDate && expirationDate
+        ? Math.ceil((expirationDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+        : null;
+
+      return {
+        ...equipment,
+        repair_logs: equipment.equipment_repair_logs || [],
+        timeRemaining,
+        nearExpiration: timeRemaining !== null && timeRemaining <= 60
+      };
     });
-
-    return formattedData;
-  }
+}
 
 
 
-  // 🔹 Delete equipment by ID
+
   async deleteEquipment(equipmentId: string): Promise<{ data: any; error: any }> {
+    // ✅ Fetch equipment details before deletion
+    const { data: equipment, error: fetchError } = await this.supabase
+      .from('equipments')
+      .select('name')
+      .eq('id', equipmentId)
+      .single();
+
+    if (fetchError || !equipment) {
+      console.error(`❌ Equipment with ID ${equipmentId} not found for deletion.`);
+      return { data: null, error: 'Equipment not found' };
+    }
+
     const { data, error } = await this.supabase
-      .from('equipments') // Ensure this is your correct table name
+      .from('equipments')
       .delete()
-      .match({ id: equipmentId }); // Assuming 'id' is the primary key column
+      .eq('id', equipmentId);
 
     if (error) {
       console.error('❌ Error deleting equipment:', error);
+      return { data, error };
     }
+
+    console.log('✅ Equipment deleted:', equipment);
+
+    // ✅ Log Activity with the correct equipment name
+    await this.logActivity('delete', equipmentId, `Equipment "${equipment.name}" was deleted from inventory.`);
 
     return { data, error };
   }
+
 
   async getSuppliers() {
     const { data, error } = await this.supabase
@@ -245,11 +288,25 @@ export class SupabaseService {
       console.error('❌ Error fetching suppliers:', error);
       return [];
     }
-
     return data;
   }
 
   async updateEquipment(equipmentId: string, equipmentData: any) {
+    // 🔹 Step 1: Fetch the current equipment details
+    const { data: existingEquipment, error: fetchError } = await this.supabase
+      .from('equipments')
+      .select('name, supplier_cost, srp, condition') // ✅ Fetch `condition`
+      .eq('id', equipmentId)
+      .single();
+
+    if (fetchError || !existingEquipment) {
+      console.error(`❌ Error fetching existing equipment:`, fetchError);
+      return null;
+    }
+
+    const oldCondition = existingEquipment.condition;
+
+    // 🔹 Step 2: Update Equipment Data in `equipments` table
     const { data, error } = await this.supabase
       .from('equipments')
       .update({
@@ -267,8 +324,9 @@ export class SupabaseService {
         qr_code: equipmentData.qr_code,
         damaged: equipmentData.damaged,
         return_slip: equipmentData.return_slip,
-        date_acquired: equipmentData.date_acquired, // 🔹 Store updated date acquired
-        lifespan_months: equipmentData.lifespan_months //
+        condition: equipmentData.condition, // ✅ Ensure condition is updated
+        date_acquired: equipmentData.date_acquired,
+        lifespan_months: equipmentData.lifespan_months
       })
       .eq('id', equipmentId)
       .select()
@@ -281,18 +339,60 @@ export class SupabaseService {
 
     console.log('✅ Equipment updated successfully:', data);
 
-    // ✅ Log the cost history change
-    await this.supabase
-      .from('equipment_cost_history')
-      .insert({
-        equipment_id: equipmentId,
-        supplier_cost: equipmentData.supplier_cost,
-        srp: equipmentData.srp,
-        date_updated: new Date().toISOString()
-      });
+    // 🔹 Step 3: Log Activity for Condition Changes
+    if (oldCondition !== equipmentData.condition) {
+      await this.logActivity(
+        'update',
+        equipmentId,
+        `Condition for "${data.name}" changed from "${oldCondition || 'Unknown'}" to "${equipmentData.condition}".`
+      );
+    }
+
+    // 🔹 Step 4: Update Repair Logs in `equipment_repair_logs`
+    if (equipmentData.repair_logs.length > 0) {
+      for (const log of equipmentData.repair_logs) {
+        if (log.id) {
+          // ✅ Update existing repair log
+          const { error: updateLogError } = await this.supabase
+            .from('equipment_repair_logs')
+            .update({
+              repair_details: log.repair_details,
+              repair_status: log.repair_status,
+              repair_date: log.repair_date
+            })
+            .eq('id', log.id);
+
+          if (updateLogError) {
+            console.error(`❌ Error updating repair log (ID: ${log.id}):`, updateLogError);
+          } else {
+            console.log(`✅ Repair log (ID: ${log.id}) updated successfully.`);
+          }
+        } else {
+          // ✅ Insert new repair log
+          const { error: insertLogError } = await this.supabase
+            .from('equipment_repair_logs')
+            .insert([{
+              equipment_id: equipmentId,
+              repair_details: log.repair_details,
+              repair_status: log.repair_status || 'New',
+              repair_date: log.repair_date || new Date().toISOString(),
+            }]);
+
+          if (insertLogError) {
+            console.error('❌ Error inserting new repair log:', insertLogError);
+          } else {
+            console.log('✅ New repair log inserted successfully.');
+          }
+        }
+      }
+      // ✅ Log repair log update activity
+      await this.logActivity('update', equipmentId, `Repair logs updated for "${data.name}".`);
+    }
 
     return data;
-  }
+}
+
+
 
 
 
@@ -361,6 +461,62 @@ export class SupabaseService {
     return data?.user || null;
   }
 
+  async getTotalEquipmentCount(): Promise<number> {
+    const { count, error } = await this.supabase
+      .from('equipments')
+      .select('*', { count: 'exact', head: true });
 
+    if (error) {
+      console.error('❌ Error fetching total equipment count:', error);
+      return 0;
+    }
+
+    return count || 0;
+  }
+
+
+
+  async logActivity(activityType: string, equipmentId: string, message: string) {
+    const { data, error } = await this.supabase
+      .from('recent_activities')
+      .insert([
+        {
+          activity_type: activityType,
+          equipment_id: equipmentId,
+          message: message,
+          timestamp: new Date().toISOString(), // Current timestamp
+        },
+      ])
+      .select(); // Select inserted data for debugging
+
+    if (error) {
+      console.error('❌ Error logging activity:', error);
+    } else {
+      console.log(`✅ Activity logged: ${activityType} - ${message}`, data);
+    }
+  }
+
+
+
+  async getRecentActivities(): Promise<any[]> {
+    const { data, error } = await this.supabase
+      .from('recent_activities')
+      .select('*')
+      .order('timestamp', { ascending: false }) // Get latest first
+      .limit(10);
+
+    if (error) {
+      console.error('❌ Error fetching recent activities:', error);
+      return [];
+    }
+
+    if (!data || data.length === 0) {
+      console.warn('⚠ No recent activities found in database.');
+      return [];
+    }
+
+    console.log('✅ Fetched recent activities:', data); // Debugging log
+    return data;
+  }
 
 }

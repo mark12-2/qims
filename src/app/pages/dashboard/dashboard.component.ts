@@ -2,10 +2,11 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { SupabaseService } from '../../services/supabase.service';
 import { Chart } from 'chart.js/auto';
 import { CommonModule, NgIf, NgFor } from '@angular/common';
+import { SidebarComponent } from "../sidebar/sidebar.component";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, NgFor],
+  imports: [CommonModule, NgFor, SidebarComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
@@ -15,13 +16,20 @@ export class DashboardComponent implements OnInit {
   costHistory: any[] = [];
   equipmentList: any[] = [];
   costChart: any;
+  totalEquipment: number = 0;
+  recentActivities: any[] = [];
 
   constructor(private supabaseService: SupabaseService) {}
 
   async ngOnInit() {
     this.loadUserEmail();
     this.equipmentList = await this.supabaseService.getEquipmentList() || [];
+    this.totalEquipment = await this.supabaseService.getTotalEquipmentCount();
+    this.recentActivities = await this.supabaseService.getRecentActivities();
+
+    console.log('🔍 Recent Activities Data:', this.recentActivities); // ✅ Debugging Log
   }
+
 
   async loadUserEmail() {
     const user = await this.supabaseService.getUser();
@@ -35,6 +43,7 @@ export class DashboardComponent implements OnInit {
     if (this.selectedEquipmentId) {
       this.costHistory = await this.supabaseService.getCostHistory(this.selectedEquipmentId);
       console.log('📊 Cost History Data:', this.costHistory);
+
 
       setTimeout(() => {
         this.renderChart();
@@ -64,14 +73,16 @@ export class DashboardComponent implements OnInit {
             data: this.costHistory.map(entry => entry.supplier_cost),
             borderColor: 'blue',
             borderWidth: 2,
-            fill: false
+            fill: false,
+            spanGaps: true
           },
           {
             label: 'SRP',
             data: this.costHistory.map(entry => entry.srp),
             borderColor: 'green',
             borderWidth: 2,
-            fill: false
+            fill: false,
+            spanGaps: true
           }
         ]
       },
@@ -96,6 +107,9 @@ export class DashboardComponent implements OnInit {
     console.log('✅ Chart rendered with formatted values!');
   }
 
+
   // Duplicate method removed
 }
+
+
 

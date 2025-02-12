@@ -152,4 +152,12 @@ export class AddEquipmentComponent implements OnInit {
       }
     }
   }
+
+  addRepairLog() {
+    this.equipmentData.repair_logs.push({ repair_details: '', repair_status: 'New', repair_date: '' });
+  }
+
+  removeRepairLog(index: number) {
+    this.equipmentData.repair_logs.splice(index, 1);
+  }
 }

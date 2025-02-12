@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 })
 export class EquipmentListComponent implements OnInit {
   equipmentList: any[] = [];
+  filteredEquipmentList: any[] = [];
   isQRCodeModalOpen = false;
   selectedQRCode: string | null = null;
 
@@ -23,13 +24,32 @@ export class EquipmentListComponent implements OnInit {
     this.fetchEquipmentData();
   }
 
-  async fetchEquipmentData() {
-    const result = await this.supabaseService.getEquipmentList();
-    if (result) {
-      this.equipmentList = result;
-    } else {
-      console.error('Failed to fetch equipment data');
+      async fetchEquipmentData() {
+        const result = await this.supabaseService.getEquipmentList();
+        if (result) {
+          // ✅ Sort by `date_acquired` (latest first) to maintain order
+          this.equipmentList = result.sort((a, b) => new Date(b.date_acquired).getTime() - new Date(a.date_acquired).getTime());
+          this.filteredEquipmentList = [...this.equipmentList];
+        } else {
+          console.error('Failed to fetch equipment data');
+        }
     }
+
+    getStatusClass(timeRemaining: number) {
+      if (timeRemaining <= 0) {
+        return 'expired'; // Red
+      } else if (timeRemaining <= 60) {
+        return 'warning'; // Orange
+      } else {
+        return 'safe'; // Green (default)
+      }
+    }
+
+  applyFilter(event: any, field: string) {
+    const value = event.target.value.toLowerCase();
+    this.filteredEquipmentList = this.equipmentList.filter(equipment =>
+      equipment[field].toLowerCase().includes(value)
+    );
   }
 
   editEquipment(equipment: any) {
@@ -46,6 +66,7 @@ export class EquipmentListComponent implements OnInit {
     } else {
       console.log('✅ Equipment deleted successfully:', result.data);
       this.equipmentList = this.equipmentList.filter(e => e.id !== equipmentId);
+      this.filteredEquipmentList = [...this.equipmentList];
     }
   }
 
@@ -53,13 +74,11 @@ export class EquipmentListComponent implements OnInit {
     this.router.navigate(['/equipment-details', equipmentId]);
   }
 
-  // ✅ Open QR Code Modal
   openQRCodeModal(qrCodeUrl: string) {
     this.selectedQRCode = qrCodeUrl;
     this.isQRCodeModalOpen = true;
   }
 
-  // ✅ Close QR Code Modal
   closeQRCodeModal() {
     this.isQRCodeModalOpen = false;
     this.selectedQRCode = null;

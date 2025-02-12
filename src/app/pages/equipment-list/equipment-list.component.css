@@ -1,10 +1,24 @@
 .equipment-list-container {
   margin: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.filters {
+  margin-bottom: 20px;
+}
+
+.filters input,
+.filters select {
+  margin-right: 10px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 
 .equipment-table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 20px;
 }
 
 .equipment-table th,
@@ -15,11 +29,16 @@
 }
 
 .equipment-table th {
-  background-color: #f4f4f4;
+  background-color: #4CAF50;
+  color: white;
 }
 
 .equipment-table tr:nth-child(even) {
   background-color: #f9f9f9;
+}
+
+.equipment-table tr:hover {
+  background-color: #f1f1f1;
 }
 
 button {
@@ -29,13 +48,13 @@ button {
   color: white;
   border: none;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 button:hover {
   background-color: #45a049;
 }
 
-/* ✅ QR Code Thumbnail */
 .qr-thumbnail {
   width: 50px;
   height: 50px;
@@ -47,7 +66,13 @@ button:hover {
   transform: scale(1.2);
 }
 
-/* ✅ Modal Styles */
+.product-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  margin-right: 5px;
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -100,4 +125,18 @@ button:hover {
   font-weight: bold;
 }
 
+.expired {
+  color: red;
+  font-weight: bold;
+}
+
+.warning {
+  color: orange;
+  font-weight: bold;
+}
+
+.safe {
+  color: green;
+  font-weight: bold;
+}
 

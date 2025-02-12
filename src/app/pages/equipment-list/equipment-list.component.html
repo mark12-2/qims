@@ -1,5 +1,18 @@
 <div class="equipment-list-container">
   <h2>Equipment List</h2>
+
+  <!-- Filters -->
+  <div class="filters">
+    <input type="text" placeholder="Search by Name" (input)="applyFilter($event, 'name')">
+    <input type="text" placeholder="Search by Brand" (input)="applyFilter($event, 'brand')">
+    <select (change)="applyFilter($event, 'condition')">
+      <option value="">All Conditions</option>
+      <option value="New">New</option>
+      <option value="Used">Used</option>
+      <option value="Damaged">Damaged</option>
+    </select>
+  </div>
+
   <table class="equipment-table">
     <thead>
       <tr>
@@ -28,7 +41,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let equipment of equipmentList">
+      <tr *ngFor="let equipment of filteredEquipmentList">
         <td>{{ equipment.id }}</td>
         <td>{{ equipment.serial_no }}</td>
         <td>{{ equipment.name }}</td>
@@ -45,17 +58,16 @@
         <td>{{ equipment.lifespan_months }}</td>
         <td>
           <span *ngIf="equipment.timeRemaining !== null">
-            <span [ngClass]="{'warning': equipment.nearExpiration, 'expired': equipment.timeRemaining <= 0}">
+            <span [ngClass]="getStatusClass(equipment.timeRemaining)">
               {{ equipment.timeRemaining > 0 ? (equipment.timeRemaining + ' days left') : 'Expired' }}
             </span>
           </span>
           <span *ngIf="equipment.timeRemaining === null">N/A</span>
+
         </td>
         <td>
           <img [src]="equipment.qr_code" alt="QR Code" class="qr-thumbnail" (click)="openQRCodeModal(equipment.qr_code)">
         </td>
-
-        <!-- ✅ Product Images -->
         <td>
           <div *ngIf="equipment.product_images?.length > 0; else noImages">
             <div *ngFor="let image of equipment.product_images">
@@ -66,16 +78,13 @@
             <span>No images available</span>
           </ng-template>
         </td>
-
         <td>{{ equipment.return_slip }}</td>
         <td>{{ equipment.damaged ? 'Yes' : 'No' }}</td>
         <td>{{ equipment.condition }}</td>
-
-        <!-- ✅ Repair Logs -->
         <td>
           <div *ngIf="equipment.repair_logs?.length > 0; else noLogs">
             <ul>
-              <li *ngFor="let log of equipment.repair_logs">
+              <li *ngFor="let log of (equipment.repair_logs || []); let i = index">
                 <strong>{{ log.repair_details }}</strong> ({{ log.repair_status }}, {{ log.repair_date | date:'short' }})
               </li>
             </ul>
@@ -94,7 +103,7 @@
   </table>
 </div>
 
-<!-- ✅ QR Code Modal -->
+<!-- QR Code Modal -->
 <div class="modal-overlay" *ngIf="isQRCodeModalOpen" (click)="closeQRCodeModal()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <h2>QR Code</h2>
