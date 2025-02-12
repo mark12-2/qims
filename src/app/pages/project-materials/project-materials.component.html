@@ -1,114 +1,116 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Materials Management</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-</head>
-<body>
-    <div class="container">
-     <!-- Sidebar -->
-<div class="sidebar">
-    <div class="profile">
-        <img alt="Profile picture" class="profile-pic" src="https://placehold.co/100x100"/>
-        <h1 class="profile-name">{{ userEmail }}</h1>
+<app-sidebar></app-sidebar>
+<div class="container">
+  <div class="main-content">
+    <div class="header">
+      <h4>Project Materials Management</h4>
     </div>
-    <nav class="nav">
-        <a class="nav-item active" href="#"><i class="fas fa-home"></i> Home</a>
-        <a class="nav-item" href="#"><i class="fas fa-folder"></i> Project Materials</a>
-        <a class="nav-item" href="#"><i class="fas fa-shopping-cart"></i> Cart</a>
-        <a class="nav-item" href="#"><i class="fas fa-clipboard-list"></i> Borrowed Items</a>
-        <!-- Parts Picker Dropdown -->
-        <button class="nav-item dropdown-btn">
-            <i class="fa fa-cart-arrow-down" aria-hidden="true"></i> Parts Picker
-            <i class="fa fa-caret-down"></i>
-        </button>
-        <div class="dropdown-container">
-            <a href="#" class="dropdown-item"><i class="fas fa-box"></i> Part A - 10 available</a>
-            <a href="#" class="dropdown-item"><i class="fas fa-box"></i> Part B - 5 available</a>
-            <a href="#" class="dropdown-item"><i class="fas fa-box"></i> Part C - 20 available</a>
+
+    <button class="btn-add-materials" (click)="openModal()">
+      <i class="fas fa-plus-circle"></i> Add Project
+    </button>
+
+    <!-- Modal -->
+    <div class="modal-backdrop" [class.hidden]="!showModal">
+      <div class="modal-content">
+        <span class="close-btn" (click)="closeModal()">&times;</span>
+        <h2 class="modal-title">Create New Project</h2>
+
+        <label class="modal-label">Project Name:</label>
+        <input type="text" class="input-field" placeholder="Enter project name" [(ngModel)]="project.name">
+
+        <label class="modal-label">Project Description:</label>
+        <textarea class="textarea-field" placeholder="Enter project description" [(ngModel)]="project.description"></textarea>
+    <!-- end of modal -->
+        <h6>Materials</h6>
+
+        <!-- Scrollable Material List -->
+        <div class="materials-container">
+          <div *ngFor="let material of project.materials; let i = index" class="material-item">
+            <input type="text" class="input-field" placeholder="Material name" [(ngModel)]="material.name">
+            <input type="number" class="input-field" min="1" placeholder="Units" [(ngModel)]="material.units">
+            <button class="remove-btn" (click)="removeMaterial(i)">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
         </div>
-    </nav>
-    <div class="footer-nav">
-        <a class="footer-item" href="#"><i class="fas fa-plus-circle"></i> Add Supplier</a>
-        <a class="footer-item" href="#"><i class="fas fa-cog"></i> Settings</a>
+        <!-- end of Scrollable Material List -->
+
+        <!-- Button Container -->
+        <div class="modal-actions">
+          <button class="action-btn add-material-btn" (click)="addMaterial()">
+            <i class="fas fa-plus"></i> Add Material
+          </button>&nbsp;&nbsp;&nbsp;&nbsp;
+
+          <button class="action-btn save-btn" (click)="submitProject()">
+            <i class="fas fa-save"></i> Save Project
+          </button>
+        </div>
+      </div>
+    </div>  
+    <!-- end of button container -->
+
+    <!-- Edit Project Modal -->
+    <div class="modal-backdrop" [class.hidden]="!showEditModal">
+      <div class="modal-content">
+        <span class="close-btn" (click)="showEditModal = false">&times;</span>
+        <h2 class="modal-title">Edit Project</h2>
+
+        <label class="modal-label">Project Name:</label>
+        <input type="text" class="input-field" placeholder="Enter project name">
+
+        <label class="modal-label">Project Description:</label>
+        <textarea class="textarea-field" placeholder="Enter project description"></textarea>
+
+        <h6>Materials</h6>
+        <div class="materials-container">
+          <div class="material-item">
+            <input type="text" class="input-field" placeholder="Material name">
+            <input type="number" class="input-field" min="1" placeholder="Units">
+            <button class="remove-btn">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="action-btn add-material-btn">
+            <i class="fas fa-plus"></i> Add Material
+          </button>&nbsp;&nbsp;&nbsp;
+          <button class="action-btn save-btn">
+            <i class="fas fa-save"></i> Save Changes
+          </button>
+        </div>
+      </div>
     </div>
+
+    <!-- Delete Confirmation Modal -->
+<div class="modal-backdrop" [class.hidden]="!showDeleteModal">
+  <div class="modal-content">
+    <h2 class="modal-title">Confirm Deletion</h2>
+    <p>Are you sure you want to delete this project?</p>
+    <div class="delete-modal-actions">
+      <button class="action-btn cancel-btn" (click)="showDeleteModal = false">No</button>
+      <button class="action-btn delete-btn">Yes</button>
+    </div>
+  </div>
 </div>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <div class="header">
-                <h1>Project Materials Management</h1>
-                <img alt="Company logo" class="company-logo" src="https://storage.googleapis.com/a1aa/image/el_TnoG-amx0la5sqV5eOP2qSqIe34vsPpuqf2ilYJM.jpg" />
-            </div>
 
-            <button class="btn-add-materials" (click)="openModal()">
-                <i class="fas fa-plus-circle"></i> Add Project
-            </button>
-
-            <!-- Modal for Adding Projects -->
-            <div class="modal" *ngIf="showModal">
-                <div class="modal-content">
-                    <span class="close" (click)="closeModal()">&times;</span>
-                    <h2>Create New Project</h2>
-
-                    <label>Project Name:</label>
-                    <input type="text" [(ngModel)]="project.name" placeholder="Enter project name">
-
-                    <label>Project Description:</label>
-                    <textarea [(ngModel)]="project.description" placeholder="Enter project description"></textarea>
-
-                    <h3>Materials</h3>
-                    <div *ngFor="let material of project.materials; let i = index" class="material-item">
-                        <input type="text" [(ngModel)]="material.name" placeholder="Material name">
-                        <input type="number" [(ngModel)]="material.units" min="1" placeholder="Units">
-                        <button (click)="removeMaterial(i)" *ngIf="project.materials.length > 1">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-
-                    <button (click)="addMaterial()">
-                        <i class="fas fa-plus"></i> Add Material
-                    </button>
-
-                    <button (click)="submitProject()">
-                        <i class="fas fa-save"></i> Save Project
-                    </button>
-                </div>
-            </div>
-
-            <!-- Project List -->
-            <div class="card-container">
-                <div *ngFor="let proj of projects" class="card">
-                    <h2>{{ proj.name }}</h2>
-                    <p>{{ proj.description }}</p>
-                    <p><strong>Materials:</strong></p>
-                    <ul>
-                        <li *ngFor="let mat of proj.materials">{{ mat.name }} - {{ mat.units }} units</li>
-                    </ul>
-                    <div class="card-buttons">
-                        <button class="btn edit"><i class="fas fa-edit"></i></button>
-                        <button class="btn delete"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-            </div>
+    <!-- project cards -->
+    <div class="project-card-grid">
+      <div class="project-card">
+        <h3 class="project-title">Project Name 1</h3>
+        <p class="project-description">This is a sample project description.</p>
+        <p class="project-materials">
+          <strong>Quantity:</strong> 2
+        </p>
+        <div class="project-actions">
+          <button class="action-icon-btn"><i class="fas fa-eye"></i></button>
+          <button class="action-icon-btn" (click)="showEditModal = true"><i class="fas fa-edit"></i></button>
+          <button class="action-icon-btn" (click)="showDeleteModal = true"><i class="fas fa-trash"></i></button>
         </div>
+      </div>
     </div>
-</body>
-<script>
-    // Toggle dropdown functionality
-    var dropdowns = document.getElementsByClassName("dropdown-btn");
-    for (var i = 0; i < dropdowns.length; i++) {
-        dropdowns[i].addEventListener("click", function () {
-            this.classList.toggle("active");
-            var dropdownContent = this.nextElementSibling;
-            if (dropdownContent.style.display === "block") {
-                dropdownContent.style.display = "none";
-            } else {
-                dropdownContent.style.display = "block";
-            }
-        });
-    }
-</script>
-</html>
+  </div>
+  <!-- end of project cards -->
+</div>

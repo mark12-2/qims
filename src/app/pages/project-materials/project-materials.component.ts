@@ -3,6 +3,7 @@ import { SupabaseAuthService } from '../../services/supabase-auth.service';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { SidebarComponent } from '../../sidebar/sidebar.component';
 
 const SUPABASE_URL = 'https://yvvuuiflqwppvezjmdsr.supabase.co';
 const SUPABASE_ANON_KEY =
@@ -11,16 +12,19 @@ const SUPABASE_ANON_KEY =
 @Component({
   selector: 'app-project-materials',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SidebarComponent],
   templateUrl: './project-materials.component.html',
   styleUrls: ['./project-materials.component.css'],
 })
 export class ProjectMaterialsComponent {
+  showAddModal = false;
+    showEditModal = false;
+    showDeleteModal = false;
   private supabase: SupabaseClient;
   userEmail: string | null = null;
   userId: string | null = null;
-  showModal = false;
-  isDropdownOpen = false; // Track dropdown state
+  showModal: boolean = false;
+  isDropdownOpen = false;
   projects: any[] = [];
   project = {
     name: '',
@@ -72,66 +76,77 @@ export class ProjectMaterialsComponent {
       alert('Please fill in all fields correctly.');
       return;
     }
+  
+    if (!this.userId) {
+      alert('User ID not found. Please log in again.');
+      return;
+    }
+  
     try {
-      // Insert project
       const { data: projectData, error: projectError } = await this.supabase
         .from('projects')
         .insert([
           {
             name: this.project.name,
             description: this.project.description,
-            user_id: this.userId,
+            user_id: this.userId, // Ensure user_id is sent
           },
         ])
         .select()
         .single();
+  
       if (projectError) throw projectError;
-
-      // Insert materials
+  
       const materialsToInsert = this.project.materials.map((m) => ({
         project_id: projectData.id,
         name: m.name,
         units: m.units,
       }));
+      
       const { error: materialsError } = await this.supabase
         .from('project_materials')
         .insert(materialsToInsert);
+  
       if (materialsError) throw materialsError;
-
+  
       alert('Project added successfully!');
       this.resetForm();
       await this.fetchProjects();
       this.closeModal();
     } catch (error) {
       console.error(error);
-      alert('Error adding project.');
+      alert(`Error adding project:`);
     }
   }
+  
 
   async fetchProjects() {
-    const { data: projects, error } = await this.supabase
-      .from('projects')
-      .select('*');
-    if (error) {
+    try {
+      const { data: projects, error } = await this.supabase
+        .from('projects')
+        .select('*');
+      if (error) throw error;
+
+      for (let project of projects) {
+        const { data: materials, error: materialsError } = await this.supabase
+          .from('project_materials')
+          .select('*')
+          .eq('project_id', project.id);
+        if (materialsError) throw materialsError;
+        project.materials = materials || [];
+      }
+      this.projects = projects;
+    } catch (error) {
       console.error(error);
-      return;
     }
-    for (let project of projects) {
-      const { data: materials } = await this.supabase
-        .from('project_materials')
-        .select('*')
-        .eq('project_id', project.id);
-      project.materials = materials || [];
-    }
-    this.projects = projects;
   }
 
   resetForm() {
     this.project = { name: '', description: '', materials: [{ name: '', units: 1 }] };
   }
 
-  // Dropdown Toggle Method
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
+  
 }
