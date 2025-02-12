@@ -34,54 +34,42 @@
 
 <div class="bobo">
     <div class="supplier-profile-container">
-        <h2>Supplier Form</h2>
-        <form class="supplier-form">
-            <!-- Supplier Name -->
-            <div class="form-group">
-                <label for="supplier-name">Supplier Name</label>
-                <input type="text" id="supplier-name" placeholder="Enter supplier name" />
-            </div>
+      <h2>Supplier Form</h2>
+      <form (ngSubmit)="onSubmit()" class="supplier-form">
+        <!-- Supplier Name -->
+        <div class="form-group">
+          <input type="text" [(ngModel)]="supplierName" placeholder="Enter supplier name" name="supplier-name" />
+        </div>
+  
+        <!-- Contact Person/s -->
+        <div class="form-group">
+          <input type="text" [(ngModel)]="contactPerson" placeholder="Enter contact person(s)" name="contact-person" />
+        </div>
+  
+        <!-- Phone/Landline Number -->
+        <div class="form-group">
+          <input type="text" [(ngModel)]="phone" placeholder="Enter phone/landline no." name="phone" />
+        </div>
 
-            <!-- Contact Person/s -->
-            <div class="form-group">
-                <label for="contact-persons">Contact Person/s</label>
-                <input type="text" id="contact-persons" placeholder="Enter contact person(s)" />
-            </div>
-
-            <!-- Phone/Landline Number -->
-            <div class="form-group">
-                <label for="phone-number">Phone/Landline Number</label>
-                <input type="text" id="phone-number" placeholder="Enter phone/landline number" />
-            </div>
-
-            <!-- Brands Offered -->
-            <div class="form-group">
-                <label for="brands-offered">Brands Offered</label>
-                <input type="text" id="brands-offered" placeholder="Enter brands offered" />
-            </div>
-
-            <!-- Items/Models Offered -->
-            <div class="form-group">
-                <label for="items-offered">Items/Models Offered</label>
-                <input type="text" id="items-offered" placeholder="Enter items/models offered" />
-            </div>
-
-            <!-- Item Costs -->
-            <div class="form-group">
-                <label for="item-costs">Item Costs</label>
-                <input type="text" id="item-costs" placeholder="Enter item costs" />
-            </div>
-
-            <!-- Supplier Group Chat/s -->
-            <div class="form-group">
-                <label for="group-chats">Supplier Group Chat/s</label>
-                <input type="text" id="group-chats" placeholder="Enter group chat links" />
-            </div>
-
-            <!-- Submit Button -->
-            <div class="submit-group">
-                <button type="submit" class="submit-button">Submit</button>
-            </div>
-        </form>
+        <!-- Email -->
+        <div class="form-group">
+          <input type="email" [(ngModel)]="email" placeholder="Enter email address" name="email" />
+        </div>
+  
+        <!-- Address -->
+        <div class="form-group">
+          <input type="text" [(ngModel)]="address" placeholder="Enter address" name="address" />
+        </div>
+  
+        <!-- Supplier Group Chat/s -->
+        <div class="form-group">
+          <input type="text" [(ngModel)]="groupChatLink" placeholder="Enter group chat links" name="group-chat-link" />
+        </div>
+  
+        <!-- Submit Button -->
+        <div class="submit-group">
+          <button type="submit" class="submit-button">Submit</button>
+        </div>
+      </form>
     </div>
-</div>
+  </div>

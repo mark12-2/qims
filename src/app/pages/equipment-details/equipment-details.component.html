@@ -1,0 +1,73 @@
+<div class="equipment-details-container" *ngIf="equipmentData">
+  <h2>Equipment Details</h2>
+
+  <div class="details-group">
+    <label>ID:</label> <span>{{ equipmentData.id }}</span>
+  </div>
+  <div class="details-group">
+    <label>Serial No:</label> <span>{{ equipmentData.serial_no }}</span>
+  </div>
+  <div class="details-group">
+    <label>Name:</label> <span>{{ equipmentData.name }}</span>
+  </div>
+  <div class="details-group">
+    <label>Model:</label> <span>{{ equipmentData.model }}</span>
+  </div>
+  <div class="details-group">
+    <label>Brand:</label> <span>{{ equipmentData.brand }}</span>
+  </div>
+  <div class="details-group">
+    <label>Supplier:</label> <span>{{ equipmentData.supplier }}</span>
+  </div>
+  <div class="details-group">
+    <label>Supplier Cost:</label> <span>{{ equipmentData.supplier_cost }}</span>
+  </div>
+  <div class="details-group">
+    <label>SRP:</label> <span>{{ equipmentData.srp }}</span>
+  </div>
+  <div class="details-group">
+    <label>Quantity:</label> <span>{{ equipmentData.quantity }}</span>
+  </div>
+  <div class="details-group">
+    <label>Location:</label> <span>{{ equipmentData.location }}</span>
+  </div>
+  <div class="details-group">
+    <label>Description:</label> <span>{{ equipmentData.description }}</span>
+  </div>
+
+  <!-- ✅ QR Code -->
+  <div class="details-group">
+    <label>QR Code:</label>
+    <img [src]="equipmentData.qr_code" alt="QR Code" style="width: 100px;">
+  </div>
+
+  <!-- ✅ Product Images -->
+  <div class="details-group">
+    <label>Product Images:</label>
+    <div *ngIf="equipmentData.product_images?.length > 0; else noImages">
+      <div *ngFor="let image of equipmentData.product_images">
+        <img [src]="image" alt="Product Image" style="width: 100px;">
+      </div>
+    </div>
+    <ng-template #noImages>
+      <span>No images available</span>
+    </ng-template>
+  </div>
+
+  <!-- ✅ Repair Logs -->
+  <div class="details-group">
+    <label>Repair Logs:</label>
+    <div *ngIf="equipmentData.repair_logs?.length > 0; else noLogs">
+      <ul>
+        <li *ngFor="let log of equipmentData.repair_logs">
+          <strong>{{ log.repair_details }}</strong> ({{ log.repair_status }}, {{ log.repair_date | date:'short' }})
+        </li>
+      </ul>
+    </div>
+    <ng-template #noLogs>
+      <span>No repair logs</span>
+    </ng-template>
+  </div>
+
+  <button (click)="goBack()">Go Back</button>
+</div>

@@ -1,0 +1,113 @@
+<div class="equipment-list-container">
+  <h2>Equipment List</h2>
+
+  <!-- Filters -->
+  <div class="filters">
+    <input type="text" placeholder="Search by Name" (input)="applyFilter($event, 'name')">
+    <input type="text" placeholder="Search by Brand" (input)="applyFilter($event, 'brand')">
+    <select (change)="applyFilter($event, 'condition')">
+      <option value="">All Conditions</option>
+      <option value="New">New</option>
+      <option value="Used">Used</option>
+      <option value="Damaged">Damaged</option>
+    </select>
+  </div>
+
+  <table class="equipment-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Serial No</th>
+        <th>Name</th>
+        <th>Model</th>
+        <th>Brand</th>
+        <th>Supplier</th>
+        <th>Supplier Cost</th>
+        <th>SRP</th>
+        <th>Quantity</th>
+        <th>Location</th>
+        <th>Description</th>
+        <th>Variety</th>
+        <th>Date Acquired</th>
+        <th>Lifespan (Months)</th>
+        <th>Remaining Days</th>
+        <th>QR Code</th>
+        <th>Product Images</th>
+        <th>Return Slip</th>
+        <th>Damaged</th>
+        <th>Condition</th>
+        <th>Repair Logs</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let equipment of filteredEquipmentList">
+        <td>{{ equipment.id }}</td>
+        <td>{{ equipment.serial_no }}</td>
+        <td>{{ equipment.name }}</td>
+        <td>{{ equipment.model }}</td>
+        <td>{{ equipment.brand }}</td>
+        <td>{{ equipment.supplier }}</td>
+        <td>{{ equipment.supplier_cost }}</td>
+        <td>{{ equipment.srp }}</td>
+        <td>{{ equipment.quantity }}</td>
+        <td>{{ equipment.location }}</td>
+        <td>{{ equipment.description }}</td>
+        <td>{{ equipment.variety }}</td>
+        <td>{{ equipment.date_acquired }}</td>
+        <td>{{ equipment.lifespan_months }}</td>
+        <td>
+          <span *ngIf="equipment.timeRemaining !== null">
+            <span [ngClass]="getStatusClass(equipment.timeRemaining)">
+              {{ equipment.timeRemaining > 0 ? (equipment.timeRemaining + ' days left') : 'Expired' }}
+            </span>
+          </span>
+          <span *ngIf="equipment.timeRemaining === null">N/A</span>
+
+        </td>
+        <td>
+          <img [src]="equipment.qr_code" alt="QR Code" class="qr-thumbnail" (click)="openQRCodeModal(equipment.qr_code)">
+        </td>
+        <td>
+          <div *ngIf="equipment.product_images?.length > 0; else noImages">
+            <div *ngFor="let image of equipment.product_images">
+              <img [src]="image" alt="Product Image" class="product-image">
+            </div>
+          </div>
+          <ng-template #noImages>
+            <span>No images available</span>
+          </ng-template>
+        </td>
+        <td>{{ equipment.return_slip }}</td>
+        <td>{{ equipment.damaged ? 'Yes' : 'No' }}</td>
+        <td>{{ equipment.condition }}</td>
+        <td>
+          <div *ngIf="equipment.repair_logs?.length > 0; else noLogs">
+            <ul>
+              <li *ngFor="let log of (equipment.repair_logs || []); let i = index">
+                <strong>{{ log.repair_details }}</strong> ({{ log.repair_status }}, {{ log.repair_date | date:'short' }})
+              </li>
+            </ul>
+          </div>
+          <ng-template #noLogs>
+            <span>No repair logs</span>
+          </ng-template>
+        </td>
+        <td>
+          <button (click)="editEquipment(equipment)">Edit</button>
+          <button (click)="deleteEquipment(equipment.id)">Delete</button>
+          <button (click)="viewEquipmentDetails(equipment.id)">View Details</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- QR Code Modal -->
+<div class="modal-overlay" *ngIf="isQRCodeModalOpen" (click)="closeQRCodeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h2>QR Code</h2>
+    <img [src]="selectedQRCode" alt="QR Code" class="qr-modal-image">
+    <button class="close-button" (click)="closeQRCodeModal()">Close</button>
+  </div>
+</div>

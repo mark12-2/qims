@@ -1,6 +1,7 @@
+/* Reset and Basic Styling */
 body {
-  background-color: #ffff; /* Tailwind's bg-gray-100 */
-  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  font-family: 'Arial', sans-serif;
   margin: 0;
 }
 
@@ -8,129 +9,272 @@ body {
   display: flex;
 }
 
-.sidebar {
-  background-color: #1e3a8a;
-  color: white;
-  width: 230;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  position: fixed;
-  top: 0;
-  left: 0;
-}
-
-.profile {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.profile-pic {
-  border-radius: 50%;
-  width: 100px;
-  height: 100px;
-}
-
-.profile-name {
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.nav {
-  margin-top: 40px;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  padding: 10px 20px;
-  color: white;
-  text-decoration: none;
-  transition: background 0.3s;
-
-}
-
-.nav-item i,
-.nav-item span {
-  display: inline-flex;
-  align-items: center;
-  margin-right: 10px;
-}
-
-.nav-item:hover, .nav-item.active {
-  background-color: #1e40af;
-}
-
-.footer-nav {
-  margin-top: auto;
-  margin-bottom: 20px;
-}
-
-.footer-item {
-  display: flex;
-  align-items: center;
-  padding: 10px 20px;
-  color: white;
-  text-decoration: none;
-  background-color: #1e3a8a;
-  margin-bottom: 10px;
-}
-
-.footer-item i,
-.footer-item span {
-  display: inline-flex;
-  align-items: center;
-  margin-right: 10px;
-}
-
 .main-content {
   flex: 1;
+  padding: 24px;
   margin-left: 230px;
-}
-
-.main-content {
-  flex: 1;
-  padding: 24px; /* Tailwind's p-6 */
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px; /* Tailwind's mb-6 */
+  margin-bottom: 24px;
 }
 
 .company-logo {
-  height: 48px; /* Tailwind's h-12 */
+  height: 48px;
 }
 
-.card-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
-  gap: 24px; /* Tailwind's gap-6 */
+.btn-add-materials {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.3s ease;
 }
 
-.card {
-  background-color: white;
-  padding: 16px; /* Tailwind's p-4 */
-  border-radius: 8px; /* Tailwind's rounded */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Tailwind's shadow */
+.btn-add-materials:hover {
+  background-color: #0056b3;
 }
 
-.card-buttons {
+/* Modal Styling */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  margin-top: 16px; /* Tailwind's mt-4 */
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
 }
 
-.btn.edit {
-  color: #3b82f6; /* Tailwind's text-blue-500 */
+.modal-backdrop.hidden {
+  display: none;
 }
 
-.btn.delete {
-  color: #ef4444; /* Tailwind's text-red-500 */
+.modal-content {
+  background-color: white;
+  padding: 24px;
+  border-radius: 8px;
+  width: 450px;
+  max-height: 80vh; /* Ensures modal doesn't exceed viewport */
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  animation: fadeIn 0.3s;
+  overflow: hidden;
 }
 
-.quantity {
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  cursor: pointer;
+  font-size: 24px;
   font-weight: bold;
+  color: #333;
+}
+
+.modal-title {
+  font-size: 22px;
+  margin-bottom: 16px;
+}
+
+.modal-label {
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 4px;
+}
+
+.input-field,
+.textarea-field {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d1d1d1;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.textarea-field {
+  height: 80px;
+}
+
+/* Scrollable Materials List */
+.materials-container {
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 8px;
+  margin-bottom: 16px;
+}
+
+.materials-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.materials-container::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 6px;
+}
+
+.material-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+/* Buttons with Better Spacing */
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.action-btn {
+  background-color: #28a745;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-block;
+  transition: background-color 0.3s;
+}
+
+.action-btn:hover {
+  background-color: #218838;
+}
+
+.add-material-btn {
+  flex: 1;
+  background-color: #28a745;
+}
+
+.add-material-btn:hover {
+  background-color: #218838;
+}
+
+.save-btn {
+  flex: 1;
+  background-color: #007bff;
+}
+
+.save-btn:hover {
+  background-color: #0056b3;
+}
+
+.remove-btn {
+  background-color: #dc3545;
+  color: white;
+  padding: 6px 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.remove-btn:hover {
+  background-color: #c82333;
+}
+
+/* Project Card Styling */
+.project-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.project-card {
+  background-color: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+}
+
+.project-title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.project-description {
+  color: #555;
+  margin: 8px 0;
+}
+
+.project-materials {
+  font-size: 14px;
+  margin: 8px 0;
+}
+
+.project-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.action-icon-btn {
+  background-color: #ddd;
+  border: none;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.action-icon-btn:hover {
+  background-color: #bbb;
+}
+
+/* Delete Confirmation Modal */
+.delete-btn {
+  background-color: #dc3545;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}
+
+.cancel-btn {
+  background-color: #6c757d;
+}
+
+.cancel-btn:hover {
+  background-color: #5a6268;
+}
+
+/* Align buttons to the right in the delete modal */
+.delete-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
 }

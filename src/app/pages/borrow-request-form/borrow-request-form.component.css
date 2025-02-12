@@ -1,0 +1,317 @@
+.sidebar {
+    background: linear-gradient(180deg, #000056 0%, #0272B1 100%);
+    color: white;
+    width: 230;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+  
+  .profile {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .profile-pic {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+  }
+  
+  .profile-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  
+  .nav {
+    margin-top: 40px;
+  }
+  
+  .nav-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    color: white;
+    text-decoration: none;
+    transition: background 0.3s;
+  
+  }
+  
+  .nav-item i,
+  .nav-item span {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 10px;
+  }
+  
+  .nav-item:hover, .nav-item.active {
+    background-color: #1e40af;
+  }
+  
+  .footer-nav {
+    margin-top: auto;
+    margin-bottom: 20px;
+  }
+  
+  .footer-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    color: white;
+    text-decoration: none;
+    background-color: #1e3a8a;
+    margin-bottom: 10px;
+    border-radius: 10px;
+  }
+  
+  .footer-item i,
+  .footer-item span {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 10px;
+  }
+
+
+/* General Container */
+.borrow-form-container {
+    height: 85vh;
+    margin-top: 3rem;
+    max-width: 1200px;
+    margin-left: 250px;
+    padding: 15px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  /* Horizontal Layout */
+  .horizontal-layout {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  
+  /* Form Sections */
+  .form-section {
+    flex: 1;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  /* Borrower Details Section */
+  .borrower-details {
+    background-color: #f0f4ff;
+  }
+  
+  /* Equipment Selection Section */
+  .equipment-selection {
+    background-color: #f9fafb;
+  }
+
+    /* Borrower Details Section */
+  .borrower-details {
+    background-color: #f0f4ff;
+    width: 20rem;
+    position: absolute;
+  }
+  
+  /* Equipment Selection Section */
+  .equipment-selection {
+    height: 76vh;
+    background-color: #f9fafb;
+    margin-left: 20rem;
+
+  }
+
+   /* Section Headings */
+   .form-section h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e3a8a;
+    margin-bottom: 10px;
+  }
+  
+  /* Item Groups Container */
+  .item-groups-container {
+    display: contents;
+  }
+  
+  /* Item Group */
+  .item-group {
+    
+    gap: 40px;
+    margin-bottom: 20px;
+  }
+  
+  /* Form Group */
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+
+  
+  .form-group input,
+  .form-group textarea {
+    padding: 12px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.7rem;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    width: 100%;
+  }
+  
+  .form-group input:focus,
+  .form-group textarea:focus {
+    border-color: #1e3a8a;
+    outline: none;
+    box-shadow: 0 0 8px rgba(30, 58, 138, 0.2);
+  }
+  
+  .form-group textarea {
+    resize: vertical;
+  }
+  
+  
+  /* Scrollable Table Container */
+  .scrollable-table {
+    max-height: 445px;
+    overflow-y: auto;
+    border-radius: 4px;
+  }
+  
+  /* Equipment Table */
+  .equipment-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    background-color: #ffffff;
+    border-radius: 4px;
+    font-family: 'Poppins', sans-serif;
+    table-layout: fixed;
+  }
+  
+  .equipment-table th,
+  .equipment-table td {
+    padding: 12px;
+    text-align: left;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    color: #333;
+    letter-spacing: 0.4px;
+    word-wrap: break-word;
+  }
+  
+  .equipment-table th {
+    background-color: #f0f0f0;
+    color: #1e3a8a;
+    font-weight: 600;
+  }
+  
+  .equipment-table tr {
+    background-color: #ffffff;
+  }
+  
+  .equipment-table tr:hover {
+    background-color: #f9f9f9;
+  }
+  
+  /* Product Info */
+  .product-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .product-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-right: 10px;
+  }
+
+  .pic{
+    display: flex;
+    position: relative;
+    padding: 20px auto;
+  }
+  
+  .product-details p {
+    margin: 0;
+    line-height: 1.5;
+  }
+  
+  
+  
+ 
+  
+
+  
+/* Quantity Input */
+.quantity-input {
+    width: 60px;
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    outline: none;
+  }
+  
+  .quantity-input:focus {
+    border-color: #1e3a8a;
+    box-shadow: 0 0 5px rgba(30, 58, 138, 0.2);
+  }
+
+  /* Action Button */
+.action-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .action-button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Submit Button */
+  .submit-group {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .submit-button {
+    padding: 12px 24px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.7rem;
+    color: #ffffff;
+    background: linear-gradient(135deg, #1e3a8a, #152c5b);
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 12px rgba(30, 58, 138, 0.2);
+  }
+  
+  .submit-button:hover {
+    background: linear-gradient(135deg, #152c5b, #1e3a8a);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(30, 58, 138, 0.3);
+  }

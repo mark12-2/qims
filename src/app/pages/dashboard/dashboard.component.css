@@ -11,7 +11,7 @@ body {
 }
 
 .sidebar {
-    background-color: #1e3a8a;
+    background: linear-gradient(180deg, #000056 0%, #0272B1 100%);
     color: white;
     width: 230;
     min-height: 100vh;
@@ -77,6 +77,7 @@ body {
     text-decoration: none;
     background-color: #1e3a8a;
     margin-bottom: 10px;
+    border-radius: 10px;
 }
 
 .footer-item i,

@@ -152,7 +152,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: left;
-  margin-left: 17.5rem;
+  margin-left: 16.5rem;
   font-family: 'Poppins', sans-serif; /* Modern font */
 }
 
@@ -169,23 +169,24 @@ body {
 
 }
 
-h2 {
+h3 {
   font-family: 'Poppins', sans-serif;
   color: #1e3a8a; /* Brand color for headings */
-  text-align: center;
+  text-align: left;
   margin-bottom: 15px; /* Reduced margin */
-  font-size: 1.3rem; /* Smaller font size for emphasis */
+  font-size: 1.2rem; /* Smaller font size for emphasis */
   font-weight: 600; /* Semi-bold instead of bold */
   position: relative;
+  margin-top: 0;
   padding-bottom: 8px; /* Reduced padding */
-  border-bottom: 1.5px solid #007bff; /* Thinner border */
+   /* Thinner border */
   letter-spacing: 0.8px; /* Reduced spacing */
 }
 
 p {
   font-family: 'Roboto Mono', monospace; /* Monospace for descriptions */
   margin-bottom: 12px; /* Reduced margin */
-  font-size: 0.9rem; /* Smaller font size */
+  font-size: 0.8rem; /* Smaller font size */
   line-height: 1.5; /* Reduced line height */
   color: #555; /* Muted color for readability */
   letter-spacing: 0.4px; /* Reduced spacing */
@@ -204,7 +205,7 @@ p {
 
 .info-item h3 {
   font-family: 'Poppins', sans-serif;
-  font-size: 1.1rem; /* Smaller font size for subheadings */
+  font-size: 1rem; /* Smaller font size for subheadings */
   font-weight: 500; /* Lighter weight for emphasis */
   margin-bottom: 8px; /* Reduced margin */
   color: #1e3a8a; /* Brand color for subheadings */
@@ -222,7 +223,8 @@ p {
   padding: 4px 8px; /* Reduced padding */
   display: flex;
   align-items: center;
-  font-family: 'Roboto Mono', monospace; /* Monospace for contact details */
+  font-size: 0.7rem; /* Smaller font size for values */
+  font-family: 'Poppins', sans-serif; /* Monospace for contact details */
 }
 
 .contact-detail strong {
@@ -231,12 +233,14 @@ p {
   font-weight: 400; /* Lighter weight for labels */
   color: #666; /* Muted color for secondary text */
   letter-spacing: 0.4px; /* Reduced spacing */
+  font-family: 'Poppins', sans-serif; /* Monospace for values */
+  font-size: 0.7rem; /* Smaller font size for values */
 }
 
 .contact-detail span {
   flex-grow: 1;
-  font-family: 'Roboto Mono', monospace; /* Monospace for values */
-  font-size: 0.8rem; /* Smaller font size for values */
+  font-family: 'Poppins', sans-serif; /* Monospace for values */
+  font-size: 0.7rem; /* Smaller font size for values */
   color: #333; /* Darker color for primary text */
   letter-spacing: 0.4px; /* Reduced spacing */
 }
@@ -246,15 +250,44 @@ p {
   margin-top: 0px; /* Reduced margin */
   width: 100%;
 }
+.bobo {
+  display: flex; /* Use flexbox for horizontal alignment */
+  gap: 20px; /* Space between the supplier profile and the table */
+  padding: 20px;
 
-/* New Styles for Brand Offered Section */
+}
+
+.supplier-profile-container {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex: 1; /* Allow the supplier profile container to grow */
+}
+
+.supplier-info {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.contact-details {
+  list-style: none;
+  padding: 0;
+}
+
+.contact-detail {
+  margin-bottom: 10px;
+}
+
 .brand-offered {
   margin-top: -10px; /* Space below the bottom-line */
 }
 
 .brand-offered h3 {
   font-family: 'Poppins', sans-serif;
-  font-size: 1rem; /* Smaller font size for heading */
+  font-size: 0.8rem; /* Smaller font size for heading */
   font-weight: 600; /* Semi-bold */
   color: #1e3a8a; /* Brand color */
   margin-bottom: 10px; /* Space below the heading */
@@ -267,16 +300,18 @@ p {
   margin-top: 20px; /* Space below the heading */
 }
 
+
 .brand-item {
   background-color: #f8f9fa; /* Light background */
   color: #333; /* Dark text */
   font-family: 'Roboto Mono', monospace; /* Monospace for consistency */
-  font-size: 0.8rem; /* Smaller font size */
+  font-size: 0.7rem; /* Smaller font size */
   text-align: center;
   padding: 8px 12px; /* Padding for clickable area */
   border-radius: 6px; /* Rounded corners */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Subtle shadow */
   transition: transform 0.2s ease, box-shadow 0.2s ease; /* Hover effect */
+  cursor: pointer; /* Indicate it's clickable */
 }
 
 .brand-item:hover {
@@ -284,76 +319,59 @@ p {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Enhanced shadow on hover */
 }
 
+.brand-item.selected {
+  background-color: #1e3a8a; /* Highlight color */
+  color: white; /* Text color for contrast */
+  font-weight: bold; /* Bold text */
+}
+
+
 
 .table {
-  position: relative;
+  flex: 1; /* Allow the table container to grow */
+  min-height: 300px; /* Set a minimum height for the table container */
   width: 100%;
   max-width: 630px;
-  margin: 0 auto;
-  padding: 15px; /* Reduced padding */
-  margin-left: 42rem;
-  font-family: 'Poppins', sans-serif; /* Modern font for table */
+  padding: 15px;
+  font-family: 'Poppins', sans-serif;
+  background-color: #ffffff;
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .supplier-table {
-  margin-top: -545px;
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 8px; /* Reduced spacing */
+  border-spacing: 0 8px;
   background-color: #ffffff;
-  border-radius: 6px; /* Slightly smaller radius */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Reduced shadow intensity */
-  font-family: 'Poppins', sans-serif; /* Consistent font */
-
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-family: 'Poppins', sans-serif;
 }
 
 .supplier-table caption {
-  font-size: 1.5rem; /* Smaller font size for caption */
-  font-weight: 600; /* Semi-bold instead of bold */
+  font-size: 1rem;
+  font-weight: 600;
   text-align: left;
-  padding: 12px; /* Reduced padding */
+  padding: 12px;
   background-color: #f0f0f0;
-  color: #1e3a8a; /* Brand color for headings */
-  letter-spacing: 0.8px; /* Reduced spacing */
+  color: #1e3a8a;
+  letter-spacing: 0.8px;
 }
 
 .supplier-table th,
 .supplier-table td {
-  padding: 12px; /* Reduced padding */
+  padding: 12px;
   text-align: left;
-  font-family: 'Roboto Mono', monospace; /* Monospace for data */
-  font-size: 0.9rem; /* Smaller font size */
-  color: #333; /* Darker text for readability */
-  letter-spacing: 0.4px; /* Reduced spacing for clarity */
-}
-
-.supplier-table th {
-  background-color: #f8f9fa;
-  font-weight: 500; /* Lighter weight for headers */
-  color: #1e3a8a; /* Brand color for headers */
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.8rem;
+  color: #333;
   letter-spacing: 0.4px;
 }
 
-.supplier-table tr:last-child td {
-  border-bottom: none;
-}
-
-.supplier-table td {
-  font-size: 0.9rem; /* Adjusted for better readability */
-  color: #555; /* Slightly muted for secondary text */
-}
-
-.supplier-table .category {
-  font-family: 'Poppins', sans-serif; /* Use Poppins for categories */
-  font-weight: 500; /* Lighter weight for emphasis */
-  color: #1e3a8a; /* Brand color for emphasis */
-  letter-spacing: 0.4px;
-}
-
-.supplier-table .description {
-  font-family: 'Roboto Mono', monospace; /* Monospace for descriptions */
-  word-break: break-word;
-  max-width: 180px; /* Reduced width */
-  font-size: 0.8rem; /* Smaller size for descriptions */
-  color: #666; /* Muted color for less important text */
+.no-items {
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  color: #666;
 }

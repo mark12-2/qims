@@ -19,11 +19,11 @@
                     <h1 class="title">Quanby Inventory System</h1>
                     <form class="form" (ngSubmit)="login()">
                         <div class="input-group">
-                   
+
                             <input class="input" name="email" [(ngModel)]="email" placeholder="Email" type="email"/>
                         </div>
                         <div class="input-group">
-                    
+
                             <input class="input" name="password" [(ngModel)]="password" placeholder="Password" type="password"/>
                         </div>
                         <div class="checkbox-group">
@@ -31,6 +31,7 @@
                             <label class="checkbox-label" for="remember">Remember me</label>
                         </div>
                         <button class="submit-button" type="submit">Submit</button>
+                        <p-button label="Submit" />
                     </form>
                 </div>
             </div>
@@ -39,5 +40,6 @@
             </div>
         </div>
     </div>
+
 </body>
 </html>

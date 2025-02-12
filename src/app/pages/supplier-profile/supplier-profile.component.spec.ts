@@ -19,5 +19,5 @@ describe('SupplierProfileComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
+  }); 
 });

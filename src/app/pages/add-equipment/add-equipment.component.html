@@ -1,0 +1,153 @@
+<div class="container">
+  <app-sidebar></app-sidebar>
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="equipment-container">
+      <div class="equipment-box">
+        <h2>{{ isEditMode ? 'Edit Equipment' : 'Add Equipment' }}</h2>
+        <form (ngSubmit)="onSubmit()">
+
+          <div class="form-group">
+            <label for="serialNo">Serial No.</label>
+            <input type="number" id="serialNo" [(ngModel)]="equipmentData.serial_no" name="serial_no" placeholder="Enter Serial Number" required />
+          </div>
+
+          <div class="form-group">
+            <label for="name">Equipment Name</label>
+            <input type="text" id="name" [(ngModel)]="equipmentData.name" name="name" placeholder="Enter Equipment Name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="model">Model</label>
+            <input type="text" id="model" [(ngModel)]="equipmentData.model" name="model" placeholder="Enter Model" />
+          </div>
+
+          <div class="form-group">
+            <label for="brand">Brand/Manufacturer</label>
+            <input type="text" id="brand" [(ngModel)]="equipmentData.brand" name="brand" placeholder="Enter Brand" />
+          </div>
+
+          <!-- Cost Details -->
+          <h3>Cost Details</h3>
+          <div class="form-group">
+            <label for="supplierCost">Supplier Cost</label>
+            <input type="number" id="supplierCost" [(ngModel)]="equipmentData.supplier_cost" name="supplier_cost" placeholder="Enter Supplier Cost" />
+          </div>
+
+          <!-- Lifespan Tracking -->
+          <h3>Lifespan Tracking</h3>
+          <div class="form-group">
+            <label for="dateAcquired">Date Acquired</label>
+            <input type="date" id="dateAcquired" [(ngModel)]="equipmentData.date_acquired" name="date_acquired" required />
+          </div>
+
+          <div class="form-group">
+            <label for="lifespan">Lifespan (in months)</label>
+            <input type="number" id="lifespan" [(ngModel)]="equipmentData.lifespan_months" name="lifespan_months" min="1" placeholder="Enter Lifespan in Months" required />
+          </div>
+
+          <div class="form-group">
+            <label for="srp">Suggested Retail Price (SRP)</label>
+            <input type="number" id="srp" [(ngModel)]="equipmentData.srp" name="srp" placeholder="Enter SRP" />
+          </div>
+
+          <div class="form-group">
+            <label for="supplier">Supplier</label>
+            <select id="supplier" [(ngModel)]="equipmentData.supplier" name="supplier" required>
+              <option value="" disabled selected>Select Supplier</option>
+              <option *ngFor="let supplier of suppliers" [value]="supplier.supplier_name">
+                {{ supplier.supplier_name }} - {{ supplier.contact_person }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Stock & Location -->
+          <h3>Stock & Location</h3>
+          <div class="form-group">
+            <label for="quantity">Quantity</label>
+            <input type="number" id="quantity" [(ngModel)]="equipmentData.quantity" name="quantity" placeholder="Enter Quantity" />
+          </div>
+
+          <div class="form-group">
+            <label for="location">Location</label>
+            <input type="text" id="location" [(ngModel)]="equipmentData.location" name="location" placeholder="Enter Storage Location" />
+          </div>
+
+          <h3>Condition & Repairs</h3>
+
+          <div class="form-group">
+            <label for="condition">Condition</label>
+            <select id="condition" [(ngModel)]="equipmentData.condition" name="condition" required>
+              <option value="" disabled selected>Select Condition</option>
+              <option value="New">New</option>
+              <option value="Used">Used</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Is the Item Damaged?</label>
+            <div class="radio-group">
+              <input type="radio" id="damagedYes" [(ngModel)]="equipmentData.damaged" name="damaged" [value]="true" />
+              <label for="damagedYes">Yes</label>
+              <input type="radio" id="damagedNo" [(ngModel)]="equipmentData.damaged" name="damaged" [value]="false" />
+              <label for="damagedNo">No</label>
+            </div>
+          </div>
+
+
+          <div *ngIf="equipmentData.damaged">
+            <h3>Repair Logs</h3>
+            <div class="form-group" *ngIf="equipmentData.damaged">
+              <label for="returnSlip">Return Slip</label>
+              <input type="file" id="returnSlip" (change)="handleReturnSlip($event)" />
+            </div>
+            <div *ngFor="let log of equipmentData.repair_logs; let i = index" class="form-group">
+              <label for="repairDetails{{i}}">Repair Details</label>
+              <input type="text" id="repairDetails{{i}}" [(ngModel)]="log.repair_details" name="repair_logs_{{i}}" placeholder="Enter repair details" />
+
+              <label for="repairStatus{{i}}">Repair Status</label>
+              <select id="repairStatus{{i}}" [(ngModel)]="log.repair_status" name="repair_status_{{i}}">
+                <option value="New">New</option>
+                <option value="Pending">Pending</option>
+                <option value="Completed">Completed</option>
+              </select>
+
+              <label for="repairDate{{i}}">Repair Date</label>
+              <input type="date" id="repairDate{{i}}" [(ngModel)]="log.repair_date" name="repair_date_{{i}}" />
+
+              <button type="button" (click)="removeRepairLog(i)">Remove</button>
+            </div>
+
+            <button type="button" (click)="addRepairLog()">➕ Add Repair Log</button>
+          </div>
+
+
+          <!-- Additional Information -->
+          <h3>Additional Information</h3>
+          <div class="form-group">
+            <label for="variety">Variety (Color, Size, etc.)</label>
+            <input type="text" id="variety" [(ngModel)]="equipmentData.variety" name="variety" placeholder="Enter Variety" />
+          </div>
+
+          <div class="form-group">
+            <label for="description">Specifications/Description</label>
+            <textarea id="description" [(ngModel)]="equipmentData.description" name="description" rows="3" placeholder="Enter Description"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="qrCode">QR/Barcode (Auto-Generated)</label>
+            <input type="text" id="qrCode" [(ngModel)]="equipmentData.qr_code" name="qr_code" disabled value="Generated Code" />
+          </div>
+
+          <div class="form-group">
+            <label for="productImage">Product Images</label>
+            <input type="file" id="productImage" name="product_images" multiple (change)="handleFileInput($event)" />
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn">Add Equipment</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

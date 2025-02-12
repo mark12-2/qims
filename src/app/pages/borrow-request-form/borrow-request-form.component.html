@@ -1,0 +1,140 @@
+<div class="sidebar">
+    <div class="profile">
+        <img alt="Profile picture of Jay-Ar" class="profile-pic" src="https://placehold.co/100x100"/>
+        <h1 class="profile-name">{{ userEmail }}</h1>
+    </div>
+    <nav class="nav">
+        <a class="nav-item active" href="#">
+            <i class="fas fa-home"></i> Home
+        </a>
+        <a class="nav-item" href="#">
+            <i class="fas fa-folder"></i> Project Materials
+        </a>
+        <a class="nav-item" href="#">
+            <i class="fas fa-shopping-cart"></i> Cart
+        </a>
+        <a class="nav-item" href="#">
+            <i class="fas fa-clipboard-list"></i> Borrowed Items
+        </a>
+    </nav>
+    <div class="footer-nav">
+      <a class="footer-item" href="#">
+        <i class="fas fa-plus-circle"></i> Add Equipment
+    </a>
+        <a class="footer-item" href="#">
+            <i class="fas fa-plus-circle"></i> Add Supplier
+        </a>
+        <a class="footer-item" href="#">
+            <i class="fas fa-cog"></i> Settings
+        </a>
+    </div>
+  </div>
+  
+
+  <div class="borrow-form-container">
+    <form (ngSubmit)="submitBorrowRequest()" class="supplier-form">
+      <!-- Borrower Details Section -->
+      <div class="form-section borrower-details">
+        <h3>Borrower Details</h3>
+        <div class="item-groups-container">
+          <div class="item-group">
+            <div class="form-group">
+              <input
+                type="text"
+                [(ngModel)]="borrowerName"
+                placeholder="Enter Borrower's Name"
+                name="borrowerName"
+                required
+              />
+            </div>
+  
+            <div class="form-group">
+              <input
+                type="text"
+                [(ngModel)]="borrowerDepartment"
+                placeholder="Enter Department/Location"
+                name="borrowerDepartment"
+                required
+              />
+            </div>
+  
+            <div class="form-group">
+              <label for="borrowDate">Borrow Date:</label>
+              <input type="date" [(ngModel)]="borrowDate" name="borrowDate" required />
+            </div>
+          </div>
+  
+          <div class="item-group">
+            <div class="form-group">
+              <label for="returnDate">Return Date:</label>
+              <input type="date" [(ngModel)]="returnDate" name="returnDate" required />
+            </div>
+  
+            <div class="form-group">
+              <textarea
+                [(ngModel)]="purpose"
+                placeholder="Purpose of Borrowing"
+                name="purpose"
+                rows="3"
+                required
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Equipment Selection Section -->
+      <div class="form-section equipment-selection">
+        <h3>Select Equipment</h3>
+        <div class="scrollable-table">
+          <table class="equipment-table">
+            <thead>
+              <tr>
+                <th>Select</th>
+                <th>Product</th>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of displayedItems">
+                <td>
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="item.selected"
+                    name="equipment-{{ item.id }}"
+                    (change)="updateSelectedEquipment(item)"
+                  />
+                </td>
+                <td>
+                  <div class="product-info">
+                    <img [src]="item.product_images" alt="{{ item.name }}" class="product-image" />
+                  </div>
+                </td>
+                <td>{{ item.name }}</td>
+                <td>
+                    <div class="quantity-selector">
+                      <input
+                        type="number"
+                        [(ngModel)]="item.quantity"
+                        name="quantity-{{ item.id }}"
+                        min="0"
+                        class="quantity-input"
+                      />
+                    </div>
+                  </td>
+                <td>
+                  <button (click)="viewDetails(item)" class="action-button">View</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+  
+      <div class="submit-group">
+        <button type="submit" class="submit-button">Submit Request</button>
+      </div>
+    </form>
+  </div>

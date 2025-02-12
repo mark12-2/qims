@@ -1,0 +1,76 @@
+.sidebar {
+  background: linear-gradient(180deg, #000056 0%, #0272B1 100%);
+  color: white;
+  width: 230;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.profile {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.profile-pic {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+}
+
+.profile-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.nav {
+  margin-top: 40px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  color: white;
+  text-decoration: none;
+  transition: background 0.3s;
+
+}
+
+.nav-item i,
+.nav-item span {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.nav-item:hover, .nav-item.active {
+  background-color: #1e40af;
+}
+
+.footer-nav {
+  margin-top: auto;
+  margin-bottom: 20px;
+}
+
+.footer-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  color: white;
+  text-decoration: none;
+  background-color: #1e3a8a;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+
+.footer-item i,
+.footer-item span {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 10px;
+}
