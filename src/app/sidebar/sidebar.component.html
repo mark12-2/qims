@@ -1,0 +1,37 @@
+<div class="sidebar">
+    <div class="profile">
+        <img alt="Profile picture" class="profile-pic" src="/icons/avatar.png" />
+        <h3 class="profile-name">Username</h3>
+    </div>
+
+    <nav class="nav">
+        <a class="nav-item" href="#"><i class="pi pi-home"></i> Home</a>
+        <a class="nav-item" href="#"><i class="pi pi-folder-open"></i> Project Materials</a>
+        <a class="nav-item" href="#"><i class="pi pi-address-book"></i> Borrowed Items</a>
+        <button class="nav-item dropdown-btn" (click)="toggleDropdown()">
+            <i class="pi pi-cart-plus" aria-hidden="true"></i> Parts Picker
+            <i class="fa fa-caret-down"></i>
+        </button>
+
+        <div class="dropdown-container" [ngClass]="{ 'active': isDropdownOpen }">
+            <a class="dropdown-item" href="#"><img src="/images/computer.jpg" alt="Part 1" /> Computer</a>
+            <a class="dropdown-item" href="#"><img src="/images/laptop.jpg" alt="Part 2" /> Laptop</a>
+            <a class="dropdown-item" href="#"><img src="/images/jiar.png" alt="Part 3" /> Jay-ar</a>
+            <a class="dropdown-item" href="#"><img src="/images/wifi.jpg" alt="Part 3" /> Piso Wifi</a>
+            <a class="dropdown-item" href="#"><img src="/images/tv.png" alt="Part 3" /> Television</a>
+        </div>
+    </nav>
+
+    <div class="footer-nav">
+        <a class="footer-item" href="#"><i class="fas fa-plus-circle"></i> Add Supplier</a>
+        <a class="footer-item" href="#"><i class="pi pi-spin pi-cog"></i> Settings</a>
+    </div>
+</div>
+
+<!-- Floating Button for Notifications and Dark Mode -->
+<div class="floating-buttons">
+    <button class="floating-btn" id="dark-mode-btn">
+        <input type="checkbox" id="switch" (change)="toggleDarkMode($event)" />
+        <label for="switch">Dark mode</label>
+    </button>
+</div>

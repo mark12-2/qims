@@ -1,0 +1,83 @@
+<app-sidebar></app-sidebar>
+<body>
+  <div class="search-bar">
+    <input 
+      type="text" 
+      [(ngModel)]="searchQuery" 
+      placeholder="Search products by name or code..." 
+      class="search-input"
+    />
+  </div>
+
+  <mat-tab-group>
+    <mat-tab *ngFor="let category of categories" [label]="category">
+      <p-table 
+        [value]="filteredProducts(category)" 
+        [tableStyle]="{'min-width': '50rem'}"
+        styleClass="small-table">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 4rem">
+              <input type="checkbox" disabled />
+            </th>
+            <th>Image</th>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Action</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+          <tr>
+            <td>
+              <input type="checkbox" [checked]="isSelected(product)" (change)="toggleProductSelection(product)" />
+            </td>
+            <td>
+              <img [src]="product.image" alt="{{ product.name }}" class="product-image" />
+            </td>
+            <td>{{ product.code }}</td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.price | currency: 'PHP' }}</td>
+            <td>
+              <input 
+                type="number" 
+                [(ngModel)]="product.quantity" 
+                min="0" 
+                max="99" 
+                class="quantity-input" 
+              />
+            </td>
+            <td>
+              <button class="view-button">View</button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </mat-tab>
+    <div class="flex items-center justify-start">
+        <div class="flex justify-center items-center gap-4">
+            <span>Items per page: </span>
+            <p-slider [(ngModel)]="rows3" (ngModelChange)="first3 = 0" [style]="{ width: '10rem' }" [min]="10" [max]="120" [step]="30" />
+        </div>
+        <p-paginator (onPageChange)="onPageChange3($event)" [first]="first3" [rows]="rows3" [totalRecords]="totalRecords"
+            [showFirstLastIcon]="false" [showCurrentPageReport]="true" currentPageReportTemplate="{first} - {last} of {totalRecords}"></p-paginator>
+    </div>
+  </mat-tab-group>
+
+  <!-- Total Price Footer with Dropdown -->
+  <div class="total-bar">
+    <span (click)="toggleDropdown()" class="total-label">
+      Total Price: {{ getTotalPrice() | currency: 'PHP' }}
+    </span>
+
+    <!-- Dropdown List -->
+    <div class="dropdown" *ngIf="showDropdown">
+      <div *ngFor="let product of selectedProducts" class="dropdown-item">
+        {{ product.name }} (Quantity: {{ product.quantity }})
+      </div>
+    </div>
+
+    <button class="checkout-button">Checkout</button>
+  </div>
+</body>
