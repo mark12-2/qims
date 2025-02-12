@@ -18,9 +18,9 @@ export class DashboardComponent {
   }
 
   async loadUserEmail() {
-    if (await this.authService.isLoggedIn()) {
-      const { data } = await this.authService.getUser();
-      this.userEmail = data.user?.email || null;
-    }
+    // if (await this.authService.isLoggedIn()) {
+    //   const { data } = await this.authService.getUser();
+    //   this.userEmail = data.user?.email || null;
+    // }
   }
 }

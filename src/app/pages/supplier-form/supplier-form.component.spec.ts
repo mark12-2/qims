@@ -19,5 +19,5 @@ describe('SupplierFormComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
+  }); 
 });

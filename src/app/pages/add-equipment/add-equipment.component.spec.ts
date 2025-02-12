@@ -1,23 +1,23 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SupplierListComponent } from './supplier-list.component';
+import { AddEquipmentComponent } from './add-equipment.component';
 
-describe('SupplierListComponent', () => {
-  let component: SupplierListComponent;
-  let fixture: ComponentFixture<SupplierListComponent>;
+describe('AddEquipmentComponent', () => {
+  let component: AddEquipmentComponent;
+  let fixture: ComponentFixture<AddEquipmentComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SupplierListComponent]
+      imports: [AddEquipmentComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SupplierListComponent);
+    fixture = TestBed.createComponent(AddEquipmentComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  }); 
+  });
 });
