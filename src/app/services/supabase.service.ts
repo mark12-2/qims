@@ -18,6 +18,15 @@ export class SupabaseService {
     this.supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
   }
 
+  
+  from(tableName: string) {
+    return this.supabase.from(tableName);
+  }
+
+  rpc(functionName: string, params: any) {
+    return this.supabase.rpc(functionName, params);
+  }
+
   private handleError(error: any): string {
     console.error('❌ Supabase Error:', error);
 
@@ -361,6 +370,64 @@ export class SupabaseService {
     return data?.user || null;
   }
 
+  async getAvailableEquipment(): Promise<any[]> {
+    const { data, error } = await this.supabase
+      .from('equipments')
+      .select('*')
+      .gt('quantity', 0); // Only fetch equipment with available quantity
+  
+    if (error) {
+      console.error('Error fetching available equipment:', error);
+      throw error;
+    }
+  
+    console.log('Fetched equipment:', data); // Log the fetched data
+    return data || [];
+  }
+
+  
+  async createBorrowRequest(requestData: any): Promise<any> {
+    const { data, error } = await this.supabase
+      .from('borrow_requests')
+      .insert([requestData])
+      .select(); // Return the inserted record
+  
+    if (error) throw error;
+    return data[0];
+  }
+
+  async insertBorrowRequestEquipment(data: any[]): Promise<void> {
+    const { error } = await this.supabase
+      .from('borrow_request_equipment')
+      .insert(data);
+  
+    if (error) {
+      throw error;
+    }
+  }
+
+  
+
+  async updateBorrowRequestStatus(requestId: string, status: string, notes?: string): Promise<any> {
+    const { data, error } = await this.supabase
+      .from('borrow_requests')
+      .update({ status, admin_notes: notes })
+      .eq('id', requestId)
+      .select();
+    if (error) throw error;
+    return data[0];
+  }
 
 
+  async updateEquipmentQuantity(equipmentId: string, newQuantity: number): Promise<void> {
+    const { error } = await this.supabase
+      .from('equipments')
+      .update({ quantity: newQuantity })
+      .eq('id', equipmentId);
+  
+    if (error) {
+      console.error('Error updating equipment quantity:', error);
+      throw error;
+    }
+  }
 }
