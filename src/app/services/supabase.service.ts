@@ -18,6 +18,15 @@ export class SupabaseService {
     this.supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
   }
 
+  
+  from(tableName: string) {
+    return this.supabase.from(tableName);
+  }
+
+  rpc(functionName: string, params: any) {
+    return this.supabase.rpc(functionName, params);
+  }
+
   private handleError(error: any): string {
     console.error('❌ Supabase Error:', error);
 
@@ -461,62 +470,6 @@ export class SupabaseService {
     return data?.user || null;
   }
 
-  async getTotalEquipmentCount(): Promise<number> {
-    const { count, error } = await this.supabase
-      .from('equipments')
-      .select('*', { count: 'exact', head: true });
 
-    if (error) {
-      console.error('❌ Error fetching total equipment count:', error);
-      return 0;
-    }
-
-    return count || 0;
-  }
-
-
-
-  async logActivity(activityType: string, equipmentId: string, message: string) {
-    const { data, error } = await this.supabase
-      .from('recent_activities')
-      .insert([
-        {
-          activity_type: activityType,
-          equipment_id: equipmentId,
-          message: message,
-          timestamp: new Date().toISOString(), // Current timestamp
-        },
-      ])
-      .select(); // Select inserted data for debugging
-
-    if (error) {
-      console.error('❌ Error logging activity:', error);
-    } else {
-      console.log(`✅ Activity logged: ${activityType} - ${message}`, data);
-    }
-  }
-
-
-
-  async getRecentActivities(): Promise<any[]> {
-    const { data, error } = await this.supabase
-      .from('recent_activities')
-      .select('*')
-      .order('timestamp', { ascending: false }) // Get latest first
-      .limit(10);
-
-    if (error) {
-      console.error('❌ Error fetching recent activities:', error);
-      return [];
-    }
-
-    if (!data || data.length === 0) {
-      console.warn('⚠ No recent activities found in database.');
-      return [];
-    }
-
-    console.log('✅ Fetched recent activities:', data); // Debugging log
-    return data;
-  }
 
 }

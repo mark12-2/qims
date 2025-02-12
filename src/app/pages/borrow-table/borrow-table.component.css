@@ -1,0 +1,163 @@
+.sidebar {
+    background: linear-gradient(180deg, #000056 0%, #0272B1 100%);
+    color: white;
+    width: 230;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+  
+  .profile {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .profile-pic {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+  }
+  
+  .profile-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  
+  .nav {
+    margin-top: 40px;
+  }
+  
+  .nav-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    color: white;
+    text-decoration: none;
+    transition: background 0.3s;
+  
+  }
+  
+  .nav-item i,
+  .nav-item span {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 10px;
+  }
+  
+  .nav-item:hover, .nav-item.active {
+    background-color: #1e40af;
+  }
+  
+  .footer-nav {
+    margin-top: auto;
+    margin-bottom: 20px;
+  }
+  
+  .footer-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    color: white;
+    text-decoration: none;
+    background-color: #1e3a8a;
+    margin-bottom: 10px;
+    border-radius: 10px;
+  }
+  
+  .footer-item i,
+  .footer-item span {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 10px;
+  }
+  
+
+div {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+  
+  button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  button:first-of-type {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  button:last-of-type {
+    background-color: #dc3545;
+    color: white;
+  }
+
+
+
+  /* General table container styling */
+.table {
+    flex: 1; /* Allow the table container to grow */
+    min-height: 300px; /* Set a minimum height for the table container */
+    width: 80%;
+    max-width: 630px;
+    padding: 15px;
+    font-family: 'Poppins', sans-serif;
+    background-color: #ffffff;
+    border-radius: 6px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Supplier table specific styling */
+  .supplier-table {
+    margin-left: 300px;
+    width: 80%;
+    border-collapse: separate;
+    border-spacing: 0 8px; /* Add spacing between rows */
+    background-color: #ffffff;
+    border-radius: 6px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  /* Caption styling */
+  .supplier-table caption {
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: left;
+    padding: 12px;
+    background-color: #f0f0f0;
+    color: #1e3a8a;
+    letter-spacing: 0.8px;
+  }
+  
+  /* Header and cell styling */
+  .supplier-table th,
+  .supplier-table td {
+    padding: 12px;
+    text-align: left;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    color: #333;
+    letter-spacing: 0.4px;
+  }
+  
+  /* Row hover effect */
+  .supplier-table tbody tr:hover {
+    background-color: #f9f9f9;
+  }
+  
+  /* No items message styling */
+  .no-items {
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    color: #666;
+  }

@@ -1,0 +1,67 @@
+<div class="sidebar">
+    <div class="profile">
+        <img alt="Profile picture of Jay-Ar" class="profile-pic" src="https://placehold.co/100x100"/>
+        <h1 class="profile-name">{{ userEmail }}</h1>
+    </div>
+    <nav class="nav">
+        <a class="nav-item active" href="#">
+            <i class="fas fa-home"></i> Home
+        </a>
+        <a class="nav-item" href="#">
+            <i class="fas fa-folder"></i> Project Materials
+        </a>
+        <a class="nav-item" href="#">
+            <i class="fas fa-shopping-cart"></i> Cart
+        </a>
+        <a class="nav-item" href="/borrow-table/">
+            <i class="fas fa-clipboard-list"></i> Borrowed Items
+        </a>
+    </nav>
+    <div class="footer-nav">
+      <a class="footer-item" href="#">
+        <i class="fas fa-plus-circle"></i> Add Equipment
+    </a>
+        <a class="footer-item" href="#">
+            <i class="fas fa-plus-circle"></i> Add Supplier
+        </a>
+        <a class="footer-item" href="#">
+            <i class="fas fa-cog"></i> Settings
+        </a>
+    </div>
+  </div>
+
+
+  <div *ngIf="pendingRequests.length === 0" class="no-items">
+    <p>No pending borrow requests.</p>
+  </div>
+  
+  <table class="supplier-table" *ngIf="pendingRequests.length > 0">
+    <caption>Pending Borrow Requests</caption>
+    <thead>
+      <tr>
+        <!-- <th>User</th> -->
+        <th>Borrower Name</th>
+        <th>Department/Location</th>
+        <th>Equipment</th>
+        <th>Quantity</th> <!-- New column for Quantity -->
+        <th>Borrow Date</th>
+        <th>Return Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let request of pendingRequests">
+        <!-- <td>{{ request.user_id }}</td> -->
+        <td>{{ request.borrower_name }}</td>
+        <td>{{ request.borrower_department }}</td>
+        <td>{{ request.equipment_names || 'No equipment' }}</td>
+        <td>{{ request.quantities || 'N/A' }}</td> <!-- Display quantities -->
+        <td>{{ request.borrow_date }}</td>
+        <td>{{ request.return_date }}</td>
+        <td>
+          <button (click)="approveRequest(request.id)" style="margin-right: 10px;">Approve</button>
+          <button (click)="rejectRequest(request.id)">Reject</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
