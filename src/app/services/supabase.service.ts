@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = 'https://xvcgubrtandfivlqcmww.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2Y2d1YnJ0YW5kZml2bHFjbXd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkxNDk4NjYsImV4cCI6MjA1NDcyNTg2Nn0.yjd-SXfzJe6XmuNpI2HsZcI9EsS9AxBXI-qukzgcZig'; // Replace with your Supabase Key
+const SUPABASE_URL = 'https://uqeuskaicawwgyknrbfi.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxZXVza2FpY2F3d2d5a25yYmZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzgxOTk0NzksImV4cCI6MjA1Mzc3NTQ3OX0.ghXQrzjmj7cQZaeIijE5pfdIhVk88pj1fZPtz-CfMq0'; // Replace with your Supabase Key
 
 interface Equipment {
   id: string;

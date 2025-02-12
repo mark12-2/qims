@@ -23,7 +23,7 @@
     "@supabase/supabase-js": "^2.48.1",
     "chart.js": "^4.4.7",
     "primeicons": "^7.0.0",
-    "primeng": "^17.8.0",
+    "primeng": "^15.2.0",
     "qrcode": "^1.5.4",
     "rating": "^0.1.0",
     "recharts": "^2.15.1",

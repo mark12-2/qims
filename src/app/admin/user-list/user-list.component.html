@@ -7,53 +7,67 @@
       placeholder="Search products by name or code..." 
       class="search-input"
     />
+    <button class="add" (click)="openAddUserDialog()">Add User</button>
   </div>
 
-  <mat-tab-group>
-      <p-table 
-
-        [tableStyle]="{'min-width': '50rem'}"
-        styleClass="small-table">
-        <ng-template pTemplate="header">
-          <tr>
-            <th style="width: 4rem">
-              <input type="checkbox" disabled />
-            </th>
-            <th>Image</th>
-            <th>Code</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Action</th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-product>
-          <tr>
-            <td>
-              <input type="checkbox" [checked]="isSelected(product)" (change)="toggleProductSelection(product)" />
-            </td>
-            <td>
-              <img [src]="product.image" alt="{{ product.name }}" class="product-image" />
-            </td>
-            <td>{{ product.code }}</td>
-            <td>{{ product.name }}</td>
-            <td>{{ product.price | currency: 'PHP' }}</td>
-            <td>
-              <input 
-                type="number" 
-                [(ngModel)]="product.quantity" 
-                min="0" 
-                max="99" 
-                class="quantity-input" 
-              />
-            </td>
-            <td>
-              <button class="view-button">View</button>
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-
-  </mat-tab-group>
-
-</body>
+  <div class="card">
+    <p-table [value]="user" [tableStyle]="{ 'min-width': '50rem' }">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>UID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-user>
+        <tr>
+          <td>{{ user.uid }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <button mat-button color="primary" (click)="editUser(user)">Edit</button>
+            <button mat-button color="warn" (click)="deleteUser(user)">Delete</button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    
+  </div>
+  
+  
+  <ng-template #addUserDialog class="box">
+    <h2 mat-dialog-title>Add User</h2>
+    <form [formGroup]="userForm" (ngSubmit)="onAddUser()" class="dialog-form">
+      <div class="name-row">
+        <mat-form-field appearance="outline" class="half-width">
+          <mat-label>First Name</mat-label>
+          <input matInput formControlName="firstName" />
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="half-width">
+          <mat-label>Last Name</mat-label>
+          <input matInput formControlName="lastName" />
+        </mat-form-field>
+      </div>
+  
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" />
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password" type="password" />
+      </mat-form-field>
+  
+      <div class="actions">
+        <button mat-button type="button" (click)="closeDialog()">Cancel</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid">
+          Add User
+        </button>
+      </div>
+    </form>
+  </ng-template>
+  
+</body> 
