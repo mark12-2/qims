@@ -5,11 +5,10 @@ import { SupabaseAuthService } from '../../services/supabase-auth.service';
 import { Router } from '@angular/router';
 
 @Component({
-  standalone: true,
-  imports: [CommonModule, FormsModule],
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+    imports: [CommonModule, FormsModule],
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   email: string = '';

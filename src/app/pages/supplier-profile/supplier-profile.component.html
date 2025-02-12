@@ -27,7 +27,7 @@
         <a class="footer-item" routerLink="/settings" routerLinkActive="active">
             <i class="fas fa-cog"></i> Settings
         </a>
-    </div>
+    </div>  
 </div>
 
 
@@ -55,7 +55,7 @@
         </a>
     </nav>
     <div class="footer-nav">
-        <a class="footer-item" routerLink="/add-supplier" routerLinkActive="active">
+        <a class="footer-item" href="/supplier-form/" routerLinkActive="active">
             <i class="fas fa-plus-circle"></i> Add Supplier
         </a>
         <a class="footer-item" routerLink="/settings" routerLinkActive="active">
@@ -71,70 +71,82 @@
         </div>
     </div>
 
-
-<div class="bobo">
-    <div class="over">
-        <p>Overview</p>
-    </div>
-    <div class="supplier-profile-container">
-        <h2>quanby images</h2>
-        <div class="supplier-info">
+    <div class="bobo">
+        <!-- Supplier Profile Container -->
+        <div class="supplier-profile-container" *ngIf="supplier">
+          <div class="over">
+            <p>Overview</p>
+          </div>
+          <div class="supplier-info">
+            <!-- Supplier Details -->
             <div class="info-item">
-                <h3>About</h3>
-                <ul class="contact-details">
-                    <li class="contact-detail">
-                        <strong>Phone:</strong> +1 (555) 123-4567
-                    </li>
-                    <li class="contact-detail">
-                        <strong>Email:</strong> john.doe.com
-                    </li>
-                    <li class="contact-detail">
-                        <strong>Address:</strong> 123 Tech Street, City, State ZIP
-                    </li>
-                </ul>
+              <h3>About</h3>
+              <ul class="contact-details">
+                <li class="contact-detail">
+                  <strong>Contact Person:</strong> {{ supplier.contact_person }}
+                </li>
+                <li class="contact-detail">
+                  <strong>Phone:</strong> {{ supplier.phone }}
+                </li>
+                <li class="contact-detail">
+                  <strong>Email:</strong> {{ supplier.email }}
+                </li>
+                <li class="contact-detail">
+                  <strong>Address:</strong> {{ supplier.address }}
+                </li>
+              </ul>
             </div>
             <hr class="bottom-line">
-            <!-- New Brand Offered Section -->
+      
+            <!-- Brands Offered -->
             <div class="brand-offered">
                 <h3>Brands Offered</h3>
-                <div class="brand-grid">
-                    <div class="brand-item">Brand 1</div>
-                    <div class="brand-item">Brand 2</div>
-                    <div class="brand-item">Brand 3</div>
-                    <div class="brand-item">Brand 4</div>
-                    <div class="brand-item">Brand 5</div>
-                    <div class="brand-item">Brand 6</div>
-                    <div class="brand-item">Brand 7</div>
-                    <div class="brand-item">Brand 8</div>
+                <div>
+                  <div class="brand-grid" *ngIf="uniqueBrands.length > 0">
+                    <div
+                      class="brand-item"
+                      *ngFor="let brand of uniqueBrands"
+                      (click)="selectBrand(brand)"
+                      [class.selected]="selectedBrand === brand"
+                    >
+                      {{ brand || 'N/A' }} <!-- Fallback for null values -->
+                    </div>
+                  </div>
                 </div>
-            </div>
+              </div>
+          </div>
+      
+          <div class="no-items" *ngIf="filteredItems.length === 0">
+            <p>No items available for this supplier.</p>
+          </div>
         </div>
-    </div>
-</div>
-
-
-<div class="table">
-    <table class="supplier-table">
-        <caption>Items</caption>
-        <tr>
-            <th>Brand</th>
-            <th>Models Offered</th>
-            <th>Item Costs</th>
-        </tr>
-        <tr>
-            <td>Item 1</td>
-            <td>vbyv</td>
-            <td>2,000</td>
-        </tr>
-        <tr>
-            <td>Item 1</td>
-            <td>vbyv</td>
-            <td>2,000</td>
-        </tr>
-        <tr>
-            <td>Item 1</td>
-            <td>vbyv</td>
-            <td>2,000</td>
-        </tr>
-    </table>
-</div>
+      
+        <!-- Items Table -->
+        <div class="table" *ngIf="filteredItems.length > 0">
+          <table class="supplier-table">
+            <caption>Items</caption>
+            <thead>
+              <tr>
+                <th>Models Offered</th>
+                <th>Item Costs</th>
+                <th>Image</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of filteredItems">
+                <td>{{ item.item_offered || 'N/A' }}</td> <!-- Fallback for null values -->
+                <td>{{ item.item_cost ? (item.item_cost | currency) : 'N/A' }}</td> <!-- Format cost as currency -->
+                <td>
+                  <img *ngIf="item.item_image_url" [src]="item.item_image_url" alt="{{ item.brand_offered }}" width="50" />
+                  <span *ngIf="!item.item_image_url">No Image</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- Fallback Message -->
+      <div *ngIf="!supplier">
+        <p>Loading supplier profile...</p>
+      </div>
