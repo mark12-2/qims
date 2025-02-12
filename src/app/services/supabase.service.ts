@@ -471,5 +471,124 @@ export class SupabaseService {
   }
 
 
+  async getTotalEquipmentCount(): Promise<number> {
+    const { count, error } = await this.supabase
+      .from('equipments')
+      .select('*', { count: 'exact', head: true });
 
+    if (error) {
+      console.error('❌ Error fetching total equipment count:', error);
+      return 0;
+    }
+
+    return count || 0;
+  }
+
+
+
+  async logActivity(activityType: string, equipmentId: string, message: string) {
+    const { data, error } = await this.supabase
+      .from('recent_activities')
+      .insert([
+        {
+          activity_type: activityType,
+          equipment_id: equipmentId,
+          message: message,
+          timestamp: new Date().toISOString(), // Current timestamp
+        },
+      ])
+      .select(); // Select inserted data for debugging
+
+    if (error) {
+      console.error('❌ Error logging activity:', error);
+    } else {
+      console.log(`✅ Activity logged: ${activityType} - ${message}`, data);
+    }
+  }
+
+
+
+  async getRecentActivities(): Promise<any[]> {
+    const { data, error } = await this.supabase
+      .from('recent_activities')
+      .select('*')
+      .order('timestamp', { ascending: false }) // Get latest first
+      .limit(10);
+
+    if (error) {
+      console.error('❌ Error fetching recent activities:', error);
+      return [];
+    }
+
+    if (!data || data.length === 0) {
+      console.warn('⚠ No recent activities found in database.');
+      return [];
+    }
+
+    console.log('✅ Fetched recent activities:', data); // Debugging log
+    return data;
+  }
+
+
+
+  async getAvailableEquipment(): Promise<any[]> {
+    const { data, error } = await this.supabase
+      .from('equipments')
+      .select('*')
+      .gt('quantity', 0); // Only fetch equipment with available quantity
+  
+    if (error) {
+      console.error('Error fetching available equipment:', error);
+      throw error;
+    }
+  
+    console.log('Fetched equipment:', data); // Log the fetched data
+    return data || [];
+  }
+
+  
+  async createBorrowRequest(requestData: any): Promise<any> {
+    const { data, error } = await this.supabase
+      .from('borrow_requests')
+      .insert([requestData])
+      .select(); // Return the inserted record
+  
+    if (error) throw error;
+    return data[0];
+  }
+
+  async insertBorrowRequestEquipment(data: any[]): Promise<void> {
+    const { error } = await this.supabase
+      .from('borrow_request_equipment')
+      .insert(data);
+  
+    if (error) {
+      throw error;
+    }
+  }
+
+  
+
+  async updateBorrowRequestStatus(requestId: string, status: string, notes?: string): Promise<any> {
+    const { data, error } = await this.supabase
+      .from('borrow_requests')
+      .update({ status, admin_notes: notes })
+      .eq('id', requestId)
+      .select();
+    if (error) throw error;
+    return data[0];
+  }
+
+
+  async updateEquipmentQuantity(equipmentId: string, newQuantity: number): Promise<void> {
+    const { error } = await this.supabase
+      .from('equipments')
+      .update({ quantity: newQuantity })
+      .eq('id', equipmentId);
+  
+    if (error) {
+      console.error('Error updating equipment quantity:', error);
+      throw error;
+    }
+  }
 }
