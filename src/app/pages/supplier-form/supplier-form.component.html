@@ -50,29 +50,7 @@
         <div class="form-group">
           <input type="text" [(ngModel)]="phone" placeholder="Enter phone/landline no." name="phone" />
         </div>
-  
-        <!-- Dynamic Item Groups -->
-        <div *ngFor="let group of itemGroups; let i = index" class="item-group">
-          <div class="form-group">
-            <input type="text" [(ngModel)]="group.brandsOffered" placeholder="Enter brands offered" name="brands-offered-{{i}}" />
-          </div>
-          <div class="form-group">
-            <input type="text" [(ngModel)]="group.itemsOffered" placeholder="Enter items/models offered" name="items-offered-{{i}}" />
-          </div>
-          <div class="form-group">
-            <input type="text" [(ngModel)]="group.itemCosts" placeholder="Enter item costs" name="item-costs-{{i}}" />
-          </div>
-          <div class="form-group">
-            <input type="file" (change)="onFileChange($event, i)" name="item-image-{{i}}" />
-          </div>
-          <button type="button" class="remove-group-button" (click)="removeItemGroup(i)" *ngIf="i > 0">
-            <i class="fas fa-trash"></i> <!-- Trash icon -->
-          </button>
-        </div>
-  
-        <!-- Add New Group Button -->
-        <button type="button" class="add-group-button" (click)="addItemGroup()">Add Another Group</button>
-  
+
         <!-- Email -->
         <div class="form-group">
           <input type="email" [(ngModel)]="email" placeholder="Enter email address" name="email" />
