@@ -5,7 +5,7 @@ import { RegisterComponent } from './pages/register/register.component';
 import { SupplierProfileComponent } from './pages/supplier-profile/supplier-profile.component';
 import { SupplierListComponent } from './pages/supplier-list/supplier-list.component';
 import { SupplierFormComponent } from './pages/supplier-form/supplier-form.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { DashboardComponent } from './admin/dashboard/dashboard.component';
 import { ProjectMaterialsComponent } from './pages/project-materials/project-materials.component';
 import { AddEquipmentComponent } from './pages/add-equipment/add-equipment.component';
 import { SidebarComponent } from './pages/sidebar/sidebar.component';
@@ -14,6 +14,7 @@ import { EquipmentDetailsComponent } from './pages/equipment-details/equipment-d
 import { BorrowRequestComponent } from './pages/borrow-request-form/borrow-request-form.component';
 import { BorrowTableComponent } from './pages/borrow-table/borrow-table.component';
 import { BorrowHistoryComponent } from './pages/borrow-history/borrow-history.component';
+import { UserListComponent } from './admin/user-list/user-list.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -30,5 +31,6 @@ export const routes: Routes = [
   { path: 'borrow-form', component: BorrowRequestComponent },
   { path: 'borrow-table', component: BorrowTableComponent },
   { path: 'borrow-history', component: BorrowHistoryComponent },
+  { path: 'user-list', component: UserListComponent },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 ];

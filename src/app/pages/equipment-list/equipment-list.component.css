@@ -1,3 +1,10 @@
+.body-equip-list {
+  margin-top: 10px;
+  margin-left: 230px; /* Match the sidebar width + spacing */
+  padding: 24px;
+  transition: margin-left 0.3s ease;
+  background-color: rgb(255, 255, 255);
+}
 .equipment-list-container {
   margin: 20px;
   font-family: Arial, sans-serif;
@@ -7,8 +14,7 @@
   margin-bottom: 20px;
 }
 
-.filters input,
-.filters select {
+.filters input {
   margin-right: 10px;
   padding: 8px;
   border: 1px solid #ddd;
@@ -19,13 +25,16 @@
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  background: #fff;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.equipment-table th,
-.equipment-table td {
+.equipment-table th, .equipment-table td {
   padding: 12px;
   text-align: left;
-  border: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
 }
 
 .equipment-table th {
@@ -33,16 +42,11 @@
   color: white;
 }
 
-.equipment-table tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
 .equipment-table tr:hover {
   background-color: #f1f1f1;
 }
 
 button {
-  margin-right: 5px;
   padding: 6px 12px;
   background-color: #4CAF50;
   color: white;
@@ -55,22 +59,15 @@ button:hover {
   background-color: #45a049;
 }
 
-.qr-thumbnail {
+.qr-thumbnail, .product-image {
   width: 50px;
   height: 50px;
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
 }
 
-.qr-thumbnail:hover {
+.qr-thumbnail:hover, .product-image:hover {
   transform: scale(1.2);
-}
-
-.product-image {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  margin-right: 5px;
 }
 
 .modal-overlay {
@@ -114,29 +111,3 @@ button:hover {
 .close-button:hover {
   background: #cc0000;
 }
-
-.warning {
-  color: orange;
-  font-weight: bold;
-}
-
-.expired {
-  color: red;
-  font-weight: bold;
-}
-
-.expired {
-  color: red;
-  font-weight: bold;
-}
-
-.warning {
-  color: orange;
-  font-weight: bold;
-}
-
-.safe {
-  color: green;
-  font-weight: bold;
-}
-

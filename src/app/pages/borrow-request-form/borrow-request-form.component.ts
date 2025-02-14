@@ -51,9 +51,9 @@ export class BorrowRequestComponent {
   }
 
 
-  get displayedItems() {
-    return this.showAllItems ? this.equipmentList : this.equipmentList.slice(0, 6);
-  }
+get displayedItems() {
+  return this.equipmentList; // Always display all items
+}
 
   async loadUserEmail() {
     if (await this.authService.isLoggedIn()) {

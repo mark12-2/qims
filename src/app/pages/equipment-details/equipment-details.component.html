@@ -1,73 +1,135 @@
-<div class="equipment-details-container" *ngIf="equipmentData">
-  <h2>Equipment Details</h2>
+<app-sidebar></app-sidebar>
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css'>
+<script src='https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js'></script>
 
-  <div class="details-group">
-    <label>ID:</label> <span>{{ equipmentData.id }}</span>
-  </div>
-  <div class="details-group">
-    <label>Serial No:</label> <span>{{ equipmentData.serial_no }}</span>
-  </div>
-  <div class="details-group">
-    <label>Name:</label> <span>{{ equipmentData.name }}</span>
-  </div>
-  <div class="details-group">
-    <label>Model:</label> <span>{{ equipmentData.model }}</span>
-  </div>
-  <div class="details-group">
-    <label>Brand:</label> <span>{{ equipmentData.brand }}</span>
-  </div>
-  <div class="details-group">
-    <label>Supplier:</label> <span>{{ equipmentData.supplier }}</span>
-  </div>
-  <div class="details-group">
-    <label>Supplier Cost:</label> <span>{{ equipmentData.supplier_cost }}</span>
-  </div>
-  <div class="details-group">
-    <label>SRP:</label> <span>{{ equipmentData.srp }}</span>
-  </div>
-  <div class="details-group">
-    <label>Quantity:</label> <span>{{ equipmentData.quantity }}</span>
-  </div>
-  <div class="details-group">
-    <label>Location:</label> <span>{{ equipmentData.location }}</span>
-  </div>
-  <div class="details-group">
-    <label>Description:</label> <span>{{ equipmentData.description }}</span>
-  </div>
-
-  <!-- ✅ QR Code -->
-  <div class="details-group">
-    <label>QR Code:</label>
-    <img [src]="equipmentData.qr_code" alt="QR Code" style="width: 100px;">
-  </div>
-
-  <!-- ✅ Product Images -->
-  <div class="details-group">
-    <label>Product Images:</label>
-    <div *ngIf="equipmentData.product_images?.length > 0; else noImages">
-      <div *ngFor="let image of equipmentData.product_images">
-        <img [src]="image" alt="Product Image" style="width: 100px;">
+<div class="container" *ngIf="equipmentData">
+  <div class="main-body">
+    <div class="row gutters-sm">
+      <div class="col-md-4 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex flex-column align-items-center text-center">
+              <img [src]="equipmentData.product_images?.[0] || 'https://bootdey.com/img/Content/avatar/avatar7.png'" 
+                   alt="Product Image"  width="100" height="100">
+            </div>
+          </div>
+        </div>
+        <div class="card mt-3">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+              <p class="mb-0">Name</p>
+              <span>{{ equipmentData.name }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+              <p class="mb-0">Model</p>
+              <span>{{ equipmentData.model }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+              <p class="mb-0">Brand</p>
+              <span>{{ equipmentData.brand }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+              <p class="mb-0">Serial No.</p>
+              <span>{{ equipmentData.serial_no }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+              <p class="mb-0">Date Acquired</p>
+              <span>{{ equipmentData.date_acquired | date:'short' }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+              <p class="mb-0">Life Span</p>
+              <span>{{ equipmentData.life_span }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+              <p class="mb-0">Condition</p>
+              <span>{{ equipmentData.condition }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+              <p class="mb-0">Repair Logs</p>
+              <span *ngIf="equipmentData.repair_logs?.length > 0; else noLogs">
+                <ul>
+                  <li *ngFor="let log of equipmentData.repair_logs">
+                    <strong>{{ log.repair_details }}</strong> ({{ log.repair_status }}, {{ log.repair_date | date:'short' }})
+                  </li>
+                </ul>
+              </span>
+              <ng-template #noLogs>No repair logs</ng-template>
+            </li>
+            
+          </ul>
+        </div>
       </div>
+      <div class="col-md-8">
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Supplier</p>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                {{ equipmentData.supplier }}
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Quantity</p>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                {{ equipmentData.quantity }}
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Supplier Cost</p>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                {{ equipmentData.supplier_cost }}
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">SRP</p>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                {{ equipmentData.srp }}
+              </div>
+            </div>
+            
+            <hr>
+             <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Description</p>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                {{ equipmentData.description }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row gutters-sm">
+          <div class="col-sm-6 mb-3">
+            <div class="card h-100">
+              <div class="card-body">
+                <p class="d-flex align-items-center mb-3">QR Code</p>
+                <img [src]="equipmentData.qr_code" alt="QR Code" style="width: 100px;">
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 mb-3">
+            <div class="card h-100">
+              <div class="card-body">
+                <p class="d-flex align-items-center mb-3">Supplier Cost History Chart</p>
+                <span>Chart</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>  <button (click)="goBack()">Go Back</button>
     </div>
-    <ng-template #noImages>
-      <span>No images available</span>
-    </ng-template>
   </div>
 
-  <!-- ✅ Repair Logs -->
-  <div class="details-group">
-    <label>Repair Logs:</label>
-    <div *ngIf="equipmentData.repair_logs?.length > 0; else noLogs">
-      <ul>
-        <li *ngFor="let log of equipmentData.repair_logs">
-          <strong>{{ log.repair_details }}</strong> ({{ log.repair_status }}, {{ log.repair_date | date:'short' }})
-        </li>
-      </ul>
-    </div>
-    <ng-template #noLogs>
-      <span>No repair logs</span>
-    </ng-template>
-  </div>
-
-  <button (click)="goBack()">Go Back</button>
 </div>

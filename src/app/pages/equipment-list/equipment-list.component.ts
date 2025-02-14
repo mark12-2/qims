@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { SupabaseService } from '../../services/supabase.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { SidebarComponent } from "../sidebar/sidebar.component";
 
 @Component({
   selector: 'app-equipment-list',
-  imports: [CommonModule],
+  imports: [CommonModule, SidebarComponent],
   templateUrl: './equipment-list.component.html',
   styleUrls: ['./equipment-list.component.css'],
 })
@@ -14,6 +15,10 @@ export class EquipmentListComponent implements OnInit {
   filteredEquipmentList: any[] = [];
   isQRCodeModalOpen = false;
   selectedQRCode: string | null = null;
+  currentPage = 1;
+  pageSize = 5;
+  totalPages = 1;
+  paginatedEquipmentList = [];
 
   constructor(
     private supabaseService: SupabaseService,
@@ -83,4 +88,6 @@ export class EquipmentListComponent implements OnInit {
     this.isQRCodeModalOpen = false;
     this.selectedQRCode = null;
   }
+
+  
 }

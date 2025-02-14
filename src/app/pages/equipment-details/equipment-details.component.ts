@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { SupabaseService } from '../../services/supabase.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, NgIf } from '@angular/common';
+import { SidebarComponent } from "../sidebar/sidebar.component";
 
 @Component({
   selector: 'app-equipment-details',
-  imports: [CommonModule, NgIf],
+  imports: [CommonModule, NgIf, SidebarComponent],
   templateUrl: './equipment-details.component.html',
   styleUrls: ['./equipment-details.component.css'],
 })

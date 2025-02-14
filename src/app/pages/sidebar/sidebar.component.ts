@@ -1,3 +1,4 @@
+
 import { Component, EventEmitter, Output, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SupabaseAuthService } from '../../services/supabase-auth.service';
@@ -5,9 +6,10 @@ import { SupabaseService } from '../../supabase.service';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [ CommonModule ],
+  standalone: true,
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.css'
+  styleUrls: ['./sidebar.component.css'],
+  imports: [CommonModule],
 })
 export class SidebarComponent {
   userEmail: string | null = null;
@@ -24,11 +26,11 @@ export class SidebarComponent {
   }
 
 
+
   toggleDropdown(): void {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
-
-
+ 
   async loadUserEmail() {
     if (await this.authService.isLoggedIn()) {
       const { data } = await this.authService.getUser();
