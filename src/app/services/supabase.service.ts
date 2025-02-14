@@ -443,11 +443,12 @@ export class SupabaseService {
 
     if (error) {
       console.error('❌ Error fetching user:', error);
-      return null;
+      return { user: null };
     }
-
-    return data.user;
+  
+    return data;
   }
+
 
   async getCurrentUser(): Promise<any | null> {
     // Removed restoreSession call as it does not exist

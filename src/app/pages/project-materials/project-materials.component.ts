@@ -42,12 +42,24 @@ export class ProjectMaterialsComponent {
   }
 
   async loadUser() {
-    if (await this.authService.isLoggedIn()) {
-      const { data } = await this.authService.getUser();
-      this.userEmail = data.user?.email || null;
-      this.userId = data.user?.id || null;
+    try {
+      const { data, error } = await this.authService.getUser();
+
+      if (error || !data?.user) {
+        console.warn('⚠ No user found. Redirecting to login...');
+        this.userEmail = null;
+        this.userId = null;
+        return;
+      }
+
+      this.userEmail = data.user.email;
+      this.userId = data.user.id;
+      console.log('✅ User loaded:', this.userEmail);
+    } catch (err) {
+      console.error('❌ Error loading user:', err);
     }
   }
+
 
   openModal() {
     console.log('Opening modal');
