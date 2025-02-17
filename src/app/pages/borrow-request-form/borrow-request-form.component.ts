@@ -52,7 +52,7 @@ export class BorrowRequestComponent {
 
 
   get displayedItems() {
-    return this.showAllItems ? this.equipmentList : this.equipmentList.slice(0, 6);
+    return this.equipmentList; // Always display all items
   }
 
   async loadUserEmail() {

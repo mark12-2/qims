@@ -35,12 +35,10 @@ export class BorrowTableComponent implements OnInit {
     }
   }
 
-  /**
-   * Fetch all pending borrow requests from the database.
-   */
   async fetchPendingRequests(): Promise<void> {
     try {
-      const { data, error } = await this.supabaseService
+        // Step 1: Fetch data from Supabase with improved join structure
+        const { data, error } = await this.supabaseService
         .from('borrow_requests')
         .select(`
           id,
@@ -50,50 +48,81 @@ export class BorrowTableComponent implements OnInit {
           status,
           borrower_name,
           borrower_department,
-          borrow_request_equipment!borrow_request_equipment_borrow_request_id_fkey (
+          borrow_request_equipment:borrow_request_equipment_borrow_request_id_fkey (
             equipment_id,
             quantity,
-            equipments!borrow_request_equipment_equipment_id_fkey (
-              id,
+            equipments:borrow_request_equipment_equipment_id_fkey (
               name
             )
           )
         `)
         .eq('status', 'pending');
-  
-      if (error) {
-        console.error('Error fetching pending borrow requests:', error);
-        throw error;
-      }
-  
-      console.log('Raw data from Supabase:', data);
-  
-      this.pendingRequests = data.map((request) => ({
-        ...request,
-        equipment_names: request.borrow_request_equipment
-          ?.map((bre: any) => bre.equipments?.name || null)
-          ?.filter((name: string | null) => name !== null)
-          ?.join(', ') || '',
-        quantities: request.borrow_request_equipment
-          ?.map((bre: any) => bre.quantity || 0)
-          ?.join(', ') || ''
-      }));
-  
-      console.log('Fetched pending requests:', this.pendingRequests);
+
+
+        // Step 2: Check for errors
+        if (error) {
+            console.error('Error fetching pending borrow requests:', error);
+            throw error;
+        }
+
+        console.log('Raw data from Supabase:', JSON.stringify(data, null, 2));
+
+        // Step 3: Process fetched data
+        this.pendingRequests = data.map((request) => {
+          console.log('Processing request:', request);
+      
+          // Check if borrow_request_equipment is an array
+          if (!Array.isArray(request.borrow_request_equipment) || request.borrow_request_equipment.length === 0) {
+              console.warn('No borrow_request_equipment found for request:', request);
+              return {
+                  ...request,
+                  equipment_names: 'No equipment',
+                  quantities: 'N/A'
+              };
+          }
+      
+          // Extract Equipment Names
+          const equipmentNames = request.borrow_request_equipment
+              .map((bre: any) => {
+                  console.log('Processing borrow_request_equipment:', bre);
+                  return bre.equipments?.name || 'Unknown Equipment';
+              })
+              .filter((name: string) => name !== null)
+              .join(', ') || 'No equipment';
+      
+          // Extract Quantities
+          const quantities = request.borrow_request_equipment
+              .map((bre: any) => bre.quantity || 0)
+              .join(', ') || 'N/A';
+      
+          return {
+              ...request,
+              equipment_names: equipmentNames,
+              quantities: quantities
+          };
+      });
+      
+      console.log('Final Processed Requests:', JSON.stringify(this.pendingRequests, null, 2));
+      
+
     } catch (error) {
-      console.error('Failed to load pending borrow requests:', error);
-      alert('An error occurred while loading pending borrow requests. Please try again later.');
+        console.error('Failed to load pending borrow requests:', error);
+        alert('An error occurred while loading pending borrow requests. Please try again later.');
     }
-  }
+}
+
+  
   
   
   
 
 
   
+  
+
   /**
-   * Approve a borrow request by updating its status to 'approved'.
-   * @param requestId - The ID of the borrow request to approve.
+   * Reject a borrow request by updating its status to 'rejected'.
+   * @param requestId - The ID of the borrow request to reject.
    */
   async approveRequest(requestId: string): Promise<void> {
     try {
@@ -106,21 +135,23 @@ export class BorrowTableComponent implements OnInit {
       if (updateError) throw updateError;
   
       // Decrement the quantity of associated equipment
-      const { error: equipmentError } = await this.supabaseService.rpc('decrement_equipment_quantity', { request_id: requestId });
+      const { error: equipmentError } = await this.supabaseService.rpc(
+        'decrement_equipment_quantity',
+        { request_id: requestId }
+      );
   
       if (equipmentError) throw equipmentError;
   
       alert('Borrow request approved successfully!');
+  
+      // Refresh the list of pending requests
+      this.fetchPendingRequests();
     } catch (error) {
       console.error('Failed to approve borrow request:', error);
       alert('Failed to approve borrow request. Please try again.');
     }
   }
-
-  /**
-   * Reject a borrow request by updating its status to 'rejected'.
-   * @param requestId - The ID of the borrow request to reject.
-   */
+  
   async rejectRequest(requestId: string): Promise<void> {
     try {
       const { data, error } = await this.supabaseService
@@ -128,15 +159,15 @@ export class BorrowTableComponent implements OnInit {
         .update({ status: 'rejected', updated_at: new Date() })
         .eq('id', requestId)
         .select(); // Return the updated record
-
+  
       if (error) {
         console.error('Error rejecting borrow request:', error);
         throw error;
       }
-
+  
       console.log('Borrow request rejected:', data[0]);
       alert('Borrow request rejected successfully!');
-
+  
       // Refresh the list of pending requests
       this.fetchPendingRequests();
     } catch (error) {

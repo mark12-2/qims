@@ -31,19 +31,15 @@
   </div>
 
 
-  <div *ngIf="pendingRequests.length === 0" class="no-items">
-    <p>No pending borrow requests.</p>
-  </div>
   
   <table class="supplier-table" *ngIf="pendingRequests.length > 0">
     <caption>Pending Borrow Requests</caption>
     <thead>
       <tr>
-        <!-- <th>User</th> -->
         <th>Borrower Name</th>
         <th>Department/Location</th>
         <th>Equipment</th>
-        <th>Quantity</th> <!-- New column for Quantity -->
+        <th>Quantity</th>
         <th>Borrow Date</th>
         <th>Return Date</th>
         <th>Actions</th>
@@ -51,11 +47,10 @@
     </thead>
     <tbody>
       <tr *ngFor="let request of pendingRequests">
-        <!-- <td>{{ request.user_id }}</td> -->
         <td>{{ request.borrower_name }}</td>
         <td>{{ request.borrower_department }}</td>
-        <td>{{ request.equipment_names || 'No equipment' }}</td>
-        <td>{{ request.quantities || 'N/A' }}</td> <!-- Display quantities -->
+        <td>{{ request.equipment_names }}</td>
+        <td>{{ request.quantities }}</td>
         <td>{{ request.borrow_date }}</td>
         <td>{{ request.return_date }}</td>
         <td>
@@ -65,3 +60,7 @@
       </tr>
     </tbody>
   </table>
+  
+  <div *ngIf="pendingRequests.length === 0" class="no-items">
+    <p>No pending borrow requests.</p>
+  </div>
