@@ -33,16 +33,11 @@ export class BorrowRequestComponent {
     try {
       // Fetch available equipment from Supabase
       const rawEquipmentList = await this.supabaseService.getAvailableEquipment();
-      console.log('Fetched equipment list:', rawEquipmentList);
-  
-      // Initialize the equipment list with a default quantity of 0
       this.equipmentList = rawEquipmentList.map((item: any) => ({
         ...item,
         quantity: 0, // Default quantity is 0
         selected: false // Default selection state
       }));
-  
-      console.log('Initialized equipment list:', this.equipmentList);
       this.loadUserEmail();
     } catch (error) {
       console.error('Failed to load available equipment:', error);
@@ -74,43 +69,52 @@ export class BorrowRequestComponent {
     console.log('Selected equipment IDs:', this.selectedEquipmentIds);
   }
 
+
+  // Validate the quantity for an equipment item
+  validateQuantity(item: any): void {
+    const maxQuantity = item.quantity_available || 0; // Available stock in the database
+    if (!item.quantity || isNaN(item.quantity) || item.quantity < 1) {
+      alert('⚠ Invalid quantity. Setting to 1.');
+      item.quantity = 1;
+    } else if (item.quantity > maxQuantity) {
+      alert(`⚠ Quantity cannot exceed available stock (${maxQuantity}).`);
+      item.quantity = maxQuantity;
+    }
+  }
+
   async submitBorrowRequest(): Promise<void> {
     try {
-      const userId = (await this.supabaseService.getCurrentUser()).id; // Get current user's ID
-  
+      const userId = (await this.supabaseService.getCurrentUser()).id;
+
       // Insert into borrow_requests
-      const { data: borrowRequestData, error: borrowRequestError } =
-        await this.supabaseService
-          .from('borrow_requests')
-          .insert([
-            {
-              user_id: userId,
-              borrower_name: this.borrowerName,
-              borrower_department: this.borrowerDepartment,
-              borrow_date: this.borrowDate,
-              return_date: this.returnDate,
-              purpose: this.purpose,
-              status: 'pending'
-            }
-          ])
-          .select();
-  
-      if (borrowRequestError) throw borrowRequestError;
-  
-      const borrowRequestId = borrowRequestData[0].id;
-  
-      // Insert into borrow_request_equipment with quantity
+      const requestData = {
+        user_id: userId,
+        borrower_name: this.borrowerName,
+        borrower_department: this.borrowerDepartment,
+        borrow_date: this.borrowDate,
+        return_date: this.returnDate,
+        purpose: this.purpose,
+        status: 'pending'
+      };
+
+      const borrowRequestData = await this.supabaseService.createBorrowRequest(requestData);
+      const borrowRequestId = borrowRequestData.id;
+
+      // Prepare equipment data
       const equipmentInsertData = this.equipmentList
         .filter((item) => item.selected && item.quantity > 0)
         .map((item) => ({
           borrow_request_id: borrowRequestId,
           equipment_id: item.id,
-          quantity: item.quantity // Include the quantity here
+          quantity: item.quantity
         }));
-  
-      // Use the new method from supabase.service.ts
+
+      // Insert into borrow_request_equipment
       await this.supabaseService.insertBorrowRequestEquipment(equipmentInsertData);
-  
+
+      // Decrement the equipment quantity in the database
+      await this.supabaseService.decrementEquipmentQuantity(borrowRequestId);
+
       alert('Borrow request submitted successfully!');
     } catch (error) {
       console.error('Error submitting borrow request:', error);
@@ -120,11 +124,13 @@ export class BorrowRequestComponent {
 
   increaseQuantity(item: any): void {
     item.quantity++;
+    this.validateQuantity(item); // Validate after increasing
   }
 
   decreaseQuantity(item: any): void {
     if (item.quantity > 1) {
       item.quantity--;
+      this.validateQuantity(item); // Validate after decreasing
     }
   }
 

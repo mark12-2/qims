@@ -547,103 +547,40 @@ export class SupabaseService {
   }
 
   
-  async createBorrowRequest(requestData: any): Promise<any> {
-    const { data, error } = await this.supabase
+  async createBorrowRequest(data: any): Promise<any> {
+    const { data: borrowRequestData, error } = await this.supabase
       .from('borrow_requests')
-      .insert([requestData])
-      .select(); // Return the inserted record
-  
-    if (error) throw error;
-    return data[0];
+      .insert([data])
+      .select(); // Return the created record
+    if (error) {
+      console.error('Error creating borrow request:', error);
+      throw error;
+    }
+    return borrowRequestData[0];
   }
+
 
   async insertBorrowRequestEquipment(data: any[]): Promise<void> {
     const { error } = await this.supabase
       .from('borrow_request_equipment')
       .insert(data);
-  
     if (error) {
+      console.error('Error inserting borrow request equipment:', error);
       throw error;
     }
   }
 
-  async updateBorrowRequestStatus(requestId: string, status: string, notes?: string): Promise<any> {
-    const { data, error } = await this.supabase
-      .from('borrow_requests')
-      .update({ status, admin_notes: notes })
-      .eq('id', requestId)
-      .select();
-    if (error) throw error;
-    return data[0];
-  }
-
-
-  async updateEquipmentQuantity(equipmentId: string, newQuantity: number): Promise<void> {
-    const { error } = await this.supabase
-      .from('equipments')
-      .update({ quantity: newQuantity })
-      .eq('id', equipmentId);
-  
+  async decrementEquipmentQuantity(requestId: string): Promise<void> {
+    const { data, error } = await this.supabase.rpc('decrement_equipment_quantity', { request_id: requestId });
     if (error) {
-      console.error('Error updating equipment quantity:', error);
+      console.error('Error decrementing equipment quantity:', error);
       throw error;
     }
   }
+ 
 
-  async getBorrowHistory(): Promise<any[]> {
-    try {
-      // Step 1: Fetch all borrow requests
-      const { data: borrowRequests, error: borrowRequestsError } = await this.supabase
-        .from('borrow_requests')
-        .select('*')
-        .order('created_at', { ascending: false });
-  
-      if (borrowRequestsError) {
-        console.error('Error fetching borrow requests:', borrowRequestsError.message);
-        throw borrowRequestsError;
-      }
-  
-      // Step 2: Fetch equipment details for each borrow request
-      const borrowHistory = await Promise.all(
-        borrowRequests.map(async (request) => {
-          const { data: equipmentData, error: equipmentError } = await this.supabase
-            .from('borrow_request_equipment')
-            .select(`
-              equipment_id,
-              quantity,
-              borrow_request_equipment_equipment_id_fkey (
-                name
-              )
-            `)
-            .eq('borrow_request_id', request.id);
-  
-          if (equipmentError) {
-            console.error('Error fetching equipment details:', equipmentError.message);
-            throw equipmentError;
-          }
-  
-          // Transform equipment data
-          const equipmentNames = equipmentData
-          ?.map((bre: any) => bre.borrow_request_equipment_equipment_id_fkey?.name || null)
-          ?.filter((name: string | null) => name !== null)
-          ?.join(', ') || 'No equipment';
 
-        const quantities = equipmentData
-          ?.map((bre: any) => bre.quantity || 0)
-          ?.join(', ') || 'N/A';
-  
-          return {
-            ...request,
-            equipment_names: equipmentNames,
-            quantities: quantities
-          };
-        })
-      );
-  
-      return borrowHistory;
-    } catch (error) {
-      console.error('Failed to fetch borrow history:', error);
-      throw error;
-    }
-  }
+ 
+
+
 }
