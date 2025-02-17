@@ -32,8 +32,8 @@
 
 
   
-  <table class="supplier-table" *ngIf="pendingRequests.length > 0">
-    <caption>Pending Borrow Requests</caption>
+  <table class="supplier-table" *ngIf="borrowRequests.length > 0">
+    <caption>Borrow Requests History</caption>
     <thead>
       <tr>
         <th>Borrower Name</th>
@@ -42,25 +42,22 @@
         <th>Quantity</th>
         <th>Borrow Date</th>
         <th>Return Date</th>
-        <th>Actions</th>
+        <th>Purpose</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let request of pendingRequests">
+      <tr *ngFor="let request of borrowRequests">
         <td>{{ request.borrower_name }}</td>
         <td>{{ request.borrower_department }}</td>
         <td>{{ request.equipment_names }}</td>
         <td>{{ request.quantities }}</td>
         <td>{{ request.borrow_date }}</td>
         <td>{{ request.return_date }}</td>
-        <td>
-          <button (click)="approveRequest(request.id)" style="margin-right: 10px;">Approve</button>
-          <button (click)="rejectRequest(request.id)">Reject</button>
-        </td>
+        <td>{{ request.purpose || 'No purpose specified' }}</td>
       </tr>
     </tbody>
   </table>
   
-  <div *ngIf="pendingRequests.length === 0" class="no-items">
-    <p>No pending borrow requests.</p>
+  <div *ngIf="borrowRequests.length === 0" class="no-items">
+    <p>No borrow requests found.</p>
   </div>
