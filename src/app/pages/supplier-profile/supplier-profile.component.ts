@@ -1,9 +1,29 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router'; // To get route parameters
+import { ActivatedRoute, Router } from '@angular/router'; // To get route parameters and navigate
 import { SupabaseService } from '../../supabase.service';
 import { NgFor, NgIf } from '@angular/common'; // Import NgFor and NgIf
 import { CommonModule } from '@angular/common';
 import { SupabaseAuthService } from '../../services/supabase-auth.service';
+
+interface Supplier {
+  id: number;
+  supplier_name: string;
+  contact_person: string;
+  phone: string;
+  email: string;
+  address: string;
+  group_chat_link: string;
+  user_id: string;
+}
+
+interface EquipmentItem {
+  brand: string;
+  model: string;
+  supplier_cost: number;
+  product_images: string[];
+}
+
+
 
 @Component({
   standalone: true,
@@ -13,85 +33,109 @@ import { SupabaseAuthService } from '../../services/supabase-auth.service';
   styleUrls: ['./supplier-profile.component.css'],
 })
 export class SupplierProfileComponent implements OnInit {
-  supplier: any = null; // To store supplier details
-  supplierItems: any[] = []; // To store all supplier items
-  filteredItems: any[] = []; // To store filtered items based on selected brand
-  selectedBrand: string | null = null; // To track the selected brand
-  uniqueBrands: string[] = []; // To store unique brand names
+  supplier: Supplier | null = null;
+  supplierItems: EquipmentItem[] = [];
+  filteredItems: EquipmentItem[] = [];
+  uniqueBrands: string[] = [];
+  selectedBrand: string | null = null;
+  isLoading: boolean = false;
+  errorMessage: string | null = null;
 
   constructor(
     private route: ActivatedRoute, // To access route parameters
     private supabaseService: SupabaseService,
-    private  authService: SupabaseAuthService
+    private authService: SupabaseAuthService,
+    private router: Router // To navigate to other routes
   ) {}
 
-  async ngOnInit(): Promise<void> {
-    // await this.supabaseService.restoreSession(); // 🔹 Restore session first
-
-    const user = await this.authService.getUser();
-    if (!user) {
-      console.error('❌ User session is missing after navigation.');
-      alert('Session expired. Please log in again.');
+  ngOnInit(): void {
+    const supplierId = this.route.snapshot.paramMap.get('id')?.trim();
+    console.log('Current URL:', window.location.href);
+    console.log('Supplier ID from route:', supplierId);
+  
+    if (!supplierId || isNaN(Number(supplierId))) {
+      console.error('Invalid supplier ID:', supplierId);
+      alert('Invalid supplier ID. Please check the URL.');
+      this.router.navigate(['/suppliers']);
       return;
     }
-
-    console.log('✅ User session exists:', user);
-    await this.fetchSupplierData(); // Fetch suppliers or profile after session is restored
+  
+    this.fetchSupplierData();
   }
+  
 
 
   async fetchSupplierData(): Promise<void> {
     try {
-      // Get the supplier ID from the route parameter
-      const supplierId = this.route.snapshot.paramMap.get('id');
-      if (!supplierId) {
-        throw new Error('Supplier ID is missing');
+      let supplierId = this.route.snapshot.paramMap.get('id')?.trim();
+      console.log('Supplier ID from route:', supplierId);
+  
+      if (!supplierId || isNaN(Number(supplierId))) {
+        throw new Error('Invalid supplier ID');
       }
-      console.log('Fetching supplier with ID:', supplierId);
-
-      // Fetch supplier details
+  
+      const numericSupplierId = Number(supplierId);
+      console.log('Fetching supplier with ID:', numericSupplierId);
+  
+      // Fetch supplier details using ID
       const { data: supplierData, error: supplierError } = await this.supabaseService
         .from('suppliers')
         .select('*')
-        .eq('id', supplierId)
-        .single();
+        .eq('id', numericSupplierId) // Ensure ID is a number
+        .maybeSingle();
+  
       if (supplierError) {
+        console.error('Error fetching supplier:', supplierError);
         throw supplierError;
       }
+      if (!supplierData) {
+        console.error(`Supplier with ID "${numericSupplierId}" not found.`);
+        alert(`Supplier not found. Please check the supplier ID.`);
+        this.router.navigate(['/suppliers']); // Redirect to supplier list
+        return;
+      }
+  
       console.log('Fetched supplier data:', supplierData);
       this.supplier = supplierData;
-
-      // Fetch supplier items
+  
+      // Fetch equipment items by supplier name or ID
       const { data: itemsData, error: itemsError } = await this.supabaseService
-        .from('supplier_items')
-        .select('*')
-        .eq('supplier_id', supplierId);
+        .from('equipments')
+        .select('brand, model, supplier_cost, product_images')
+        .eq('supplier', supplierData.supplier_name); // Ensure supplier is matched correctly
+  
       if (itemsError) {
+        console.error('Error fetching equipment items:', itemsError);
         throw itemsError;
       }
-      console.log('Fetched supplier items:', itemsData);
-
-      // Store supplier items
+  
+      console.log('Fetched equipment items:', itemsData);
+  
+      // Store equipment items
       this.supplierItems = itemsData;
-
+  
       // Create a unique list of brands
-      this.uniqueBrands = [...new Set(itemsData.map(item => item.brand_offered))].filter(Boolean); // Remove duplicates and null values
+      this.uniqueBrands = [...new Set(itemsData.map((item) => item.brand))].filter(Boolean);
       console.log('Unique brands:', this.uniqueBrands);
-
+  
       // Initially show all items
       this.filteredItems = itemsData;
+  
     } catch (error) {
       console.error('Error fetching supplier data:', error);
       alert('Failed to load supplier profile. Please try again.');
     }
   }
+  
+  
+  
 
   // Method to handle brand selection
   selectBrand(brand: string): void {
     this.selectedBrand = brand;
     if (brand) {
       // Filter items by the selected brand
-      this.filteredItems = this.supplierItems.filter((item) => item.brand_offered === brand);
+      this.filteredItems = this.supplierItems.filter((item) => item.brand === brand);
     } else {
       // Show all items if no brand is selected
       this.filteredItems = this.supplierItems;

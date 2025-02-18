@@ -34,24 +34,19 @@ export class SupabaseService {
 }
 
 
+
   // Fetch all suppliers
   async getSuppliers(): Promise<any[]> {
-    const user = await this.authService.getUser();
-    if (!user) {
-        throw new Error('User is not authenticated');
-    }
-
     const { data, error } = await this.supabase
-        .from('suppliers')
-        .select('id, supplier_name, contact_person, phone, email, address')
-        .eq('user_id', user.id); // Filter by the current user's ID
+      .from('suppliers')
+      .select('id, supplier_name, contact_person, phone, email, address'); // Select specific fields
 
     if (error) {
-        console.error('Error fetching suppliers:', error);
-        throw error;
+      console.error('Error fetching suppliers:', error);
+      throw error;
     }
-    return data;
-}
+    return data || [];
+  }
 
   // Delete a supplier by ID
   async deleteSupplier(id: number): Promise<void> {

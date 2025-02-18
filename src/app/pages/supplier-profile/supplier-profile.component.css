@@ -328,8 +328,6 @@ p {
 
 
 .table {
-  flex: 1; /* Allow the table container to grow */
-  min-height: 300px; /* Set a minimum height for the table container */
   width: 100%;
   max-width: 630px;
   padding: 15px;
@@ -337,41 +335,50 @@ p {
   background-color: #ffffff;
   border-radius: 6px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden; /* Prevents table overflow */
 }
 
 .supplier-table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 8px;
+  border-collapse: collapse;
   background-color: #ffffff;
-  border-radius: 6px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   font-family: 'Poppins', sans-serif;
 }
 
-.supplier-table caption {
-  font-size: 1rem;
-  font-weight: 600;
-  text-align: left;
-  padding: 12px;
-  background-color: #f0f0f0;
-  color: #1e3a8a;
-  letter-spacing: 0.8px;
+/* Set fixed height for table container and allow scrolling */
+.table-container {
+  max-height: 300px; /* Adjust height as needed */
+  overflow-y: auto; /* Enables vertical scrolling */
+  border: 1px solid #ddd; /* Optional: adds a border for styling */
 }
 
-.supplier-table th,
+/* Make header fixed */
+.supplier-table thead {
+  position: sticky;
+  top: 0;
+  background-color: #f0f0f0;
+  z-index: 2;
+}
+
+/* Ensure header text is visible when scrolling */
+.supplier-table th {
+  padding: 12px;
+  text-align: left;
+  font-size: 0.9rem;
+  color: #1e3a8a;
+  background-color: #f0f0f0;
+}
+
+/* Style table rows */
 .supplier-table td {
   padding: 12px;
   text-align: left;
-  font-family: 'Poppins', sans-serif;
   font-size: 0.8rem;
   color: #333;
-  letter-spacing: 0.4px;
+  border-bottom: 1px solid #ddd;
 }
 
-.no-items {
-  text-align: center;
-  font-family: 'Poppins', sans-serif;
-  font-size: 0.9rem;
-  color: #666;
+/* Prevent the last row from having a border */
+.supplier-table tbody tr:last-child td {
+  border-bottom: none;
 }
