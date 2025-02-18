@@ -148,13 +148,15 @@ body {
   font-family: 'Poppins', sans-serif; /* Modern font */
 }
 
+
 .bobo {
-  display: flex;
-  align-items: center;
-  justify-content: left;
-  margin-left: 16.5rem;
+  display: flex; /* Use flexbox for horizontal alignment */
+  gap: 20px; /* Space between the supplier profile and the table */
+  padding: 20px;
+  margin-left: 15rem;
   font-family: 'Poppins', sans-serif; /* Modern font */
 }
+
 
 .supplier-profile-container {
   margin-top: 40px; /* Reduced from 100px */
@@ -250,12 +252,6 @@ p {
   margin-top: 0px; /* Reduced margin */
   width: 100%;
 }
-.bobo {
-  display: flex; /* Use flexbox for horizontal alignment */
-  gap: 20px; /* Space between the supplier profile and the table */
-  padding: 20px;
-
-}
 
 .supplier-profile-container {
   background-color: #ffffff;
@@ -329,7 +325,7 @@ p {
 
 .table {
   width: 100%;
-  max-width: 630px;
+  max-width: 830px;
   padding: 15px;
   font-family: 'Poppins', sans-serif;
   background-color: #ffffff;
@@ -345,14 +341,12 @@ p {
   font-family: 'Poppins', sans-serif;
 }
 
-/* Set fixed height for table container and allow scrolling */
 .table-container {
-  max-height: 300px; /* Adjust height as needed */
+  max-height: 500px; /* Adjust height as needed */
   overflow-y: auto; /* Enables vertical scrolling */
-  border: 1px solid #ddd; /* Optional: adds a border for styling */
+ 
 }
 
-/* Make header fixed */
 .supplier-table thead {
   position: sticky;
   top: 0;
@@ -360,7 +354,16 @@ p {
   z-index: 2;
 }
 
-/* Ensure header text is visible when scrolling */
+.supplier-table caption {
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: left;
+  padding: 12px;
+  background-color: #f0f0f0;
+  color: #1e3a8a;
+  letter-spacing: 0.8px;
+}
+
 .supplier-table th {
   padding: 12px;
   text-align: left;
@@ -369,16 +372,20 @@ p {
   background-color: #f0f0f0;
 }
 
-/* Style table rows */
 .supplier-table td {
   padding: 12px;
   text-align: left;
   font-size: 0.8rem;
   color: #333;
-  border-bottom: 1px solid #ddd;
 }
 
-/* Prevent the last row from having a border */
 .supplier-table tbody tr:last-child td {
   border-bottom: none;
+}
+
+.no-items {
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  color: #666;
 }

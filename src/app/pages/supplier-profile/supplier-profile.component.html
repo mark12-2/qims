@@ -65,78 +65,95 @@
 </div>
 
 
-<div *ngIf="isLoading" class="loading-spinner">Loading...</div>
-<div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+    <div class="prop">
+        <div class="pap">
+            <p>Profile</p>
+        </div>
+    </div>
 
-<div class="bobo" *ngIf="!isLoading && supplier">
-  <div class="supplier-profile-container">
-    <div class="over"><p>Overview</p></div>
-    <div class="supplier-info">
-      <div class="info-item">
-        <h3>About</h3>
-        <ul class="contact-details">
-          <li><strong>Contact Person:</strong> {{ supplier.contact_person }}</li>
-          <li><strong>Phone:</strong> {{ supplier.phone }}</li>
-          <li><strong>Email:</strong> {{ supplier.email }}</li>
-          <li><strong>Address:</strong> {{ supplier.address }}</li>
-        </ul>
-      </div>
-      <hr class="bottom-line">
-
-      <div class="brand-offered">
-        <h3>Brands Offered</h3>
-        <div class="brand-grid" *ngIf="uniqueBrands.length > 0">
-          <div
-            class="brand-item"
-            *ngFor="let brand of uniqueBrands"
-            (click)="selectBrand(brand)"
-            [class.selected]="selectedBrand === brand"
-            role="button"
-            [attr.aria-label]="'Select brand ' + brand"
-          >
-            {{ brand || 'N/A' }}
+    <div class="bobo">
+        <!-- Supplier Profile Container -->
+        <div class="supplier-profile-container" *ngIf="supplier">
+          <div class="over">
+            <p>Overview</p>
+          </div>
+          <div class="supplier-info">
+            <!-- Supplier Details -->
+            <div class="info-item">
+              <h3>About</h3>
+              <ul class="contact-details">
+                <li class="contact-detail">
+                  <strong>Contact Person:</strong> {{ supplier.contact_person }}
+                </li>
+                <li class="contact-detail">
+                  <strong>Phone:</strong> {{ supplier.phone }}
+                </li>
+                <li class="contact-detail">
+                  <strong>Email:</strong> {{ supplier.email }}
+                </li>
+                <li class="contact-detail">
+                  <strong>Address:</strong> {{ supplier.address }}
+                </li>
+              </ul>
+            </div>
+            <hr class="bottom-line">
+      
+            <!-- Brands Offered -->
+            <div class="brand-offered">
+                <h3>Brands Offered</h3>
+                <div>
+                  <div class="brand-grid" *ngIf="uniqueBrands.length > 0">
+                    <div
+                      class="brand-item"
+                      *ngFor="let brand of uniqueBrands"
+                      (click)="selectBrand(brand)"
+                      [class.selected]="selectedBrand === brand"
+                    >
+                      {{ brand || 'N/A' }} <!-- Fallback for null values -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+      
+          <div class="no-items" *ngIf="filteredItems.length === 0">
+            <p>No items available for this supplier.</p>
           </div>
         </div>
-      </div>
-    </div>
-
-    <div class="no-items" *ngIf="filteredItems.length === 0">
-      <p>No items available for this supplier.</p>
-    </div>
-  </div>
-
-  <div class="table" *ngIf="filteredItems.length > 0">
-    <caption>Equipment</caption>
-    <div class="table-container">
-      <table class="supplier-table">
-        <thead>
-          <tr>
-            <th>Brand</th>
-            <th>Model</th>
-            <th>Supplier Cost</th>
-            <th>Images</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of filteredItems">
-            <td>{{ item.brand || 'N/A' }}</td>
-            <td>{{ item.model || 'N/A' }}</td>
-            <td>{{ item.supplier_cost ? (item.supplier_cost | currency) : 'N/A' }}</td>
-            <td>
-              <div *ngIf="item.product_images && item.product_images.length > 0">
-                <img
-                  *ngFor="let image of item.product_images"
-                  [src]="image"
-                  alt="{{ item.brand }}"
-                  width="50"
-                  onError="this.src='assets/default-image.png'"
-                />
-              </div>
-              <span *ngIf="!item.product_images || item.product_images.length === 0">No Images</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  
+      
+        <!-- Items Table -->
+        <div class="table" *ngIf="filteredItems.length > 0">
+          <caption>Equipment</caption>
+          <div class="table-container">
+            <table class="supplier-table">
+              <thead>
+                <tr>
+                  <th>Brand</th>
+                  <th>Model</th>
+                  <th>Supplier Cost</th>
+                  <th>Images</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of filteredItems">
+                  <td>{{ item.brand || 'N/A' }}</td>
+                  <td>{{ item.model || 'N/A' }}</td>
+                  <td>{{ item.supplier_cost ? (item.supplier_cost | currency) : 'N/A' }}</td>
+                  <td>
+                    <div *ngIf="item.product_images && item.product_images.length > 0">
+                      <img
+                        *ngFor="let image of item.product_images"
+                        [src]="image"
+                        alt="{{ item.brand }}"
+                        width="50"
+                        onError="this.src='assets/default-image.png'"
+                      />
+                    </div>
+                    <span *ngIf="!item.product_images || item.product_images.length === 0">No Images</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
