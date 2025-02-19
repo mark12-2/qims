@@ -131,6 +131,7 @@ body {
 
 
 .prop {
+  margin-top: 30px;
   display: flex;
   align-items: center;
   justify-content: left;
@@ -141,7 +142,7 @@ body {
 
 .over {
   display: flex;
-  top: 54px;
+  top: 84px;
   position: absolute;
   justify-content: left;
   margin-left: 0rem;
@@ -257,7 +258,7 @@ p {
   background-color: #ffffff;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(0, 2, 1, 0.1);
   flex: 1; /* Allow the supplier profile container to grow */
 }
 
@@ -352,6 +353,16 @@ p {
   top: 0;
   background-color: #f0f0f0;
   z-index: 2;
+}
+
+.table caption {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: left;
+  padding: 12px;
+  color: #1e3a8a;
+  letter-spacing: 0.8px;
 }
 
 .supplier-table caption {
