@@ -12,8 +12,7 @@ import { SidebarComponent } from './pages/sidebar/sidebar.component';
 import { EquipmentListComponent } from './pages/equipment-list/equipment-list.component';
 import { EquipmentDetailsComponent } from './pages/equipment-details/equipment-details.component';
 import { BorrowRequestComponent } from './pages/borrow-request-form/borrow-request-form.component';
-import { BorrowTableComponent } from './pages/borrow-table/borrow-table.component';
-import { BorrowHistoryComponent } from './pages/borrow-history/borrow-history.component';
+import { BorrowTableComponent } from './pages/borrow-table /borrow-table.component';
 import { UserListComponent } from './admin/user-list/user-list.component';
 
 export const routes: Routes = [
@@ -30,7 +29,6 @@ export const routes: Routes = [
   { path: 'equipment-details/:id', component: EquipmentDetailsComponent },
   { path: 'borrow-form', component: BorrowRequestComponent },
   { path: 'borrow-table', component: BorrowTableComponent },
-  { path: 'borrow-history', component: BorrowHistoryComponent },
   { path: 'user-list', component: UserListComponent },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 ];
