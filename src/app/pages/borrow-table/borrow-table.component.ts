@@ -21,7 +21,7 @@ export class BorrowTableComponent implements OnInit {
   ) {}
 
 
-  
+
   ngOnInit(): void {
     this.fetchPendingRequests();
     this.loadUserEmail();
@@ -29,11 +29,17 @@ export class BorrowTableComponent implements OnInit {
 
 
   async loadUserEmail() {
-    if (await this.authService.isLoggedIn()) {
-      const { data } = await this.authService.getUser();
-      this.userEmail = data?.user?.email || null;
+    const user = await this.authService.getUser(); // ✅ Get user directly
+
+    if (!user) {
+      console.warn('⚠ No authenticated user found.');
+      this.userEmail = null;
+      return;
     }
+
+    this.userEmail = user.email || null; // ✅ Directly access user.email
   }
+
 
   /**
    * Fetch all pending borrow requests from the database.
@@ -60,14 +66,14 @@ export class BorrowTableComponent implements OnInit {
           )
         `)
         .eq('status', 'pending');
-  
+
       if (error) {
         console.error('Error fetching pending borrow requests:', error);
         throw error;
       }
-  
+
       console.log('Raw data from Supabase:', data);
-  
+
       this.pendingRequests = data.map((request) => ({
         ...request,
         equipment_names: request.borrow_request_equipment
@@ -78,19 +84,19 @@ export class BorrowTableComponent implements OnInit {
           ?.map((bre: any) => bre.quantity || 0)
           ?.join(', ') || ''
       }));
-  
+
       console.log('Fetched pending requests:', this.pendingRequests);
     } catch (error) {
       console.error('Failed to load pending borrow requests:', error);
       alert('An error occurred while loading pending borrow requests. Please try again later.');
     }
   }
-  
-  
-  
 
 
-  
+
+
+
+
   /**
    * Approve a borrow request by updating its status to 'approved'.
    * @param requestId - The ID of the borrow request to approve.
@@ -102,14 +108,14 @@ export class BorrowTableComponent implements OnInit {
         .from('borrow_requests')
         .update({ status: 'approved' })
         .eq('id', requestId);
-  
+
       if (updateError) throw updateError;
-  
+
       // Decrement the quantity of associated equipment
       const { error: equipmentError } = await this.supabaseService.rpc('decrement_equipment_quantity', { request_id: requestId });
-  
+
       if (equipmentError) throw equipmentError;
-  
+
       alert('Borrow request approved successfully!');
     } catch (error) {
       console.error('Failed to approve borrow request:', error);

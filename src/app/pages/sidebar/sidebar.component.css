@@ -257,7 +257,7 @@ label {
   background: rgb(50, 54, 126);
   display: block;
   border-radius: 100px;
-  position: relative;                                               
+  position: relative;
 }
 
 label:after {
@@ -285,3 +285,14 @@ input:checked + label:after {
 label:active:after {
   width: 30px;
 }
+
+.notification-badge {
+  background: red;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 50%;
+  margin-left: 8px;
+}
+

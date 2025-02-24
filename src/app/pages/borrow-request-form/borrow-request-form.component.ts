@@ -34,14 +34,14 @@ export class BorrowRequestComponent {
       // Fetch available equipment from Supabase
       const rawEquipmentList = await this.supabaseService.getAvailableEquipment();
       console.log('Fetched equipment list:', rawEquipmentList);
-  
+
       // Initialize the equipment list with a default quantity of 0
       this.equipmentList = rawEquipmentList.map((item: any) => ({
         ...item,
         quantity: 0, // Default quantity is 0
         selected: false // Default selection state
       }));
-  
+
       console.log('Initialized equipment list:', this.equipmentList);
       this.loadUserEmail();
     } catch (error) {
@@ -55,12 +55,18 @@ get displayedItems() {
   return this.equipmentList; // Always display all items
 }
 
-  async loadUserEmail() {
-    if (await this.authService.isLoggedIn()) {
-      const { data } = await this.authService.getUser();
-      this.userEmail = data.user?.email || null;
-    }
+async loadUserEmail() {
+  const user = await this.authService.getUser(); // ✅ Get user directly
+
+  if (!user) {
+    console.warn('⚠ No authenticated user found.');
+    this.userEmail = null;
+    return;
   }
+
+  this.userEmail = user.email || null; // ✅ Directly access user.email
+}
+
 
   // Update the selected equipment IDs when a checkbox is toggled
   updateSelectedEquipment(item: any): void {
@@ -77,7 +83,7 @@ get displayedItems() {
   async submitBorrowRequest(): Promise<void> {
     try {
       const userId = (await this.supabaseService.getCurrentUser()).id; // Get current user's ID
-  
+
       // Insert into borrow_requests
       const { data: borrowRequestData, error: borrowRequestError } =
         await this.supabaseService
@@ -94,11 +100,11 @@ get displayedItems() {
             }
           ])
           .select();
-  
+
       if (borrowRequestError) throw borrowRequestError;
-  
+
       const borrowRequestId = borrowRequestData[0].id;
-  
+
       // Insert into borrow_request_equipment with quantity
       const equipmentInsertData = this.equipmentList
         .filter((item) => item.selected && item.quantity > 0)
@@ -107,10 +113,10 @@ get displayedItems() {
           equipment_id: item.id,
           quantity: item.quantity // Include the quantity here
         }));
-  
+
       // Use the new method from supabase.service.ts
       await this.supabaseService.insertBorrowRequestEquipment(equipmentInsertData);
-  
+
       alert('Borrow request submitted successfully!');
     } catch (error) {
       console.error('Error submitting borrow request:', error);

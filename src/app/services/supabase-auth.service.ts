@@ -72,17 +72,23 @@ export class SupabaseAuthService {
     }
   }
 
-  async getUser(): Promise<any | null> {
-    // Wait until the session is restored
-    await this.restoreSession();
+  async getUser() {
+    try {
+      const { data, error } = await this.supabase.auth.getUser();
 
-    const { data, error } = await this.supabase.auth.getUser();
-    if (error) {
-      console.error('❌ Error fetching user:', error);
+      if (error) {
+        console.warn('⚠ No authenticated user found:', error);
+        return null;
+      }
+
+      return data?.user || null; // ✅ Safely return the user object
+    } catch (err) {
+      console.error('❌ Unexpected error in getUser():', err);
       return null;
     }
-    return data?.user || null;
   }
+
+
 
 
   // Check if the user is logged in

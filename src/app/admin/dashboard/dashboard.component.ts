@@ -40,73 +40,98 @@ export class DashboardComponent implements OnInit {
     this.selectedEquipmentId = event.target.value;
     console.log('🔍 Selected Equipment ID:', this.selectedEquipmentId);
 
+    // 🔹 Reset cost history to prevent "carrying over" from previous selections
+    this.costHistory = [];
+
     if (this.selectedEquipmentId) {
-      this.costHistory = await this.supabaseService.getCostHistory(this.selectedEquipmentId);
-      console.log('📊 Cost History Data:', this.costHistory);
+        // ✅ Fetch cost history
+        this.costHistory = await this.supabaseService.getCostHistory(this.selectedEquipmentId);
+        console.log('📊 Cost History Data:', this.costHistory);
 
+        // 🔹 If no cost history exists, fetch original cost from `equipments`
+        if (!this.costHistory || this.costHistory.length === 0) {
+            console.warn('⚠ No cost history found. Fetching original cost.');
 
-      setTimeout(() => {
-        this.renderChart();
-      }, 500); // Delay to ensure canvas is available
+            const originalCost = await this.supabaseService.getEquipmentById(this.selectedEquipmentId);
+            if (originalCost) {
+                this.costHistory = [{
+                    date_updated: originalCost.date_acquired || new Date().toISOString(), // Use date acquired
+                    supplier_cost: originalCost.supplier_cost,
+                    srp: originalCost.srp
+                }];
+            }
+        }
+
+        // ✅ Render the chart with either history or original cost
+        setTimeout(() => {
+            this.renderChart();
+        }, 500);
     }
-  }
+}
+
+
+
 
   renderChart() {
     const canvas = document.getElementById('costChart') as HTMLCanvasElement;
 
     if (!canvas) {
-      console.error('❌ Canvas element not found!');
-      return;
+        console.error('❌ Canvas element not found!');
+        return;
     }
 
     if (this.costChart) {
-      this.costChart.destroy(); // Remove old chart before creating a new one
+        this.costChart.destroy(); // ✅ Destroy old chart before creating a new one
+    }
+
+    if (!this.costHistory || this.costHistory.length === 0) {
+        console.warn('⚠ No valid cost data found for chart.');
+        return;
     }
 
     this.costChart = new Chart(canvas, {
-      type: 'line',
-      data: {
-        labels: this.costHistory.map(entry => new Date(entry.date_updated).toLocaleDateString()),
-        datasets: [
-          {
-            label: 'Supplier Cost',
-            data: this.costHistory.map(entry => entry.supplier_cost),
-            borderColor: 'blue',
-            borderWidth: 2,
-            fill: false,
-            spanGaps: true
-          },
-          {
-            label: 'SRP',
-            data: this.costHistory.map(entry => entry.srp),
-            borderColor: 'green',
-            borderWidth: 2,
-            fill: false,
-            spanGaps: true
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: false,
-            ticks: {
-              callback: function(value) {
-                const numericValue = Number(value);
-                if (numericValue >= 1_000_000) return `${numericValue / 1_000_000}M`; // Convert to millions
-                if (numericValue >= 1_000) return `${numericValue / 1_000}K`; // Convert to thousands
-                return numericValue; // Otherwise, show raw value
-              }
+        type: 'line',
+        data: {
+            labels: this.costHistory.map(entry => new Date(entry.date_updated).toLocaleDateString()),
+            datasets: [
+                {
+                    label: 'Supplier Cost',
+                    data: this.costHistory.map(entry => entry.supplier_cost),
+                    borderColor: 'blue',
+                    borderWidth: 2,
+                    fill: false,
+                    spanGaps: true
+                },
+                {
+                    label: 'SRP',
+                    data: this.costHistory.map(entry => entry.srp),
+                    borderColor: 'green',
+                    borderWidth: 2,
+                    fill: false,
+                    spanGaps: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    ticks: {
+                        callback: function(value) {
+                            const numericValue = Number(value);
+                            if (numericValue >= 1_000_000) return `${numericValue / 1_000_000}M`; // Convert to millions
+                            if (numericValue >= 1_000) return `${numericValue / 1_000}K`; // Convert to thousands
+                            return numericValue; // Otherwise, show raw value
+                        }
+                    }
+                }
             }
-          }
         }
-      }
     });
 
     console.log('✅ Chart rendered with formatted values!');
-  }
-
+}
 
   // Duplicate method removed
 }

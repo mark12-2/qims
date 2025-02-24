@@ -34,3 +34,4 @@ export const routes: Routes = [
   { path: 'user-list', component: UserListComponent },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 ];
+

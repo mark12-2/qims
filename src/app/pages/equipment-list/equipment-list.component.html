@@ -11,25 +11,25 @@
   <table class="equipment-table">
     <thead>
       <tr>
-        <th style="background-color: #000154;">Serial No</th>
-        <th style="background-color: #00012c ;">Name</th>
-        <th style="background-color: #000154;">Model</th>
-        <th style="background-color: #00012c ;">Variety</th>
-        <th style="background-color: #000154;">Supplier Cost</th>
-        <th style="background-color: #00012c ;">SRP</th>
-        <th style="background-color: #000154;">QR Code</th>
-        <th style="background-color: #00012c ;">Product Image</th>
-        <th style="background-color: #000154;">Actions</th>
+        <th style="background-color: #000154;">Name</th>
+        <th style="background-color: #00012c;">Model</th>
+        <th style="background-color: #000154;">Brand</th>
+        <!-- <th style="background-color: #000154;">Total Quantity</th>
+        <th style="background-color: #00012c;">Used for Project</th>
+        <th style="background-color: #000154;">Remaining Quantity</th> -->
+        <th style="background-color: #00012c;">QR Code</th>
+        <th style="background-color: #000154;">Product Image</th>
+        <th style="background-color: #00012c;">Actions</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let equipment of filteredEquipmentList">
-        <td>{{ equipment.serial_no }}</td>
         <td>{{ equipment.name }}</td>
         <td>{{ equipment.model }}</td>
-        <td>{{ equipment.variety }}</td>
-        <td>{{ equipment.supplier_cost | currency }}</td>
-        <td>{{ equipment.srp | currency }}</td>
+        <td>{{ equipment.brand }}</td>
+        <!-- <td>{{ equipment.quantity }}</td>
+        <td>{{ equipment.usedForProject }}</td>
+        <td>{{ equipment.remainingQuantity }}</td> -->
         <td>
           <img [src]="equipment.qr_code" alt="QR Code" class="qr-thumbnail" (click)="openQRCodeModal(equipment.qr_code)">
         </td>
@@ -40,7 +40,7 @@
         <td>
           <button (click)="editEquipment(equipment)">Edit</button>&nbsp;&nbsp;
           <button style="background-color: red;" (click)="deleteEquipment(equipment.id)">Delete</button>&nbsp;&nbsp;
-          <button style="background-color: #000154;;" (click)="viewEquipmentDetails(equipment.id)">View</button>
+          <button style="background-color: #000154;" (click)="viewEquipmentDetails(equipment.id)">View</button>
         </td>
       </tr>
     </tbody>
@@ -56,3 +56,4 @@
   </div>
 </div>
 </body>
+

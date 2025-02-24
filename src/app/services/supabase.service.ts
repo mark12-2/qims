@@ -13,12 +13,13 @@ interface Equipment {
 })
 export class SupabaseService {
   private supabase: SupabaseClient;
+  private equipmentId: string | null = null;
 
   constructor() {
     this.supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
   }
 
-  
+
   from(tableName: string) {
     return this.supabase.from(tableName);
   }
@@ -101,120 +102,191 @@ export class SupabaseService {
   }
 
   async addEquipment(equipmentData: any) {
-    // 🔹 Step 1: Insert Equipment Data (Without Images & Logs)
-    const { data, error } = await this.supabase
-      .from('equipments')
-      .insert([{
-        serial_no: equipmentData.serial_no,
-        name: equipmentData.name,
-        model: equipmentData.model,
-        brand: equipmentData.brand,
-        supplier: equipmentData.supplier,
-        supplier_cost: equipmentData.supplier_cost,
-        srp: equipmentData.srp,
-        quantity: equipmentData.quantity,
-        location: equipmentData.location,
-        description: equipmentData.description,
-        variety: equipmentData.variety,
-        qr_code: equipmentData.qr_code,
-        damaged: equipmentData.damaged,
-        return_slip: equipmentData.return_slip,
-        product_images: [],
-        condition: equipmentData.condition,
-        date_acquired: equipmentData.date_acquired,
-        lifespan_months: equipmentData.lifespan_months
-      }])
-      .select()
-      .single();
+    // Determine if it's a new equipment or updating existing one
+    if (this.equipmentId) {
+      // 🔹 Edit Existing Equipment (Update Record)
+      const { data, error } = await this.supabase
+        .from('equipments')
+        .update({
+          serial_no: equipmentData.serial_no,
+          name: equipmentData.name,
+          model: equipmentData.model,
+          brand: equipmentData.brand,
+          supplier: equipmentData.supplier,
+          supplier_cost: equipmentData.supplier_cost,
+          srp: equipmentData.srp,
+          quantity: equipmentData.quantity,
+          location: equipmentData.location,
+          description: equipmentData.description,
+          variety: equipmentData.variety,
+          qr_code: equipmentData.qr_code,
+          damaged: equipmentData.damaged,
+          return_slip: equipmentData.return_slip,
+          product_images: equipmentData.product_images,
+          condition: equipmentData.condition,
+          date_acquired: equipmentData.date_acquired,
+          lifespan_months: equipmentData.lifespan_months
+        })
+        .eq('id', this.equipmentId)  // Specify the equipment to update by ID
+        .select()
+        .single();
 
-    if (error) {
-      console.error('❌ Error adding equipment:', error);
-      return null;
-    }
-
-    console.log('✅ Equipment added successfully:', data);
-    const equipmentId = data.id;
-
-    let imageUrls: string[] = [];
-    let repairLogs: any[] = [];
-
-    // 🔹 Step 2: Insert Product Images into `equipment_images`
-    for (const imageUrl of equipmentData.product_images) {
-      const { data: imageData, error: imageError } = await this.supabase
-        .from('equipment_images')
-        .insert([{ equipment_id: equipmentId, image_url: imageUrl }])
-        .select('image_url');
-
-      if (imageError) {
-        console.error('❌ Error inserting image:', imageError);
-      } else if (imageData && imageData.length > 0) {
-        imageUrls.push(imageData[0].image_url);
+      if (error) {
+        console.error('❌ Error updating equipment:', error);
+        return null;
       }
-    }
 
-    console.log('✅ Image URLs inserted:', imageUrls);
+      console.log('✅ Equipment updated successfully:', data);
+      const equipmentId = data.id;
 
-    // 🔹 Step 3: Insert Repair Logs into `equipment_repair_logs`
-    console.log('🔍 Checking repair logs before insert:', equipmentData.repair_logs);
+      // Handle image URLs if new ones are provided
+      let imageUrls: string[] = [];
+      if (equipmentData.product_images && equipmentData.product_images.length > 0) {
+        for (const imageUrl of equipmentData.product_images) {
+          const { data: imageData, error: imageError } = await this.supabase
+            .from('equipment_images')
+            .insert([{ equipment_id: equipmentId, image_url: imageUrl }])
+            .select('image_url');
 
-    if (!equipmentData.repair_logs || equipmentData.repair_logs.length === 0) {
-      console.warn('⚠ No repair logs provided. Skipping repair log insertion.');
-    } else {
-      for (const repair of equipmentData.repair_logs) {
-        console.log('📌 Inserting repair log:', repair);
+          if (imageError) {
+            console.error('❌ Error inserting image:', imageError);
+          } else if (imageData && imageData.length > 0) {
+            imageUrls.push(imageData[0].image_url);
+          }
+        }
+        console.log('✅ Image URLs inserted:', imageUrls);
+      }
 
-        const { data: repairData, error: repairError } = await this.supabase
-          .from('equipment_repair_logs')
-          .insert([{
-            equipment_id: equipmentId,
-            repair_details: repair.repair_details,
-            repair_status: repair.repair_status || 'New',
-            repair_date: repair.repair_date || new Date().toISOString(),
-          }])
-          .select();
+      // Update `equipments` table with new images
+      const { error: updateImageError } = await this.supabase
+        .from('equipments')
+        .update({
+          product_images: imageUrls.length > 0 ? imageUrls : null
+        })
+        .eq('id', equipmentId);
 
-        if (repairError) {
-          console.error('❌ Error inserting repair log:', repairError);
-        } else {
-          console.log('✅ Repair log inserted successfully:', repairData);
-          repairLogs.push(repairData[0]);
+      if (updateImageError) {
+        console.error('❌ Error updating equipment with images:', updateImageError);
+      } else {
+        console.log('✅ Equipment updated with images:', imageUrls);
+      }
+
+      // 🔹 Handle Repair Logs Update (if any)
+      if (equipmentData.repair_logs && equipmentData.repair_logs.length > 0) {
+        for (const repair of equipmentData.repair_logs) {
+          const { data: repairData, error: repairError } = await this.supabase
+            .from('equipment_repair_logs')
+            .insert([{
+              equipment_id: equipmentId,
+              repair_details: repair.repair_details,
+              repair_status: repair.repair_status || 'New',
+              repair_date: repair.repair_date || new Date().toISOString(),
+            }])
+            .select();
+
+          if (repairError) {
+            console.error('❌ Error inserting repair log:', repairError);
+          } else {
+            console.log('✅ Repair log inserted successfully:', repairData);
+          }
         }
       }
 
-      // ✅ Fetch Repair Logs After Insert
-      const { data: insertedRepairLogs, error: fetchError } = await this.supabase
-        .from('equipment_repair_logs')
-        .select('*')
-        .eq('equipment_id', equipmentId);
-
-      if (fetchError) {
-        console.error('❌ Error fetching repair logs after insert:', fetchError);
-      } else {
-        console.log('✅ Confirmed repair logs in DB:', insertedRepairLogs);
-      }
-    }
-
-    // 🔹 Step 4: Update `equipments` Table with `product_images` & `repair_logs`
-    const { error: updateError } = await this.supabase
-      .from('equipments')
-      .update({
-        product_images: imageUrls.length > 0 ? imageUrls : null,
-        repair_logs: repairLogs.length > 0 ? repairLogs : null
-      })
-      .eq('id', equipmentId);
-
-    if (updateError) {
-      console.error('❌ Error updating equipment with images & repair logs:', updateError);
+      // ✅ Log activity after editing
+      await this.logActivity('edit', equipmentId, `Equipment "${data.name}" was updated.`);
+      return data;
     } else {
-      console.log('✅ Equipment updated with product_images & repair_logs:', { imageUrls, repairLogs });
+      // 🔹 Add New Equipment
+      const { data, error } = await this.supabase
+        .from('equipments')
+        .insert([{
+          serial_no: equipmentData.serial_no,
+          name: equipmentData.name,
+          model: equipmentData.model,
+          brand: equipmentData.brand,
+          supplier: equipmentData.supplier,
+          supplier_cost: equipmentData.supplier_cost,
+          srp: equipmentData.srp,
+          quantity: equipmentData.quantity,
+          location: equipmentData.location,
+          description: equipmentData.description,
+          variety: equipmentData.variety,
+          qr_code: equipmentData.qr_code,
+          damaged: equipmentData.damaged,
+          return_slip: equipmentData.return_slip,
+          product_images: [],
+          condition: equipmentData.condition,
+          date_acquired: equipmentData.date_acquired,
+          lifespan_months: equipmentData.lifespan_months
+        }])
+        .select()
+        .single();
+
+      if (error) {
+        console.error('❌ Error adding equipment:', error);
+        return null;
+      }
+
+      console.log('✅ Equipment added successfully:', data);
+      const equipmentId = data.id;
+
+      let imageUrls: string[] = [];
+      let repairLogs: any[] = [];
+
+      // 🔹 Insert Product Images
+      for (const imageUrl of equipmentData.product_images) {
+        const { data: imageData, error: imageError } = await this.supabase
+          .from('equipment_images')
+          .insert([{ equipment_id: equipmentId, image_url: imageUrl }])
+          .select('image_url');
+
+        if (imageError) {
+          console.error('❌ Error inserting image:', imageError);
+        } else if (imageData && imageData.length > 0) {
+          imageUrls.push(imageData[0].image_url);
+        }
+      }
+
+      // Insert Repair Logs
+      if (equipmentData.repair_logs && equipmentData.repair_logs.length > 0) {
+        for (const repair of equipmentData.repair_logs) {
+          const { data: repairData, error: repairError } = await this.supabase
+            .from('equipment_repair_logs')
+            .insert([{
+              equipment_id: equipmentId,
+              repair_details: repair.repair_details,
+              repair_status: repair.repair_status || 'New',
+              repair_date: repair.repair_date || new Date().toISOString(),
+            }])
+            .select();
+
+          if (repairError) {
+            console.error('❌ Error inserting repair log:', repairError);
+          } else {
+            repairLogs.push(repairData[0]);
+          }
+        }
+      }
+
+      // 🔹 Update equipment with images & repair logs
+      const { error: updateError } = await this.supabase
+        .from('equipments')
+        .update({
+          product_images: imageUrls.length > 0 ? imageUrls : null,
+          repair_logs: repairLogs.length > 0 ? repairLogs : null
+        })
+        .eq('id', equipmentId);
+
+      if (updateError) {
+        console.error('❌ Error updating equipment with images & repair logs:', updateError);
+      } else {
+        console.log('✅ Equipment updated with images & repair logs');
+      }
+
+      await this.logActivity('add', equipmentId, `Equipment "${data.name}" was added to inventory.`);
+      return data;
     }
-
-    await this.logActivity('add', equipmentId, `Equipment "${data.name}" was added to inventory.`);
-    return data;
   }
-
-
-
 
   async getEquipmentList() {
     const { data, error } = await this.supabase
@@ -314,6 +386,8 @@ export class SupabaseService {
     }
 
     const oldCondition = existingEquipment.condition;
+    const oldSupplierCost = existingEquipment.supplier_cost;
+    const oldSrp = existingEquipment.srp;
 
     // 🔹 Step 2: Update Equipment Data in `equipments` table
     const { data, error } = await this.supabase
@@ -357,7 +431,29 @@ export class SupabaseService {
       );
     }
 
-    // 🔹 Step 4: Update Repair Logs in `equipment_repair_logs`
+    // 🔹 Step 4: If cost changed, log cost history in `equipment_cost_history`
+    if (oldSupplierCost !== equipmentData.supplier_cost || oldSrp !== equipmentData.srp) {
+      const { error: costHistoryError } = await this.supabase
+        .from('equipment_cost_history')
+        .insert([
+          {
+            equipment_id: equipmentId,
+            supplier_cost: equipmentData.supplier_cost,
+            srp: equipmentData.srp,
+            date_updated: new Date().toISOString()
+          }
+        ]);
+
+      if (costHistoryError) {
+        console.error('❌ Error inserting cost history:', costHistoryError);
+      } else {
+        console.log('✅ Cost history recorded successfully!');
+      }
+    } else {
+      console.log('⚠ No cost change detected, skipping cost history update.');
+    }
+
+    // 🔹 Step 5: Update Repair Logs in `equipment_repair_logs`
     if (equipmentData.repair_logs.length > 0) {
       for (const log of equipmentData.repair_logs) {
         if (log.id) {
@@ -402,35 +498,52 @@ export class SupabaseService {
 }
 
 
+      async getEquipmentById(equipmentId: string) {
+        const { data, error } = await this.supabase
+          .from('equipments')
+          .select(`
+            id,
+            name,
+            model,
+            brand,
+            serial_no,
+            lifespan_months,
+            condition,
+            supplier,
+            quantity,
+            description,
+            qr_code,
+            supplier_cost,
+            srp,
+            date_acquired,
 
+            equipment_images (image_url),
+            equipment_repair_logs (repair_details, repair_status, repair_date),
+            equipment_cost_history (supplier_cost, srp, date_updated)
+          `)
+          .eq('id', equipmentId)
+          .single();
 
+        if (error) {
+          console.error('❌ Error fetching equipment details:', error);
+          return null;
+        }
 
-  async getEquipmentById(equipmentId: string) {
-    const { data, error } = await this.supabase
-      .from('equipments')
-      .select(`
-        *,
-        equipment_images (image_url),
-        equipment_repair_logs (repair_details, repair_status, repair_date)
-      `)
-      .eq('id', equipmentId)
-      .single();
-
-    if (error) {
-      console.error('❌ Error fetching equipment details:', error);
-      return null;
-    }
-
-    return {
-      ...data,
-      product_images: data.equipment_images.map((img: any) => img.image_url),
-      repair_logs: data.equipment_repair_logs.map((log: any) => ({
-        repair_details: log.repair_details,
-        repair_status: log.repair_status,
-        repair_date: log.repair_date
-      }))
-    };
-  }
+        return {
+          ...data,
+          product_images: data.equipment_images.map((img: any) => img.image_url),
+          repair_logs: data.equipment_repair_logs.map((log: any) => ({
+            repair_details: log.repair_details,
+            repair_status: log.repair_status,
+            repair_date: log.repair_date
+          })),
+          cost_history: data.equipment_cost_history.map((history: any) => ({
+            supplier_cost: history.supplier_cost,
+            srp: history.srp,
+            date_updated: history.date_updated
+          })),
+        };
+      }
 
   async getCostHistory(equipmentId: string) {
     const { data, error } = await this.supabase
@@ -530,29 +643,28 @@ export class SupabaseService {
   }
 
 
-
   async getAvailableEquipment(): Promise<any[]> {
     const { data, error } = await this.supabase
       .from('equipments')
       .select('*')
       .gt('quantity', 0); // Only fetch equipment with available quantity
-  
+
     if (error) {
       console.error('Error fetching available equipment:', error);
       throw error;
     }
-  
+
     console.log('Fetched equipment:', data); // Log the fetched data
     return data || [];
   }
 
-  
+
   async createBorrowRequest(requestData: any): Promise<any> {
     const { data, error } = await this.supabase
       .from('borrow_requests')
       .insert([requestData])
       .select(); // Return the inserted record
-  
+
     if (error) throw error;
     return data[0];
   }
@@ -561,13 +673,13 @@ export class SupabaseService {
     const { error } = await this.supabase
       .from('borrow_request_equipment')
       .insert(data);
-  
+
     if (error) {
       throw error;
     }
   }
 
-  
+
 
   async updateBorrowRequestStatus(requestId: string, status: string, notes?: string): Promise<any> {
     const { data, error } = await this.supabase
@@ -580,15 +692,176 @@ export class SupabaseService {
   }
 
 
-  async updateEquipmentQuantity(equipmentId: string, newQuantity: number): Promise<void> {
+  async updateEquipmentQuantity(equipmentId: string, newQuantity: number): Promise<{ success: boolean }> {
+    console.log(`🔄 Updating equipment ID: ${equipmentId}, New Quantity: ${newQuantity}`);
+
     const { error } = await this.supabase
-      .from('equipments')
+      .from('equipments') // Ensure this matches your actual table name
       .update({ quantity: newQuantity })
       .eq('id', equipmentId);
-  
+
     if (error) {
-      console.error('Error updating equipment quantity:', error);
+      console.error('❌ Error updating equipment quantity:', error);
+      return { success: false };
+    }
+
+    console.log('✅ Equipment quantity updated successfully');
+    return { success: true };
+  }
+
+
+
+  async decrementEquipmentQuantity(requestId: string): Promise<void> {
+    const { data, error } = await this.supabase.rpc('decrement_equipment_quantity', { request_id: requestId });
+
+    if (error) {
+      console.error('Error decrementing equipment quantity:', error);
       throw error;
     }
   }
+
+  async getPendingRequestsCount(): Promise<number> {
+    const { count, error } = await this.supabase
+      .from('project_material_requests')
+      .select('*', { count: 'exact', head: true })
+      .eq('status', 'Pending');
+
+    if (error) {
+      console.error('❌ Error fetching pending requests count:', error);
+      return 0;
+    }
+
+    return count || 0;
+  }
+
+
+  async getGroupedEquipmentList() {
+    const { data, error } = await this.supabase
+      .from('equipments')
+      .select('*');
+
+    if (error) {
+      console.error('❌ Error fetching equipment:', error);
+      return [];
+    }
+
+    // ✅ Group equipment by Name, Model, and Brand
+    const groupedData = data.reduce((acc, item) => {
+      const key = `${item.name}-${item.model}-${item.brand}`;
+      if (!acc[key]) {
+        acc[key] = { ...item, quantity: 1 };
+      } else {
+        acc[key].quantity++;
+      }
+      return acc;
+    }, {});
+
+    return Object.values(groupedData);
+  }
+
+  async getEquipmentMovements(equipmentId: string) {
+  // Fetch equipment movements
+  const { data: movementsData, error: movementsError } = await this.supabase
+    .from('equipment_movements')
+    .select('movement_date, project_id, equipment_id')
+    .eq('equipment_id', equipmentId)
+    .order('movement_date', { ascending: false });
+
+  if (movementsError) {
+    console.error("❌ Error fetching equipment movements:", movementsError);
+    return [];
+  }
+
+  if (!movementsData.length) return [];
+
+  // Fetch project details
+  const projectIds = movementsData.map(movement => movement.project_id);
+  const { data: projectData, error: projectError } = await this.supabase
+    .from('projects')
+    .select('id, name')
+    .in('id', projectIds);
+
+  if (projectError) {
+    console.error("❌ Error fetching project details:", projectError);
+    return [];
+  }
+
+  // Fetch total equipment quantity
+  const { data: equipmentData, error: equipmentError } = await this.supabase
+    .from('equipments')
+    .select('quantity')
+    .eq('id', equipmentId)
+    .single();
+
+  if (equipmentError || !equipmentData) {
+    console.error("❌ Error fetching equipment data:", equipmentError);
+    return [];
+  }
+
+  // Fetch project materials data
+  const { data: projectMaterialsData, error: projectMaterialsError } = await this.supabase
+    .from('project_materials')
+    .select('project_id, quantity')
+    .in('project_id', projectIds)
+    .eq('equipment_id', equipmentId);
+
+  if (projectMaterialsError) {
+    console.error("❌ Error fetching project materials:", projectMaterialsError);
+    return [];
+  }
+
+  // Calculate total used quantity across all projects
+  const totalUsedQuantity = projectMaterialsData.reduce((sum, pm) => sum + pm.quantity, 0);
+  const remainingQuantity = equipmentData.quantity - totalUsedQuantity;
+
+  // Combine movement data
+  const movements = movementsData.map(movement => {
+    const project = projectData.find(p => p.id === movement.project_id);
+    const usedQuantity = projectMaterialsData.find(pm => pm.project_id === movement.project_id)?.quantity || 0;
+
+    return {
+      movement_date: movement.movement_date ? new Date(movement.movement_date).toISOString() : null,
+      project_name: project ? project.name : 'Unknown Project',
+      used_quantity: usedQuantity,
+      total_quantity: equipmentData.quantity, // ✅ Fetching from `equipments` table
+      remaining_quantity: remainingQuantity,
+    };
+  });
+
+  return movements;
+}
+
+
+
+  async getEquipmentByNameModelBrand(name: string, model: string, brand: string): Promise<any> {
+    const { data, error } = await this.supabase
+      .from('equipments')
+      .select()
+      .eq('name', name)
+      .eq('model', model)
+      .eq('brand', brand);
+
+    if (error) {
+      console.error('Error fetching equipment:', error);
+      return null;
+    }
+
+    return data[0] || null;
+  }
+
+  // In supabase.service.ts
+async getProjectMaterialsByEquipment(equipmentId: string) {
+  const { data, error } = await this.supabase
+    .from('project_materials')
+    .select('quantity, equipment_id')
+    .eq('equipment_id', equipmentId);
+
+  if (error) {
+    console.error('Error fetching project materials:', error);
+  }
+  return { data, error };
+}
+
+
+
 }

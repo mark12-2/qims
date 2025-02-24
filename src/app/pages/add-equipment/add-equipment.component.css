@@ -8,13 +8,13 @@
 }
 
 .container {
-    display: flex;
+  display: flex;
 }
 
 .main-content {
-    flex: 1;
+  flex: 1;
     margin-left: 230px;
-    padding: 20px;
+  padding: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -58,14 +58,14 @@ h3 {
     font-weight: 500;
     font-size: 1rem;
     color: #444;
-    display: block;
-    margin-bottom: 5px;
+  display: block;
+  margin-bottom: 5px;
 }
 
 .form-group input,
 .form-group textarea,
 .form-group select {
-    width: 100%;
+  width: 100%;
     padding: 12px;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -77,26 +77,26 @@ h3 {
 .form-group textarea:focus,
 .form-group select:focus {
     border-color: #4ca1af;
-    outline: none;
+  outline: none;
     box-shadow: 0px 0px 8px rgba(76, 161, 175, 0.5);
 }
 
 .radio-group {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
     gap: 15px;
 }
 
 .btn {
     width: 100%;
     background: #4ca1af;
-    border: none;
+  border: none;
     padding: 14px;
     color: #fff;
     font-size: 1.1rem;
     font-weight: 600;
     border-radius: 8px;
-    cursor: pointer;
+  cursor: pointer;
     transition: 0.3s ease-in-out;
     margin-top: 1rem;
 }
